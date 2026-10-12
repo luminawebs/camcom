@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulador de pantalla</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var i = 0, errores = 0, erroresPaso = 0, total = c.pasos.length;
+
+  function pintar() {
+    var p = c.pasos[i], z = p.zona; erroresPaso = 0;
+    ui.progreso(i + 1, total, "Paso " + (i + 1) + " de " + total);
+    ui.cuerpo.innerHTML =
+      '<div class="as-aviso as-aviso--marca"><b>' + A.texto(p.instruccion) + "</b></div>" +
+      '<div class="as-movil"><div class="as-movil__pantalla" id="pant">' + A.medio(p.pantalla) +
+      '<button class="as-zona' + (c.verZonas ? " as-zona--ver" : "") + '" id="zona" aria-label="' + A.esc(p.instruccion) + '" style="left:' + z.x + "%;top:" + z.y + "%;width:" + z.w + "%;height:" + z.h + '%"></button>' +
+      '</div></div><div id="retro"></div>';
+    ui.pie.innerHTML = '<button class="as-btn as-btn--sec" id="ayuda">Ver dónde es</button>';
+    document.getElementById("pant").addEventListener("click", function (e) {
+      if (e.target.id === "zona") return;
+      errores++; erroresPaso++;
+      var r = this.getBoundingClientRect(), t = document.createElement("span");
+      t.className = "as-toque"; t.style.left = (e.clientX - r.left) + "px"; t.style.top = (e.clientY - r.top) + "px";
+      this.appendChild(t); setTimeout(function () { t.remove(); }, 700);
+      document.getElementById("retro").innerHTML = '<div class="as-aviso as-aviso--error"><b>Ahí no.</b> ' + A.texto(p.pista) + "</div>";
+    });
+    document.getElementById("zona").onclick = acierto;
+    document.getElementById("ayuda").onclick = function () { errores++; document.getElementById("zona").classList.add("as-zona--ver"); };
+  }
+  function acierto() {
+    document.getElementById("retro").innerHTML = '<div class="as-aviso as-aviso--ok"><b>¡Eso es!</b></div>';
+    setTimeout(function () {
+      i++;
+      if (i < total) pintar();
+      else A.final(ui, c, Math.max(0, 100 - errores * 10), errores ? "Tuviste " + errores + " toque(s) de más. Repite hasta hacerlo sin ayuda." : "Sin un solo error.");
+    }, 650);
+  }
+  pintar();
+})();
+</script>
+</body>
+</html>

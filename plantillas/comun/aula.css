@@ -1,0 +1,184 @@
+/* =====================================================================
+   Aula Virtual Empresarial Soacha · Sistema visual común
+   ---------------------------------------------------------------------
+   Un solo archivo para dos usos:
+   1. Tema de Moodle: pegar completo en Boost Union > Apariencia >
+      SCSS adicional ("Raw SCSS"). Así los fragmentos que se pegan en el
+      editor de Moodle (Página, Etiqueta, Resumen de sección) quedan con
+      estilo sin necesidad de <style> en cada página.
+   2. Componentes SCORM: el empaquetador lo copia dentro de cada paquete.
+   Todas las clases empiezan por "as-" para no chocar con Moodle.
+   Paleta: blanco, rojo, negro y grises.
+   Para cambiar de marca, edita solo las variables de :root.
+   ===================================================================== */
+
+:root{
+  --as-negro:#141414;      /* botones, cabeceras, títulos fuertes */
+  --as-negro-700:#2e2e2e;  /* degradado de la banda, hover de botones */
+  --as-rojo:#c8102e;       /* acento de marca: franja, progreso, foco, enlaces */
+  --as-rojo-oscuro:#9e0c24;/* texto rojo sobre fondos claros */
+  --as-rojo-100:#fbe9ec;   /* fondos suaves de acento */
+  --as-suave:#f1f1f2;      /* fondos suaves neutros (chips, avisos) */
+  --as-ok:#137a50;  --as-ok-100:#e3f6ee;     /* correcto (semántico) */
+  --as-error:#b3261e; --as-error-100:#fdecea; /* error (semántico) */
+  --as-tinta:#1a1a1a;      /* texto principal */
+  --as-gris-600:#5c5c63;   /* texto secundario */
+  --as-gris-300:#d0d0d4;   /* bordes */
+  --as-gris-100:#efeff1;   /* fondos de bloque */
+  --as-blanco:#ffffff;
+  --as-fondo:#f6f6f7;
+  --as-hueco:#8d8d94;      /* bordes y texto de los espacios por llenar */
+  --as-radio:12px;
+  --as-sombra:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.07);
+  --as-fuente:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+}
+
+/* ---------- Base (solo dentro de .as) ---------- */
+.as{font-family:var(--as-fuente);color:var(--as-tinta);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+.as *,.as *::before,.as *::after{box-sizing:border-box}
+.as h1,.as h2,.as h3,.as h4{line-height:1.2;margin:0;text-wrap:balance;font-weight:700;color:var(--as-tinta)}
+.as h1{font-size:1.6rem}.as h2{font-size:1.3rem}.as h3{font-size:1.08rem}
+.as p{margin:0}
+.as img{max-width:100%;height:auto;display:block}
+.as a{color:var(--as-rojo)}
+.as :focus-visible{outline:3px solid var(--as-rojo);outline-offset:2px;border-radius:6px}
+.as-pila{display:flex;flex-direction:column;gap:14px}
+.as-fila{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.as-sec{color:var(--as-gris-600);font-size:.92rem}
+.as-eti{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--as-gris-600)}
+.as-num{font-variant-numeric:tabular-nums}
+
+/* ---------- Espacio por llenar (wireframe) ----------
+   Marca dónde va un video, imagen, audio o texto definitivo.
+   Al producir el curso se reemplaza el bloque completo. */
+.as-hueco{border:2px dashed var(--as-hueco);border-radius:var(--as-radio);color:var(--as-gris-600);
+  background:repeating-linear-gradient(135deg,transparent 0 10px,rgba(133,146,170,.08) 10px 20px),var(--as-gris-100);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;padding:18px;min-height:90px}
+.as-hueco b{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--as-negro)}
+.as-hueco span{font-size:.85rem;max-width:42ch}
+.as-hueco--video{aspect-ratio:16/9;width:100%;max-width:100%}
+.as-hueco--vertical{aspect-ratio:9/16;max-width:260px;margin-inline:auto;width:100%}
+.as-hueco--imagen{aspect-ratio:4/3;width:100%}
+.as-hueco--audio{min-height:70px;flex-direction:row;gap:12px}
+.as-hueco--texto{align-items:flex-start;text-align:left;min-height:0;padding:12px 14px}
+.as-ph{background:#e4e4e8;border:1px dashed var(--as-hueco);border-radius:4px;padding:0 4px;color:#2e2e33;font-style:normal}
+
+/* ---------- Botones ---------- */
+.as-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:10px;
+  border:2px solid var(--as-negro);background:var(--as-negro);color:var(--as-blanco)!important;font:600 .95rem/1.2 var(--as-fuente);
+  text-decoration:none!important;cursor:pointer}
+.as-btn:hover{background:var(--as-negro-700);border-color:var(--as-negro-700)}
+.as-btn--sec{background:var(--as-blanco);color:var(--as-negro)!important}
+.as-btn--sec:hover{background:var(--as-suave)}
+.as-btn--ancho{width:100%}
+.as-btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---------- Tarjeta y chips ---------- */
+.as-tarjeta{background:var(--as-blanco);border-radius:var(--as-radio);box-shadow:var(--as-sombra);padding:18px}
+.as-chip{white-space:nowrap;display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:600;background:var(--as-suave);color:var(--as-negro)}
+.as-chip--ok{background:var(--as-ok-100);color:var(--as-ok)}
+.as-chip--rojo{background:var(--as-rojo-100);color:var(--as-rojo-oscuro)}
+.as-chip--gris{background:var(--as-gris-100);color:var(--as-gris-600)}
+
+/* ---------- Cabecera de curso (como la banda del Moodle actual) ---------- */
+.as-banda{position:relative;overflow:hidden;border-radius:var(--as-radio);color:var(--as-blanco);padding:24px 22px 26px;
+  background:linear-gradient(100deg,var(--as-negro) 0%,var(--as-negro-700) 70%)}
+.as-banda::after{content:"";position:absolute;top:0;bottom:0;right:-30px;width:110px;transform:skewX(-18deg);
+  background:linear-gradient(90deg,var(--as-rojo) 0 62%,#8d8d94 62% 100%)}
+.as-banda > *{position:relative;z-index:1;max-width:calc(100% - 70px)}
+.as-banda h1,.as-banda h2{color:var(--as-blanco)}
+.as-banda .as-eti{color:rgba(255,255,255,.75)}
+.as-banda p{color:rgba(255,255,255,.9)}
+
+/* ---------- Progreso ---------- */
+.as-barra{height:8px;border-radius:99px;background:var(--as-gris-300);overflow:hidden}
+.as-barra > i{display:block;height:100%;background:var(--as-rojo);border-radius:99px;transition:width .3s}
+
+/* ---------- Pasos de la unidad (siempre los mismos 6) ---------- */
+.as-pasos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.as-paso{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;background:var(--as-blanco);
+  border:1px solid var(--as-gris-300);border-radius:var(--as-radio);padding:10px 12px}
+.as-paso__n{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--as-suave);color:var(--as-negro)}
+.as-paso__t{min-width:0}
+.as-paso__t b{display:block}
+.as-paso__t small{color:var(--as-gris-600);font-size:.82rem}
+.as-paso--hecho .as-paso__n{background:var(--as-rojo);color:var(--as-blanco)}
+.as-paso--ahora{border:2px solid var(--as-rojo)}
+.as-paso--ahora .as-paso__n{background:var(--as-negro);color:var(--as-blanco)}
+
+/* ---------- Caja de aviso / retroalimentación ---------- */
+.as-aviso{border-radius:10px;padding:12px 14px;background:var(--as-suave);border-left:0}
+.as-aviso--ok{background:var(--as-ok-100);color:#0b4a31}
+.as-aviso--error{background:var(--as-error-100);color:#7a160f}
+.as-aviso--marca{background:var(--as-rojo-100);color:var(--as-tinta);box-shadow:inset 3px 0 0 var(--as-rojo)}
+
+/* ---------- Lista de verificación ---------- */
+.as-check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.as-check li{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start}
+.as-check li::before{content:"✓";width:24px;height:24px;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:.85rem;
+  background:var(--as-ok-100);color:var(--as-ok)}
+
+/* =====================================================================
+   Componentes interactivos (SCORM)
+   ===================================================================== */
+body.as{margin:0;background:var(--as-fondo)}
+.as-app{max-width:640px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--as-fondo)}
+.as-top{position:sticky;top:0;z-index:5;background:var(--as-negro);color:var(--as-blanco);padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.as-top__fila{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.as-top h1{color:var(--as-blanco);font-size:1rem;font-weight:600}
+.as-top .as-eti{color:rgba(255,255,255,.7)}
+.as-top .as-barra{background:rgba(255,255,255,.22);height:6px}
+.as-top .as-barra > i{background:var(--as-rojo)}
+.as-cuerpo{flex:1;padding:18px 16px 24px;display:flex;flex-direction:column;gap:16px}
+.as-pie{position:sticky;bottom:0;background:var(--as-blanco);border-top:1px solid var(--as-gris-300);padding:12px 16px;display:flex;gap:10px}
+.as-pie .as-btn{flex:1}
+
+/* Opciones de respuesta */
+.as-opciones{display:flex;flex-direction:column;gap:10px}
+.as-opcion{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;min-height:48px;padding:12px 14px;border-radius:10px;
+  border:2px solid var(--as-gris-300);background:var(--as-blanco);font:500 .95rem/1.4 var(--as-fuente);color:var(--as-tinta);cursor:pointer}
+.as-opcion:hover{border-color:var(--as-rojo)}
+.as-opcion__l{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.8rem;background:var(--as-gris-100);color:var(--as-negro)}
+.as-opcion--ok{border-color:var(--as-ok);background:var(--as-ok-100)}
+.as-opcion--error{border-color:var(--as-error);background:var(--as-error-100)}
+.as-opcion[disabled]{cursor:default}
+
+/* Campos */
+.as-campo{display:flex;flex-direction:column;gap:6px}
+.as-campo label{font-weight:600;font-size:.92rem}
+.as-entrada{display:flex;align-items:center;border:2px solid var(--as-gris-300);border-radius:10px;background:var(--as-blanco);overflow:hidden}
+.as-entrada:focus-within{border-color:var(--as-rojo)}
+.as-entrada span{padding:0 10px;color:var(--as-gris-600);font-weight:600}
+.as-entrada input,.as textarea{flex:1;min-width:0;border:0;padding:12px 10px;font:500 1.05rem var(--as-fuente);color:var(--as-tinta);background:transparent;outline:none}
+.as textarea{width:100%;border:2px solid var(--as-gris-300);border-radius:10px;min-height:96px;resize:vertical;font-size:.95rem;background:var(--as-blanco)}
+.as textarea:focus{border-color:var(--as-rojo)}
+.as-dato{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--as-gris-100)}
+.as-dato:last-child{border-bottom:0}
+
+/* Teléfono (simulador de pantalla) */
+.as-movil{position:relative;margin:0 auto;width:100%;max-width:280px;border-radius:28px;border:10px solid #141414;background:#141414;box-shadow:var(--as-sombra)}
+.as-movil__pantalla{position:relative;border-radius:18px;overflow:hidden;background:var(--as-blanco);aspect-ratio:9/19}
+.as-movil__pantalla > img,.as-movil__pantalla > .as-hueco{position:absolute;inset:0;width:100%;height:100%;border-radius:0;aspect-ratio:auto;min-height:0}
+.as-zona{position:absolute;border:0;background:transparent;cursor:pointer;border-radius:8px}
+.as-zona--ver{outline:3px dashed var(--as-rojo);background:rgba(200,16,46,.12)}
+.as-toque{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:rgba(180,35,24,.35);border:2px solid var(--as-error);pointer-events:none;animation:as-toque .6s ease-out forwards}
+@keyframes as-toque{from{transform:scale(.4);opacity:1}to{transform:scale(1.4);opacity:0}}
+
+/* Chat (escenario ramificado) */
+.as-chat{display:flex;flex-direction:column;gap:8px;background:#e9e3d8;border-radius:var(--as-radio);padding:14px;min-height:180px}
+.as-burbuja{max-width:82%;padding:8px 12px;border-radius:12px;font-size:.95rem;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.as-burbuja--cliente{align-self:flex-start;background:var(--as-blanco);border-top-left-radius:2px}
+.as-burbuja--yo{align-self:flex-end;background:#d7f7c5;border-top-right-radius:2px}
+.as-burbuja small{display:block;font-size:.72rem;color:var(--as-gris-600);margin-top:2px}
+
+/* Comparador */
+.as-par{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.as-par button{display:flex;flex-direction:column;gap:8px;padding:8px;border-radius:var(--as-radio);border:2px solid var(--as-gris-300);background:var(--as-blanco);cursor:pointer;font:600 .9rem var(--as-fuente);color:var(--as-tinta)}
+.as-par button:hover{border-color:var(--as-rojo)}
+.as-par .as-hueco{min-height:0}
+
+/* Resultado final */
+.as-final{text-align:center;align-items:center}
+.as-final__nota{font-size:2.6rem;font-weight:800;color:var(--as-negro);line-height:1}
+
+@media (prefers-reduced-motion:reduce){.as *{animation:none!important;transition:none!important}}

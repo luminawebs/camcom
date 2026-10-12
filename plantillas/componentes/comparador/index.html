@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Cuál funciona mejor?</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var i = 0, aciertos = 0, total = c.pares.length;
+
+  function pintar() {
+    var p = c.pares[i], lados = A.mezclar([{ m: p.buena, ok: true }, { m: p.mala, ok: false }]);
+    ui.progreso(i + 1, total);
+    ui.cuerpo.innerHTML = '<h2>' + A.texto(p.pregunta) + '</h2><div class="as-par">' +
+      lados.map(function (l, k) { return '<button data-k="' + k + '">' + A.medio(l.m) + "<span>" + A.texto(l.m.etiqueta || "Opción " + (k + 1)) + "</span></button>"; }).join("") +
+      '</div><div id="retro"></div>';
+    ui.pie.innerHTML = '<button class="as-btn" id="sig" disabled>' + (i < total - 1 ? "Siguiente ›" : "Ver resultado") + "</button>";
+    ui.cuerpo.querySelectorAll(".as-par button").forEach(function (b) {
+      b.onclick = function () {
+        var l = lados[+b.dataset.k];
+        if (l.ok) aciertos++;
+        ui.cuerpo.querySelectorAll(".as-par button").forEach(function (x, k) {
+          x.disabled = true; x.style.borderColor = lados[k].ok ? "var(--as-ok)" : (x === b ? "var(--as-error)" : "");
+        });
+        document.getElementById("retro").innerHTML = '<div class="as-aviso as-aviso--' + (l.ok ? "ok" : "error") + '"><b>' +
+          (l.ok ? "¡Bien visto! " : "Fíjate en la otra. ") + "</b>" + A.texto(p.explicacion) + "</div>";
+        document.getElementById("sig").disabled = false;
+      };
+    });
+    document.getElementById("sig").onclick = function () {
+      i++; if (i < total) { pintar(); ui.arriba(); } else A.final(ui, c, (aciertos / total) * 100, aciertos + " de " + total + " aciertos.");
+    };
+  }
+  pintar();
+})();
+</script>
+</body>
+</html>

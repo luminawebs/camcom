@@ -1,0 +1,198 @@
+{
+  "id": "plata-negocio",
+  "titulo": "La plata del negocio no es la de la casa",
+  "titulo_corto": "Plata del negocio",
+  "nivel": "g",
+  "perfil": "K",
+  "area": "Contabilidad y finanzas",
+  "duracion": "≈ 1,5 horas",
+  "promesa": "Al terminar sabrás cuánto gana de verdad tu negocio, cuánto te puedes pagar cada mes y tendrás una cuenta y un registro solo para el negocio.",
+  "certificado": "Constancia de participación",
+  "resumen_formato": "video",
+  "experto": "Contador público [por definir]",
+  "caso": "Luz Dary, 46 años, tiene una miscelánea y papelería en León XIII (Soacha). Vende cerca de $300.000 al día, recibe pagos por Nequi en su celular personal y a fin de mes no le queda para surtir.",
+  "personas": [
+    {
+      "nombre": "Luz Dary",
+      "negocio": "Miscelánea y papelería",
+      "barrio": "León XIII",
+      "problema": "Saca del cajón para la casa sin anotar y no sabe si gana."
+    },
+    {
+      "nombre": "Jhon Fredy",
+      "negocio": "Peluquería y barbería",
+      "barrio": "Ciudad Verde",
+      "problema": "Un mes se paga mucho y otro nada; no sabe cuánto puede sacar."
+    },
+    {
+      "nombre": "Marleny",
+      "negocio": "Taller de confección",
+      "barrio": "San Mateo",
+      "problema": "Le pagan al mismo Nequi donde recibe la plata de la familia y paga tela con su tarjeta personal."
+    }
+  ],
+  "objetivos": [
+    "Reconocer por dónde se va la plata del negocio hacia la casa y medir cuánto se fue en una semana.",
+    "Calcular la ganancia del mes y un sueldo fijo que el negocio pueda pagar.",
+    "Separar una cuenta o billetera solo para el negocio y seguir las 3 reglas de la plata.",
+    "Llevar un registro diario de entradas, salidas y saldo en 5 minutos."
+  ],
+  "evidencia": "Tu regla de la plata: tu sueldo calculado, la cuenta del negocio definida y una semana de registro (foto del cuaderno o plantilla).",
+  "inicio": {
+    "bienvenida": "Hola, te damos la bienvenida a La plata del negocio no es la de la casa",
+    "texto": "Luz Dary vende todos los días en su miscelánea de León XIII, pero a fin de mes no le queda para surtir. En tres unidades cortas vas a ver por dónde se va la plata, cuánto te puedes pagar y cómo separar la plata del negocio de la de tu casa, con ejercicios que te corrigen al momento.",
+    "aprobar": "Completar las 3 unidades",
+    "dudas": "Foro Comunidad o WhatsApp de la Cámara [VERIFICAR número]",
+    "diagnostico": [
+      "¿Sabes cuánto ganó tu negocio el mes pasado? (Sí / Más o menos / No)",
+      "¿Te pagas un sueldo fijo? (Sí / A veces / No, saco lo que necesito)",
+      "Los pagos de tus clientes, ¿entran a una cuenta solo del negocio? (Sí / No / Recibo en efectivo)"
+    ]
+  },
+  "unidades": [
+    {
+      "tema": "Por qué se mezcla la plata",
+      "objetivo": "por dónde se va la plata de tu negocio y cuánto se fue esta semana",
+      "entrada": {
+        "titulo": "El cajón de Luz Dary",
+        "texto": "Luz Dary abre su miscelánea a las 7 de la mañana. Del cajón saca para el mercado, para las onces de los niños y para el recibo de la luz de la casa. La mercancía la paga a veces con su tarjeta personal. Vende bien, pero el día 30 no tiene para surtir y no sabe si su negocio gana o pierde.",
+        "pregunta": "¿Por dónde se va la plata del negocio?",
+        "reflexion": "Piensa en la última semana: ¿cuántas veces sacaste plata del negocio para algo de la casa?",
+        "imagen": "Ilustración de Luz Dary en el mostrador con el cajón abierto (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Comparte cuánto se fue",
+        "texto": "Durante tres días, cada vez que saques plata del negocio para algo que no es del negocio, anótalo: fecha, para qué y cuánto. Al tercer día súmalo.",
+        "entrega": "Publica en el foro el total de tus tres días (sin datos personales). Al publicar verás las de tus compañeros: comenta al menos una."
+      },
+      "llevatelo": {
+        "titulo": "Las 4 fugas de la plata",
+        "resumen": [
+          "Lo que vendes no es todo tuyo: una parte es para volver a surtir.",
+          "Las 4 fugas: el cajón para la casa, los pagos cruzados, lo que consumes y el celular personal.",
+          "Si no anotas lo que sacas, no puedes saber si estás ganando."
+        ],
+        "formula": "Se fue = caja inicial + ventas − pagos del negocio − caja final",
+        "descargas": [
+          "Ficha Las 4 fugas · PDF 200 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Departamento Administrativo Nacional de Estadística. (2025, 30 de julio). Encuesta de Micronegocios (EMICRON) 2024: boletín técnico. DANE.",
+          "url": "https://www.dane.gov.co/files/operaciones/EMICRON/bol-EMICRON-2024.pdf",
+          "para": "Cuántos micronegocios en Colombia llevan registros (pp. 21-22)."
+        },
+        {
+          "apa": "Gómez Guasca, C. (2025, 28 de octubre). Microempresas: más de la mitad carece de registros financieros formales. Portafolio.",
+          "url": "https://www.portafolio.co/negocios/empresas/microempresas-mas-de-la-mitad-carece-de-registros-financieros-formales-643178",
+          "para": "Encuesta a 1.223 emprendedores: el 39 % mezcla la plata."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u1-guion.md"
+      }
+    },
+    {
+      "tema": "Págate un sueldo",
+      "objetivo": "cuánto te puedes pagar cada mes sin dejar al negocio sin plata",
+      "entrada": {
+        "titulo": "Un mes mucho, otro mes nada",
+        "texto": "En octubre Luz Dary sacó $2.500.000 del negocio; en noviembre, $600.000. En diciembre vendió bien pero no tuvo para surtir los útiles escolares de enero. Su vecino Jhon Fredy, el de la peluquería, le dijo que él se paga un sueldo fijo cada quincena, como si fuera un empleado más.",
+        "pregunta": "¿Cuánto te puedes pagar sin dejar sin plata al negocio?",
+        "reflexion": "¿Cuánto sacaste de tu negocio el mes pasado? ¿Fue más o menos de lo que ganó?",
+        "imagen": "Ilustración: Luz Dary y Jhon Fredy conversando frente a la peluquería (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Comparte tu sueldo",
+        "texto": "Con tus números de los últimos tres meses, calcula la ganancia de cada mes, el promedio y tu sueldo con un colchón del 20 %. Escoge tus fechas de pago.",
+        "entrega": "Publica en el foro tu sueldo y tus fechas, o solo cómo lo calculaste si prefieres no mostrar cifras. Al publicar verás las de tus compañeros: comenta al menos una."
+      },
+      "llevatelo": {
+        "titulo": "Tu sueldo en 3 pasos",
+        "resumen": [
+          "Págate un sueldo fijo, en fecha fija, no lo que necesites.",
+          "Calcúlalo con el promedio de 3 meses, no con el mejor mes.",
+          "Deja un colchón en el negocio para los meses malos."
+        ],
+        "formula": "Sueldo = promedio de ganancia de 3 meses × (1 − colchón)",
+        "descargas": [
+          "Plantilla Calcula tu sueldo · Excel 40 KB",
+          "Ficha Tu sueldo · PDF 200 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Leal, A. C. (s. f.). 7 tips para separar tu dinero del de tu negocio. Siigo.",
+          "url": "https://www.siigo.com/blog/empresario/7-tips-para-separar-tu-dinero-del-de-tu-negocio/",
+          "para": "Consejos para pagarte un salario y separar cuentas."
+        },
+        {
+          "apa": "Banca de las Oportunidades. (2021). Reporte de micronegocios [VERIFICAR título].",
+          "url": "https://bancadelasoportunidades.gov.co/sites/default/files/2021-03/Reporte%20micronegocios%20final.pdf",
+          "para": "Cómo ahorran los micronegocios en Colombia (pp. 6-9)."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u2-guion.md"
+      }
+    },
+    {
+      "tema": "Una cuenta y un registro para el negocio",
+      "objetivo": "separar la plata del negocio en su propia cuenta y anotar cada día lo que entra y sale",
+      "entrada": {
+        "titulo": "Todo llega al mismo Nequi",
+        "texto": "Los clientes le pagan a Luz Dary por Nequi, al mismo número donde su hija le manda para el arriendo y donde le cae la plata de la natillera. Cuando quiso saber cuánto vendió en la semana, no pudo separar qué era del negocio y qué era de la familia.",
+        "pregunta": "¿Cómo separar la plata del negocio sin complicarte?",
+        "reflexion": "¿Dónde te pagan tus clientes? ¿Esa cuenta la usas también para tu casa?",
+        "imagen": "Pantalla de celular con movimientos mezclados: pagos de clientes y plata familiar (4:3, sin logos)."
+      },
+      "aplica": {
+        "titulo": "Comparte tu registro",
+        "texto": "Define cuál será la cuenta o billetera del negocio. Durante una semana, al cerrar, anota fecha, qué fue, entró, salió y saldo. Al final revisa si el saldo cuadra con la cuenta y el cajón.",
+        "entrega": "Publica en el foro una foto de tu registro (tapa lo que no quieras mostrar). Al publicar verás las de tus compañeros: comenta al menos una."
+      },
+      "llevatelo": {
+        "titulo": "Las 3 reglas de la plata",
+        "resumen": [
+          "Todo lo que vendes entra a la cuenta del negocio.",
+          "Todo gasto del negocio sale de esa cuenta.",
+          "A la casa solo va tu sueldo, en tu fecha fija."
+        ],
+        "formula": "Saldo de hoy = saldo de ayer + lo que entró − lo que salió",
+        "descargas": [
+          "Plantilla Registro diario · Excel 40 KB",
+          "Hoja para imprimir del cuaderno · PDF 150 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Banco de la República. (s. f.). ¿Qué es la Llave en Bre-B y para qué se necesita?",
+          "url": "https://www.banrep.gov.co/es/bre-b/preguntas-frecuentes/que-es-la-llave-en-bre-b-y-para-que-se-necesita",
+          "para": "Cómo recibir pagos en la cuenta del negocio."
+        },
+        {
+          "apa": "Gerencie.com. (s. f.). Exención del gravamen a los movimientos financieros [VERIFICAR título].",
+          "url": "https://www.gerencie.com/exencion-gmf.html",
+          "para": "El 4x1000 y el tope de 350 UVT en cuentas de ahorro."
+        },
+        {
+          "apa": "Decreto 410 de 1971. Código de Comercio, art. 19. 27 de marzo de 1971 (Colombia).",
+          "url": "http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html",
+          "para": "Obligaciones de los comerciantes, entre ellas llevar contabilidad."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u3-guion.md"
+      }
+    }
+  ],
+  "cierre": {
+    "titulo": "Último paso: tu regla de la plata",
+    "texto": "Ya sabes por dónde se va la plata, cuánto te puedes pagar y cómo separarla. Ahora déjalo funcionando en tu negocio.",
+    "reto": "Tu regla de la plata, revisada por dos compañeros",
+    "siguiente": "Contabilidad práctica para emprendedores",
+    "siguiente_texto": "Curso certificado de 4 unidades: ingresos y gastos, registros básicos, estado de resultados y decisiones."
+  },
+  "notebooklm": "notebooklm/LEEME.md"
+}

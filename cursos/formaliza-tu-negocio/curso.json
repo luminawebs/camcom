@@ -1,0 +1,225 @@
+{
+  "id": "formaliza-tu-negocio",
+  "titulo": "Formaliza tu negocio paso a paso",
+  "titulo_corto": "Formaliza tu negocio",
+  "nivel": "g",
+  "perfil": "N",
+  "area": "Contabilidad y finanzas",
+  "duracion": "≈ 1,5 horas",
+  "promesa": "Al terminar sabrás qué registros necesita tu negocio, tendrás tu RUT sacado o revisado y una lista con lo que le falta a tu local y la fecha para hacerlo.",
+  "certificado": "Constancia de participación",
+  "resumen_formato": "video",
+  "experto": "Asesor de formalización de la Cámara de Comercio [por definir]",
+  "revisor": "un asesor de formalización de la Cámara de Comercio",
+  "narracion": {
+    "voz": "a253156d",
+    "secciones": ["entrada", "aprende"],
+    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad siguen en NotebookLM."
+  },
+  "caso": "Édgar, 52 años, tiene una tienda de barrio en Compartir (Soacha) desde hace ocho años. Un distribuidor le ofrece mercancía a crédito, pero le pide RUT y matrícula mercantil. Édgar cree que formalizarse es empezar a pagar impuestos que no puede pagar.",
+  "personas": [
+    {
+      "nombre": "Édgar",
+      "negocio": "Tienda de barrio",
+      "barrio": "Compartir",
+      "problema": "Un distribuidor le pide RUT y matrícula para venderle a crédito, y él cree que eso significa pagar más impuestos."
+    },
+    {
+      "nombre": "Yuli",
+      "negocio": "Uñas y peinados a domicilio",
+      "barrio": "Ciudad Latina",
+      "problema": "Un salón de belleza le quiere contratar servicios, pero le pide el RUT y no sabe sacarlo."
+    },
+    {
+      "nombre": "Wilson",
+      "negocio": "Taller de motos",
+      "barrio": "El Danubio",
+      "problema": "Tiene matrícula mercantil, pero no la renueva hace tres años y no sabe qué más le exigen para el local."
+    }
+  ],
+  "objetivos": [
+    "Reconocer los tres pasos de la formalización (RUT, matrícula mercantil y requisitos del local) y qué ganas con cada uno.",
+    "Sacar o revisar tu RUT en línea, sin costo, con el código de actividad de tu negocio.",
+    "Saber cuándo y dónde se hace y se renueva la matrícula mercantil en Soacha.",
+    "Revisar qué le falta a tu local y ponerle fecha a cada pendiente."
+  ],
+  "evidencia": "Tu ruta de formalización: qué tienes (RUT, matrícula, requisitos del local), qué te falta y en qué fecha lo vas a hacer.",
+  "mapa_curso_nota": "Mapa del curso con las 3 unidades y la ruta de formalización",
+  "inicio": {
+    "bienvenida": "Hola, te damos la bienvenida a Formaliza tu negocio paso a paso",
+    "texto": "Édgar tiene una tienda en Compartir hace ocho años. Un distribuidor le ofrece mercancía a crédito, pero le pide RUT y matrícula mercantil. En tres unidades cortas vas a ver qué registros necesita tu negocio, cómo sacar tu RUT gratis desde el celular y qué le falta a tu local para estar en regla.",
+    "aprobar": "Completar las 3 unidades",
+    "dudas": "Foro Comunidad o WhatsApp de la Cámara [VERIFICAR número]",
+    "video_nota": "Bienvenida de 60 s: Édgar cuenta por qué quiere formalizar su tienda y qué vas a lograr. Con subtítulos.",
+    "diagnostico": [
+      "¿Tu negocio tiene RUT? (Sí / No / No sé)",
+      "¿Tu negocio tiene matrícula mercantil? (Sí, renovada este año / Sí, pero sin renovar / No)",
+      "¿Qué te frena para formalizarte? (Miedo a los impuestos / No sé por dónde empezar / No tengo tiempo / Ya estoy formal)"
+    ]
+  },
+  "unidades": [
+    {
+      "tema": "Formal no es pagar más: es poder crecer",
+      "objetivo": "qué registros necesita tu negocio, qué ganas con cada uno y en qué paso vas",
+      "entrada": {
+        "titulo": "El distribuidor de Édgar",
+        "texto": "Édgar abre su tienda en Compartir a las 6 de la mañana. Un distribuidor de gaseosas le ofrece surtir a crédito, a 30 días, pero le pide el RUT y la matrícula mercantil. Édgar no tiene ninguno de los dos. Piensa que si se registra, al mes siguiente le van a llegar impuestos que no puede pagar. Por eso sigue comprando de contado y con poca mercancía.",
+        "pregunta": "¿Qué necesita tu negocio para estar formal y qué ganas con eso?",
+        "reflexion": "Piensa en el último mes: ¿perdiste alguna venta, un crédito o un cliente grande porque te pidieron un papel que no tenías?",
+        "imagen": "Ilustración de Édgar en el mostrador de su tienda hablando con el distribuidor (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "¿En qué paso vas?",
+        "texto": "Usa el árbol de la práctica con los datos de tu negocio. Mira en qué paso de la ruta estás: RUT, matrícula mercantil o requisitos del local.",
+        "entrega": "Publica en el foro en qué paso vas y qué es lo que más te frena (sin datos personales). Al publicar verás lo de tus compañeros: comenta al menos una publicación."
+      },
+      "llevatelo": {
+        "titulo": "Tu ruta de formalización",
+        "resumen": [
+          "Estar formal es tener tres cosas: RUT, matrícula mercantil y el local en regla.",
+          "El RUT no es un impuesto: es un registro gratis ante la DIAN.",
+          "Formal puedes comprar a crédito, venderle a empresas y pedir crédito en un banco."
+        ],
+        "etiqueta_formula": "La ruta",
+        "formula": "RUT (DIAN) → matrícula mercantil (Cámara de Comercio) → requisitos del local (Alcaldía y Policía)",
+        "descargas": []
+      },
+      "profundiza": [
+        {
+          "apa": "Departamento Administrativo Nacional de Estadística. (2025, 30 de julio). Encuesta de Micronegocios (EMICRON) 2024: boletín técnico. DANE.",
+          "url": "https://www.dane.gov.co/files/operaciones/EMICRON/bol-EMICRON-2024.pdf",
+          "para": "Cuántos micronegocios en Colombia tienen RUT."
+        },
+        {
+          "apa": "Decreto 2210 de 2023. Por el cual se crea la Cámara de Comercio de Soacha. (2023). Ministerio de Comercio, Industria y Turismo.",
+          "url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=257376",
+          "para": "La creación de la Cámara de Comercio de Soacha y su jurisdicción."
+        },
+        {
+          "apa": "Decreto 410 de 1971. Código de Comercio. (1971). Secretaría General del Senado.",
+          "url": "http://www.secretariasenado.gov.co/senado/basedoc/codigo_comercio.html",
+          "para": "Quién es comerciante y sus deberes (artículos 10 y 19)."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u1-guion.md"
+      }
+    },
+    {
+      "tema": "El RUT, gratis y desde el celular",
+      "objetivo": "cómo sacar o revisar tu RUT en línea, sin pagar nada, con el código de actividad de tu negocio",
+      "entrada": {
+        "titulo": "El salón que quiere contratar a Yuli",
+        "texto": "Yuli hace uñas y peinados a domicilio en Ciudad Latina. Un salón de belleza del centro de Soacha le ofrece trabajo fijo los fines de semana, pero le pide el RUT para poder pagarle. Una vecina le dijo que sacarlo cuesta plata y que hay que hacer fila en la DIAN. Yuli lleva dos semanas sin contestarle al salón.",
+        "pregunta": "¿Cómo sacas tu RUT sin pagar ni hacer filas?",
+        "reflexion": "¿Tienes a la mano tu cédula, un correo que uses y la dirección donde trabajas? Con eso empiezas.",
+        "imagen": "Ilustración de Yuli con su celular y su maletín de manicure (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu RUT listo",
+        "texto": "Saca tu RUT en línea o, si ya lo tienes, descárgalo y revisa que la dirección, el celular y la actividad de tu negocio estén bien.",
+        "entrega": "Publica en el foro qué actividad quedó en tu RUT (el nombre, no tu número de NIT) y una duda que te haya quedado. Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tu RUT en una mirada",
+        "resumen": [
+          "El RUT se saca gratis en la página de la DIAN, con la cédula y el celular.",
+          "Tu NIT es tu número de cédula con un dígito de verificación.",
+          "El RUT no vence: solo lo actualizas si cambias de dirección, celular o actividad."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "RUT = gratis + en línea + no vence (solo se actualiza)",
+        "descargas": [
+          {"texto": "Lista de lo que necesitas para el RUT · PDF", "archivo": "u2-lista-rut.pdf"}
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Dirección de Impuestos y Aduanas Nacionales. (s. f.). Inscripción en el Registro Único Tributario (RUT). DIAN.",
+          "url": "https://www.dian.gov.co",
+          "para": "Portal oficial: inscripción y actualización del RUT. [VERIFICAR enlace directo al trámite]"
+        },
+        {
+          "apa": "El Cronista. (2026). Registro Único Tributario (RUT) 2026: cómo sacarlo por internet paso a paso. El Cronista Colombia.",
+          "url": "https://www.cronista.com/colombia/finanzas-y-economia/registro-unico-tributario-rut-2026-como-sacarlo-por-internet-paso-a-paso/",
+          "para": "El paso a paso en línea, con fotos de la cédula y selfie."
+        },
+        {
+          "apa": "Actualícese. (s. f.). Inscripción en el RUT para personas naturales que declaran renta por primera vez. Actualícese.",
+          "url": "https://actualicese.com/inscripcion-en-el-rut-para-personas-naturales-que-declaran-renta-por-primera-vez/",
+          "para": "Qué responsabilidades quedan en el RUT y cuándo declarar renta."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u2-guion.md"
+      }
+    },
+    {
+      "tema": "Matrícula mercantil y tu local en regla",
+      "objetivo": "cuándo y dónde se hace y se renueva la matrícula mercantil y qué le falta a tu local",
+      "entrada": {
+        "titulo": "Los papeles del taller de Wilson",
+        "texto": "Wilson tiene un taller de motos en El Danubio. Sacó la matrícula mercantil hace cinco años, pero no la renueva desde hace tres. La semana pasada pasó la Policía y le preguntó por la matrícula, el uso de suelo y la música que suena en el taller. Wilson no supo qué contestar.",
+        "pregunta": "¿Qué papeles le piden a tu local y cada cuánto se renuevan?",
+        "reflexion": "Si mañana llega una visita a tu negocio, ¿qué papel podrías mostrar y cuál no tienes?",
+        "imagen": "Ilustración del taller de Wilson con una moto y un radio en la pared (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Lo que le falta a tu local",
+        "texto": "Revisa tu negocio con el checklist de esta unidad. Marca lo que ya tienes y escribe al frente de cada pendiente la fecha en que lo vas a hacer.",
+        "entrega": "Publica en el foro cuántos pendientes te quedaron y cuál vas a hacer primero, con su fecha (sin datos personales). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tu calendario y tu checklist",
+        "resumen": [
+          "La matrícula mercantil se saca en la Cámara de Comercio y se renueva cada año entre el 1 de enero y el 31 de marzo.",
+          "Tu local necesita: uso de suelo, matrícula vigente y avisar la apertura a la Policía.",
+          "Si pones música para tus clientes, te toca pagar derechos de autor."
+        ],
+        "etiqueta_formula": "La fecha",
+        "formula": "Renueva la matrícula cada año entre el 1 de enero y el 31 de marzo",
+        "descargas": [
+          {"texto": "Checklist de tu negocio formal · PDF", "archivo": "u3-checklist-formal.pdf"}
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Ley 1801 de 2016. Código Nacional de Seguridad y Convivencia Ciudadana. Artículo 87. (2016). Congreso de la República de Colombia.",
+          "url": "https://leyes.co/codigo_nacional_de_seguridad_y_convivencia_ciudadana/87.htm",
+          "para": "Los requisitos para abrir y mantener una actividad económica."
+        },
+        {
+          "apa": "Ministerio de Comercio, Industria y Turismo. (2025). Por qué renovar oportunamente su matrícula mercantil. Mincomercio.",
+          "url": "https://www.ambitojuridico.com/sites/default/files/2025-05/DOCUMENTO-Mincomercio-2025%28Porquerenovaroportunamentesumatriculamercantil%29.pdf",
+          "para": "Qué pasa si no renuevas a tiempo."
+        },
+        {
+          "apa": "Alcaldía de Santiago de Cali. (s. f.). Evite medidas correctivas en su establecimiento comercial. Alcaldía de Cali.",
+          "url": "https://www.cali.gov.co/seguridad/publicaciones/177265/evite-medidas-correctivas-en-su-establecimiento-comercial/",
+          "para": "Ejemplo práctico de los papeles que revisan en un local (en Soacha puede variar)."
+        },
+        {
+          "apa": "Confecámaras. (s. f.). Registro Único Empresarial y Social (RUES). Confecámaras.",
+          "url": "https://www.rues.org.co",
+          "para": "Consulta si el nombre de tu negocio ya está registrado."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u3-guion.md"
+      }
+    }
+  ],
+  "cierre": {
+    "titulo": "Último paso: tu ruta de formalización",
+    "texto": "Ya sabes qué registros necesita tu negocio, cómo sacar tu RUT y qué le falta a tu local. Ahora ponle fecha a cada pendiente.",
+    "reto": "Tu ruta de formalización, revisada por dos compañeros",
+    "rubrica": [
+      "¿Dice en qué paso está: RUT, matrícula mercantil o requisitos del local?",
+      "¿Tiene la lista de lo que le falta, con una fecha para cada pendiente?",
+      "¿Anotó la fecha de renovación de la matrícula (antes del 31 de marzo)?"
+    ],
+    "siguiente": "Impuestos para pequeños negocios",
+    "siguiente_texto": "Curso certificado: Régimen Simple, IVA, retenciones y calendario tributario, explicado para tu negocio."
+  },
+  "notebooklm": "notebooklm/LEEME.md"
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora con retroalimentación</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var n = 0, aciertos = 0, v, correcta, intentos;
+  var fmt = function (x) { return c.unidadRespuesta === "$" ? A.pesos(x) : (Math.round(x * 100) / 100).toLocaleString("es-CO") + " " + c.unidadRespuesta; };
+  function valor(def) { var pasos = Math.floor((def.max - def.min) / def.paso); return def.min + Math.floor(Math.random() * (pasos + 1)) * def.paso; }
+
+  function nuevo() {
+    v = {}; intentos = 0;
+    Object.keys(c.variables).forEach(function (k) { v[k] = valor(c.variables[k]); });
+    correcta = c.calcular(v);
+    ui.progreso(n + 1, c.ejercicios, "Ejercicio " + (n + 1) + " de " + c.ejercicios);
+    ui.cuerpo.innerHTML =
+      '<div class="as-tarjeta as-pila"><span class="as-eti">El caso</span><p>' + A.texto(c.caso) + "</p><div>" +
+      Object.keys(c.variables).map(function (k) {
+        var d = c.variables[k];
+        return '<div class="as-dato"><span>' + A.esc(d.etiqueta) + '</span><b class="as-num">' + (d.tipo === "$" ? A.pesos(v[k]) : v[k] + " " + d.tipo) + "</b></div>";
+      }).join("") + "</div></div>" +
+      '<div class="as-tarjeta as-pila"><div class="as-campo"><label for="resp">' + A.texto(c.pregunta) + '</label>' +
+      '<div class="as-entrada">' + (c.unidadRespuesta === "$" ? "<span>$</span>" : "") +
+      '<input id="resp" inputmode="decimal" autocomplete="off" placeholder="Escribe tu resultado">' +
+      (c.unidadRespuesta !== "$" ? "<span>" + A.esc(c.unidadRespuesta) + "</span>" : "") + '</div></div><div id="retro"></div></div>';
+    ui.pie.innerHTML = '<button class="as-btn" id="ok">Comprobar</button>';
+    document.getElementById("ok").onclick = comprobar;
+    document.getElementById("resp").onkeydown = function (e) { if (e.key === "Enter") comprobar(); };
+  }
+  function numero(s) { return parseFloat(String(s).replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".")); }
+
+  function comprobar() {
+    var r = numero(document.getElementById("resp").value);
+    if (isNaN(r)) { aviso("error", "Escribe un número, sin letras."); return; }
+    intentos++;
+    var bien = Math.abs(r - correcta) <= Math.abs(correcta) * c.tolerancia;
+    if (bien) {
+      if (intentos === 1) aciertos++;
+      aviso("ok", "<b>¡Bien!</b> " + A.texto(c.explicar(v, correcta, fmt)));
+      siguiente();
+    } else {
+      var pista = (c.errores || []).filter(function (e) { var x = e.calcular(v); return Math.abs(r - x) <= Math.abs(x) * c.tolerancia; })[0];
+      if (intentos < 2) {
+        aviso("error", "<b>Todavía no.</b> " + A.esc(pista ? pista.mensaje : "Revisa la operación e inténtalo otra vez."));
+      } else {
+        aviso("error", "<b>La respuesta era " + fmt(correcta) + ".</b> " + (pista ? A.esc(pista.mensaje) + " " : "") + A.texto(c.explicar(v, correcta, fmt)));
+        siguiente();
+      }
+    }
+  }
+  function aviso(t, h) { document.getElementById("retro").innerHTML = '<div class="as-aviso as-aviso--' + t + '">' + h + "</div>"; }
+  function siguiente() {
+    document.getElementById("resp").disabled = true;
+    n++;
+    ui.pie.innerHTML = '<button class="as-btn" id="sig">' + (n < c.ejercicios ? "Otro ejercicio ›" : "Ver resultado") + "</button>";
+    document.getElementById("sig").onclick = function () {
+      if (n < c.ejercicios) { nuevo(); ui.arriba(); } else A.final(ui, c, (aciertos / c.ejercicios) * 100, aciertos + " de " + c.ejercicios + " ejercicios correctos al primer intento.");
+    };
+    document.getElementById("sig").focus();
+  }
+  nuevo();
+})();
+</script>
+</body>
+</html>

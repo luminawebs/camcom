@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escenario ramificado</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var puntos = 0, maximo = 0, turnos = 0;
+  var hora = function () { var d = new Date(); return d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0"); };
+  ui.cuerpo.innerHTML = '<div class="as-fila"><span class="as-chip">' + A.texto(c.cliente) + ' · WhatsApp</span></div><div class="as-chat" id="chat"></div><div id="zona"></div>';
+  var chat = document.getElementById("chat"), zona = document.getElementById("zona");
+
+  function burbuja(t, quien) {
+    var b = document.createElement("div");
+    b.className = "as-burbuja as-burbuja--" + quien;
+    b.innerHTML = A.texto(t) + "<small>" + hora() + "</small>";
+    chat.appendChild(b); b.scrollIntoView({ block: "nearest" });
+  }
+  function escena(id) {
+    var e = c.escenas[id];
+    e.cliente.forEach(function (m) { burbuja(m, "cliente"); });
+    ui.progreso(turnos + 1, turnos + 2, "Turno " + (turnos + 1));
+    if (!e.opciones) {
+      var nota = maximo ? (puntos / maximo) * 100 : 100;
+      zona.innerHTML = '<div class="as-aviso as-aviso--' + (nota >= (c.notaMinima || 60) ? "ok" : "error") + '">' + A.texto(e.final) + "</div>";
+      ui.pie.innerHTML = '<button class="as-btn" id="fin">Ver resultado</button>';
+      document.getElementById("fin").onclick = function () { A.final(ui, c, nota, puntos + " de " + maximo + " puntos posibles."); };
+      return;
+    }
+    maximo += Math.max.apply(null, e.opciones.map(function (o) { return o.puntos; }));
+    zona.innerHTML = '<div class="as-pila"><span class="as-eti">¿Qué respondes?</span><div class="as-opciones">' +
+      e.opciones.map(function (o, k) { return '<button class="as-opcion" data-k="' + k + '"><span class="as-opcion__l">' + "ABCDE"[k] + "</span><span>" + A.texto(o.texto) + "</span></button>"; }).join("") +
+      "</div></div>";
+    ui.pie.innerHTML = "";
+    zona.querySelectorAll(".as-opcion").forEach(function (b) {
+      b.onclick = function () {
+        var o = e.opciones[+b.dataset.k];
+        puntos += o.puntos; turnos++;
+        burbuja(o.texto, "yo");
+        zona.innerHTML = '<div class="as-aviso as-aviso--' + (o.puntos >= 2 ? "ok" : o.puntos === 1 ? "marca" : "error") + '">' + A.texto(o.nota) + "</div>";
+        ui.pie.innerHTML = '<button class="as-btn" id="sig">Continuar ›</button>';
+        document.getElementById("sig").onclick = function () { escena(o.ir); };
+      };
+    });
+  }
+  escena(c.inicio);
+})();
+</script>
+</body>
+</html>

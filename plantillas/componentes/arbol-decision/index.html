@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Árbol de decisión</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var ruta = [];
+
+  function pintar(id) {
+    var n = c.nodos[id];
+    if (!n) return resultado(id);
+    ui.progreso(ruta.length + 1, ruta.length + 2, "Pregunta " + (ruta.length + 1));
+    ui.cuerpo.innerHTML = camino() +
+      '<div class="as-tarjeta as-pila"><h2>' + A.texto(n.pregunta, c.datos) + "</h2>" +
+      (n.ayuda ? '<p class="as-sec">' + A.texto(n.ayuda, c.datos) + "</p>" : "") +
+      '<div class="as-opciones">' + n.opciones.map(function (o, k) {
+        return '<button class="as-opcion" data-k="' + k + '"><span class="as-opcion__l">' + "ABCDE"[k] + "</span><span>" + A.texto(o.texto, c.datos) + "</span></button>";
+      }).join("") + "</div></div>";
+    ui.cuerpo.querySelectorAll(".as-opcion").forEach(function (b) {
+      b.onclick = function () { var o = n.opciones[+b.dataset.k]; ruta.push({ id: id, r: o.texto }); pintar(o.ir); ui.arriba(); };
+    });
+    ui.pie.innerHTML = '<button class="as-btn as-btn--sec" id="atras"' + (ruta.length ? "" : " disabled") + ">‹ Cambiar respuesta</button>";
+    document.getElementById("atras").onclick = function () { var p = ruta.pop(); pintar(p.id); };
+  }
+  function camino() {
+    if (!ruta.length) return "";
+    return '<div class="as-fila">' + ruta.map(function (p) { return '<span class="as-chip as-chip--gris">' + A.texto(p.r, c.datos) + "</span>"; }).join("") + "</div>";
+  }
+  function resultado(id) {
+    var r = c.resultados[id];
+    ui.progreso(1, 1, "Tu caso");
+    ui.cuerpo.innerHTML = camino() + '<div class="as-aviso as-aviso--' + (r.tono || "marca") + ' as-pila"><span class="as-eti">Tu caso</span><h2>' +
+      A.texto(r.titulo, c.datos) + "</h2><p>" + A.texto(r.texto, c.datos) + "</p></div>";
+    ui.pie.innerHTML = '<button class="as-btn as-btn--sec" id="atras">‹ Cambiar respuesta</button><button class="as-btn" id="fin">Terminar</button>';
+    document.getElementById("atras").onclick = function () { var p = ruta.pop(); pintar(p.id); };
+    document.getElementById("fin").onclick = function () { A.final(ui, c); };
+  }
+  pintar(c.inicio);
+})();
+</script>
+</body>
+</html>

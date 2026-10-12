@@ -1,0 +1,22 @@
+/* Portada del curso (sección 0): video + tarjetas de unidad. Las demás secciones se ocultan
+   en la página del curso para estudiantes; en modo edición se ven todas. */
+body.as-con-portada:not(.editing) .course-content li.section:not(#section-0){display:none}
+body.as-con-portada:not(.editing) #section-0 .course-section-header{display:none}
+.as-portada{display:flex;flex-direction:column;gap:16px}
+.as-portada__cabeza{display:grid;gap:16px;background:var(--as-blanco);border-radius:var(--as-radio);box-shadow:var(--as-sombra);padding:16px}
+@media (min-width:768px){.as-portada__cabeza{grid-template-columns:3fr 2fr;align-items:center;padding:24px}}
+.as-portada__video .as-hueco{border-radius:var(--as-radio)}
+.as-portada__datos{display:flex;flex-direction:column;gap:8px}
+.as-portada__titulo{display:block;font-size:1.3rem;font-weight:700;line-height:1.25;color:var(--as-tinta)}
+.as-portada__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.as .as-portada__unidad{display:flex;flex-direction:column;gap:6px;min-height:150px;padding:18px;background:var(--as-blanco);border-radius:var(--as-radio);box-shadow:var(--as-sombra);color:var(--as-tinta);text-decoration:none;border-top:4px solid var(--as-gris-300)}
+.as .as-portada__unidad:hover,.as .as-portada__unidad:focus-visible{border-top-color:var(--as-rojo);text-decoration:none;color:var(--as-tinta)}
+.as-portada__nombre{display:block;font-size:1.08rem;font-weight:700;line-height:1.25;flex:1}
+.as-portada__ir{align-self:flex-start;padding:8px 14px;border-radius:999px;background:var(--as-negro);color:var(--as-blanco);font-weight:600;font-size:.9rem}
+.as-portada__unidad:hover .as-portada__ir{background:var(--as-rojo)}
+
+/* Sin títulos duplicados: en SCORM y en Páginas hechas con las plantillas (.as) el encabezado propio
+   ya trae paso, unidad y título, así que se oculta el título con ícono de Moodle. Se conservan
+   la miga de pan, "Salir de la actividad" y el estado de finalización. */
+#page-mod-scorm-player #page-header .page-context-header{display:none}
+#page-mod-page-view:has(#region-main .as) #page-header .page-context-header{display:none}

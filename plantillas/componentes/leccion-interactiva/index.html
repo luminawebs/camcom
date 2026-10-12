@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lección interactiva</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var total = c.pantallas.length, i = 0, aciertos = 0, preguntas = 0, respondidas = {};
+  c.pantallas.forEach(function (p) { if (p.pregunta) preguntas++; });
+  var guardado = A.scorm.recuperar();
+  if (guardado && guardado.i < total) { i = guardado.i; aciertos = guardado.a || 0; respondidas = guardado.r || {}; }
+
+  function pintar() {
+    var p = c.pantallas[i];
+    ui.progreso(i + 1, total);
+    // narración de la pantalla (Resemble AI): contenido.js lleva narracion: true y medios/narracion-N.mp3
+    var narr = c.narracion ? '<div class="as-pila" style="gap:4px"><audio controls preload="none" src="medios/narracion-' + (i + 1) +
+      '.mp3" style="width:100%"></audio><small class="as-sec">🔊 Escucha esta pantalla · voz generada con inteligencia artificial</small></div>' : "";
+    var h = '<div class="as-tarjeta as-pila"><h2>' + A.texto(p.titulo, c.datos) + "</h2>" + narr +
+      (p.medio ? A.medio(p.medio) : "") + "<p>" + A.texto(p.texto, c.datos) + "</p></div>";
+    if (p.pregunta) {
+      var q = p.pregunta;
+      h += '<div class="as-tarjeta as-pila"><span class="as-eti">Comprueba</span><h3>' + A.texto(q.enunciado, c.datos) + '</h3><div class="as-opciones">' +
+        q.opciones.map(function (o, k) {
+          return '<button class="as-opcion" data-k="' + k + '"><span class="as-opcion__l">' + "ABCDE"[k] + "</span><span>" + A.texto(o) + "</span></button>";
+        }).join("") + '</div><div id="retro"></div></div>';
+    }
+    ui.cuerpo.innerHTML = h;
+    ui.pie.innerHTML = '<button class="as-btn as-btn--sec" id="ant"' + (i === 0 ? " disabled" : "") + '>‹ Anterior</button>' +
+      '<button class="as-btn" id="sig">' + (i === total - 1 ? "Terminar" : "Siguiente ›") + "</button>";
+    document.getElementById("ant").onclick = function () { i--; pintar(); ui.arriba(); };
+    document.getElementById("sig").onclick = function () {
+      if (i === total - 1) { A.final(ui, c, preguntas ? (aciertos / preguntas) * 100 : undefined); return; }
+      i++; A.scorm.recordar({ i: i, a: aciertos, r: respondidas }); pintar(); ui.arriba();
+    };
+    if (p.pregunta) {
+      var sig = document.getElementById("sig");
+      if (!(i in respondidas)) sig.disabled = true; else marcar(respondidas[i], false);
+      ui.cuerpo.querySelectorAll(".as-opcion").forEach(function (b) {
+        b.onclick = function () { marcar(+b.dataset.k, true); };
+      });
+    }
+  }
+  function marcar(k, nueva) {
+    var q = c.pantallas[i].pregunta, ok = k === q.correcta;
+    if (nueva) { respondidas[i] = k; if (ok) aciertos++; }
+    ui.cuerpo.querySelectorAll(".as-opcion").forEach(function (b) {
+      var j = +b.dataset.k; b.disabled = true;
+      if (j === q.correcta) b.classList.add("as-opcion--ok"); else if (j === k) b.classList.add("as-opcion--error");
+    });
+    document.getElementById("retro").innerHTML = '<div class="as-aviso as-aviso--' + (ok ? "ok" : "error") + '"><b>' +
+      (ok ? "¡Bien! " : "Revisa: ") + "</b>" + A.texto(ok ? q.retro.bien : q.retro.mal) + "</div>";
+    document.getElementById("sig").disabled = false;
+  }
+  pintar();
+})();
+</script>
+</body>
+</html>

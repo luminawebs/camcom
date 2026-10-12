@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lienzo interactivo</title>
+<link rel="stylesheet" href="../../comun/aula.css">
+</head>
+<body class="as">
+<script src="../../comun/aula.js"></script>
+<script src="contenido.js"></script>
+<script>
+(function () {
+  var c = window.CONTENIDO, A = window.Aula, ui = A.marco(c);
+  var total = c.bloques.length, respuestas = (A.scorm.recuperar() || {}).r || {}, listos = {};
+
+  function revisar(b, t) {
+    var palabras = t.trim().split(/\s+/).filter(Boolean).length;
+    if (palabras < b.minPalabras) return { ok: false, msg: b.retro.corto || "Escribe un poco más." };
+    var claves = (b.claves || []).filter(function (k) { return k && k.charAt(0) !== "["; });
+    if (claves.length && !claves.some(function (k) { return t.toLowerCase().indexOf(k.toLowerCase()) > -1; }))
+      return { ok: false, msg: b.retro.sinClave || "Revisa la pregunta guía." };
+    return { ok: true, msg: b.retro.bien || "¡Bien!" };
+  }
+  function contar() {
+    var n = Object.keys(listos).filter(function (k) { return listos[k]; }).length;
+    ui.progreso(n, total, n + " de " + total + " bloques");
+    document.getElementById("fin").disabled = n < total;
+  }
+  ui.cuerpo.innerHTML =
+    (c.ejemplo ? '<div class="as-aviso as-aviso--marca">' + A.texto(c.ejemplo) + "</div>" : "") +
+    c.bloques.map(function (b, k) {
+      return '<div class="as-tarjeta as-pila"><div class="as-campo"><label for="b' + k + '">' + (k + 1) + ". " + A.texto(b.titulo) + '</label>' +
+        '<p class="as-sec">' + A.texto(b.ayuda) + '</p><textarea id="b' + k + '" placeholder="Escribe aquí…"></textarea></div>' +
+        '<div class="as-fila"><button class="as-btn as-btn--sec" data-k="' + k + '">Revisar bloque</button></div><div id="r' + k + '"></div></div>';
+    }).join("");
+  c.bloques.forEach(function (b, k) {
+    var ta = document.getElementById("b" + k);
+    ta.value = respuestas[k] || "";
+    ta.oninput = function () { respuestas[k] = ta.value; listos[k] = false; contar(); };
+    ta.onblur = function () { A.scorm.recordar({ r: respuestas }); };
+  });
+  ui.cuerpo.querySelectorAll("[data-k]").forEach(function (btn) {
+    btn.onclick = function () {
+      var k = +btn.dataset.k, r = revisar(c.bloques[k], document.getElementById("b" + k).value);
+      listos[k] = r.ok;
+      document.getElementById("r" + k).innerHTML = '<div class="as-aviso as-aviso--' + (r.ok ? "ok" : "error") + '">' + A.texto(r.msg) + "</div>";
+      contar();
+    };
+  });
+  ui.pie.innerHTML = '<button class="as-btn as-btn--sec" id="copiar">Copiar mi lienzo</button><button class="as-btn" id="fin" disabled>Terminar</button>';
+  document.getElementById("copiar").onclick = function () {
+    var t = c.bloques.map(function (b, k) { return b.titulo + "\n" + (respuestas[k] || "") + "\n"; }).join("\n");
+    var btn = this;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { btn.textContent = "Copiado"; },
+      function () { btn.textContent = "Selecciona y copia el texto"; });
+  };
+  document.getElementById("fin").onclick = function () { A.scorm.recordar({ r: respuestas }); A.final(ui, c); };
+  contar();
+})();
+</script>
+</body>
+</html>

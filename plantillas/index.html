@@ -1,0 +1,171 @@
+<title>Plantillas Aula Soacha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: cabecera corta, luego visor (lista + teléfono) y debajo herramientas y uso. */
+:root{
+  --bg:#f6f6f7; --panel:#ffffff; --ink:#1a1a1a; --muted:#5c5c63; --line:#dcdce0;
+  --brand:#141414; --brand-2:#c8102e; --accent:#c8102e; --soft:#f1f1f2; --ok:#137a50;
+  --display:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --body:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121213; --panel:#1c1c1e; --ink:#ededee; --muted:#a3a3aa; --line:#323236;
+  --brand:#f2f2f3; --brand-2:#ff4d63; --accent:#e5223f; --soft:#2a2a2d; --ok:#5fd3a2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121213; --panel:#1c1c1e; --ink:#ededee; --muted:#a3a3aa; --line:#323236;
+  --brand:#f2f2f3; --brand-2:#ff4d63; --accent:#e5223f; --soft:#2a2a2d; --ok:#5fd3a2; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body)}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);line-height:1.2;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:700}
+h2{font-size:1.25rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0}
+.eyebrow{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.lead{color:var(--muted);max-width:68ch}
+header{display:flex;flex-direction:column;gap:10px;padding-bottom:18px;border-bottom:4px solid var(--accent)}
+.stats{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:.9rem}
+.stats b{color:var(--ink)}
+
+/* Visor */
+.visor{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:start}
+@media (max-width:900px){.visor{grid-template-columns:1fr}}
+.lista{display:flex;flex-direction:column;gap:18px;min-width:0}
+.grupo{display:flex;flex-direction:column;gap:8px}
+.grupo > p{color:var(--muted);font-size:.88rem;max-width:70ch}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.item{display:flex;flex-direction:column;gap:2px;text-align:left;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit;cursor:pointer}
+.item:hover{border-color:var(--brand-2)}
+.item[aria-pressed="true"]{border:2px solid var(--brand-2);padding:9px 11px;background:var(--soft)}
+.item b{font-weight:600;font-size:.93rem}
+.item small{color:var(--muted);font-size:.8rem;line-height:1.4}
+.tag{align-self:flex-start;font-size:.68rem;font-weight:600;letter-spacing:.04em;padding:1px 8px;border-radius:99px;background:var(--soft);color:var(--brand);margin-bottom:4px}
+.item:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.telefono{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:10px;align-items:center}
+.marco{width:100%;max-width:390px;border-radius:34px;border:10px solid #111111;background:#111111;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.marco iframe{display:block;width:100%;height:min(720px,78vh);border:0;border-radius:24px;background:#f4f6fa}
+.barra-visor{width:100%;max-width:390px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+.barra-visor code{font-size:.78rem;overflow-wrap:anywhere}
+.btn{font:600 .8rem var(--body);padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;white-space:nowrap}
+
+/* Tablas */
+.tabla{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.88rem}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+td b{font-weight:600}
+.si{color:var(--ok);font-weight:600}
+.sec{display:flex;flex-direction:column;gap:12px}
+.pasos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;counter-reset:p}
+.paso{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.paso h3::before{counter-increment:p;content:counter(p);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--brand);color:var(--panel);font-size:.8rem;margin-right:8px}
+.paso p{color:var(--muted);font-size:.88rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;background:var(--soft);padding:1px 5px;border-radius:4px}
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Aula Virtual Empresarial Soacha · Librería de plantillas</span>
+    <h1>Plantillas HTML5 para Moodle</h1>
+    <p class="lead">Los moldes de cada paso del curso, listos para llenar con videos y textos. Los espacios rayados marcan dónde va cada medio y el texto resaltado entre corchetes es lo que se reemplaza. Toca una plantilla para verla en el celular; los componentes funcionan de verdad.</p>
+    <div class="stats"><span><b>7</b> componentes interactivos SCORM 1.2</span><span><b>8</b> fragmentos para el editor de Moodle</span><span><b>1</b> hoja de estilo común para el tema</span></div>
+  </header>
+
+  <section class="visor">
+    <div class="lista" id="lista"></div>
+    <div class="telefono">
+      <div class="barra-visor"><code id="ruta"></code><button class="btn" id="recargar">Reiniciar</button></div>
+      <div class="marco"><iframe id="vista" title="Vista previa de la plantilla"></iframe></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Qué plantilla llena cada paso</h2>
+    <p class="lead">Según el perfil de contenido del curso, como en la receta del manual de producción. Demuestra siempre es el Cuestionario nativo de Moodle y Aplica es una Tarea, así que no necesitan plantilla propia.</p>
+    <div class="tabla"><table>
+      <thead><tr><th>Perfil</th><th>Entrada</th><th>Aprende</th><th>Practica</th><th>Llévatelo</th></tr></thead>
+      <tbody>
+        <tr><td><b>P</b> Procedimiento</td><td>Entrada: el caso</td><td>Aprende: video (H5P)</td><td>Simulador de pantalla</td><td>Llévatelo: ficha</td></tr>
+        <tr><td><b>K</b> Cálculo</td><td>Entrada: el caso</td><td>Lección interactiva</td><td>Calculadora</td><td>Llévatelo: ficha</td></tr>
+        <tr><td><b>N</b> Normativa</td><td>Entrada: el caso</td><td>Lección interactiva (cifras editables)</td><td>Árbol de decisión</td><td>Llévatelo: ficha</td></tr>
+        <tr><td><b>E</b> Estrategia</td><td>Entrada: el caso</td><td>Aprende: pódcast</td><td>Lienzo interactivo</td><td>Llévatelo: ficha</td></tr>
+        <tr><td><b>H</b> Creativa</td><td>Entrada: el caso</td><td>Aprende: video (H5P)</td><td>¿Cuál funciona mejor?</td><td>Llévatelo: ficha</td></tr>
+        <tr><td><b>R</b> Relacional</td><td>Entrada: el caso</td><td>Aprende: pódcast</td><td>Escenario ramificado</td><td>Llévatelo: ficha</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec">
+    <h2>Herramientas: por qué HTML5 propio y no un editor visual</h2>
+    <p class="lead">Las plantillas ya son el wireframe y la pieza final a la vez: se diseñan una vez y cada curso solo cambia el texto y los medios. Un lienzo de diseño (Figma o el tipo Diseño de Claude) sirve para bocetar, pero obliga a rehacer todo en código para Moodle.</p>
+    <div class="tabla"><table>
+      <thead><tr><th>Herramienta</th><th>Para qué la usamos</th><th>Por qué</th></tr></thead>
+      <tbody>
+        <tr><td><b>HTML5 propio + SCORM 1.2</b></td><td>Los 7 componentes de Practica y la Lección interactiva</td><td>Claude escribe el contenido directo en <code>contenido.js</code>; envía nota y finalización a Moodle; funciona sin datos en la app de Moodle; 9 KB por paquete.</td></tr>
+        <tr><td><b>Fragmentos HTML + tema Boost Union</b></td><td>Cabeceras, Entrada, Aprende con audio, Llévatelo, Cierre</td><td>Se pegan en el editor de Moodle (Página o resumen de sección). Los estilos van una sola vez en el tema, así Moodle no los borra.</td></tr>
+        <tr><td><b>H5P (nativo en Moodle)</b></td><td>Video interactivo de Aprende</td><td>Preguntas dentro del video y edición sin código por otra persona.</td></tr>
+        <tr><td><b>Cuestionario de Moodle</b></td><td>Demuestra y evaluación final</td><td>Bancos de preguntas, valores aleatorios y reportes para la Cámara.</td></tr>
+        <tr><td><b>Canva / Descript / NotebookLM / Resemble AI</b></td><td>Fichas, edición de video, audio</td><td>Producen los medios que llenan los espacios rayados.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="sec">
+    <h2>Cómo pasar de plantilla a curso</h2>
+    <div class="pasos">
+      <div class="paso"><h3>Tema, una sola vez</h3><p>Pega <code>comun/aula.css</code> en Boost Union, en el SCSS adicional. Los colores se cambian en las variables del inicio.</p></div>
+      <div class="paso"><h3>Fragmentos</h3><p>Abre el editor de Moodle en modo código, pega lo que está entre COPIAR DESDE AQUÍ y HASTA AQUÍ, y reemplaza los corchetes.</p></div>
+      <div class="paso"><h3>Componentes</h3><p>Copia <code>contenido.js</code> a <code>cursos/&lt;pieza&gt;/</code>, llénalo (lo puede generar el prompt maestro) y pon los medios en <code>medios/</code>.</p></div>
+      <div class="paso"><h3>Empaquetar y subir</h3><p><code>python3 empaquetar.py calculadora --curso &lt;pieza&gt;</code> crea el .zip. En Moodle: Agregar actividad, Paquete SCORM.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+var GRUPOS = [
+  { titulo: "Componentes interactivos · SCORM 1.2", desc: "Se suben como Paquete SCORM. Envían nota y finalización a Moodle.", items: [
+    ["componentes/leccion-interactiva/index.html", "Lección interactiva", "Aprende · K, N", "Ejemplo resuelto por pantallas, con preguntas de comprobación y cifras editables."],
+    ["componentes/calculadora/index.html", "Calculadora con retroalimentación", "Practica · K", "Cifras nuevas en cada intento y explicación del error común."],
+    ["componentes/simulador-pantalla/index.html", "Simulador de pantalla", "Practica · P", "Toca el lugar correcto en capturas del celular."],
+    ["componentes/arbol-decision/index.html", "Árbol de decisión", "Practica · N", "Preguntas que llevan a «qué me toca a mí»."],
+    ["componentes/lienzo/index.html", "Lienzo interactivo", "Practica · E", "Bloques que se revisan al momento y se copian."],
+    ["componentes/comparador/index.html", "¿Cuál funciona mejor?", "Practica · H", "Pares de fotos o videos para elegir el mejor."],
+    ["componentes/escenario-ramificado/index.html", "Escenario ramificado", "Practica · R", "Conversación de WhatsApp con un cliente difícil."]
+  ]},
+  { titulo: "Fragmentos para el editor de Moodle", desc: "Se pegan en una Página o en el resumen de una sección.", items: [
+    ["fragmentos/01-cabecera-curso.html", "Cabecera del curso", "Curso", "Banda de marca, video de bienvenida y botón de inicio."],
+    ["fragmentos/02-inicio-bienvenida.html", "Inicio del curso", "Inicio", "Bienvenida, los seis pasos y datos del curso."],
+    ["fragmentos/03-cabecera-unidad.html", "Cabecera de unidad", "Unidad", "Objetivo, tiempo y mapa de los seis pasos."],
+    ["fragmentos/04-entrada-caso.html", "Entrada: el caso", "Paso 1", "Caso real y la pregunta de la unidad."],
+    ["fragmentos/05-aprende-video.html", "Aprende: video", "Paso 2 · P, H", "Espacio para H5P, ideas clave y transcripción."],
+    ["fragmentos/06-aprende-audio.html", "Aprende: pódcast", "Paso 2 · E, R", "Audio liviano con preguntas guía y transcripción."],
+    ["fragmentos/07-llevatelo-ficha.html", "Llévatelo: ficha", "Paso 6", "Ficha vertical, resumen y descargas."],
+    ["fragmentos/08-cierre.html", "Cierre del curso", "Cierre", "Proyecto, evaluación, encuesta y certificado."]
+  ]}
+];
+var lista = document.getElementById("lista"), vista = document.getElementById("vista"), ruta = document.getElementById("ruta");
+function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+lista.innerHTML = GRUPOS.map(function (g) {
+  return '<div class="grupo"><h2>' + esc(g.titulo) + "</h2><p>" + esc(g.desc) + '</p><div class="items">' +
+    g.items.map(function (it) {
+      return '<button class="item" data-src="' + it[0] + '" aria-pressed="false"><span class="tag">' + esc(it[2]) + "</span><b>" + esc(it[1]) + "</b><small>" + esc(it[3]) + "</small></button>";
+    }).join("") + "</div></div>";
+}).join("");
+function abrir(src) {
+  vista.src = src; ruta.textContent = src;
+  lista.querySelectorAll(".item").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.src === src); });
+  try { localStorage.setItem("plantilla", src); } catch (e) {}
+}
+lista.addEventListener("click", function (e) {
+  var b = e.target.closest(".item"); if (!b) return;
+  abrir(b.dataset.src);
+  if (window.innerWidth <= 900) vista.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+document.getElementById("recargar").onclick = function () { vista.src = vista.src; };
+var inicial = "componentes/calculadora/index.html";
+try { inicial = localStorage.getItem("plantilla") || inicial; } catch (e) {}
+abrir(inicial);
+</script>

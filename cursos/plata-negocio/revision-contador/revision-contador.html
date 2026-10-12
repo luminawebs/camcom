@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisión del contador · La plata del negocio</title>
+<style>
+:root{--rojo:#c8102e;--rojo-o:#9e0c24;--negro:#141414;--tinta:#1a1a1a;--gris:#6b6b72;--linea:#e2e2e5;--suave:#f6f6f7;--ok:#137a50;--ok-s:#e3f4ec;--warn:#9a6700;--warn-s:#fff4d6;--err-s:#fde7ea;--fondo:#fff}
+*{box-sizing:border-box;margin:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--tinta);background:var(--suave);line-height:1.45;font-size:15px}
+header{background:var(--rojo);color:#fff;padding:28px 16px 24px}
+.ancho{max-width:1100px;margin:0 auto;padding:0 16px}
+header small{font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.85;font-size:12px}
+header h1{font-size:28px;line-height:1.15;margin:6px 0 8px}
+header p{opacity:.92;max-width:760px}
+.barra{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--linea)}
+.barra .ancho{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 16px}
+.prog{flex:1 1 220px;min-width:200px}
+.prog span{font-size:13px;color:var(--gris)}
+.prog div{height:8px;background:var(--linea);border-radius:4px;overflow:hidden;margin-top:4px}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+select,button,input,textarea{font:inherit}
+.filtros select{border:1px solid var(--linea);border-radius:8px;padding:6px 8px;background:#fff}
+button{border:0;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;background:var(--negro);color:#fff}
+button.sec{background:#fff;color:var(--negro);border:1px solid var(--negro)}
+main{padding:20px 0 40px}
+h2{font-size:20px;margin:28px 0 6px;display:flex;align-items:center;gap:8px}
+h2:before{content:"";width:10px;height:10px;background:var(--rojo);border-radius:2px}
+.intro{color:var(--gris);margin-bottom:12px;max-width:820px}
+.item{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;border-left:5px solid var(--linea)}
+.item[data-estado="ok"]{border-left-color:var(--ok)}
+.item[data-estado="corregir"]{border-left-color:var(--rojo)}
+.item[data-estado="duda"]{border-left-color:#d4a106}
+.top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.top h3{font-size:16px;flex:1 1 360px}
+.top h3 em{font-style:normal;color:var(--rojo);font-weight:800}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--suave);color:var(--gris)}
+.chip.quien-contador{background:#e8eefc;color:#1d4ed8}
+.chip.quien-camara{background:#f3e8fc;color:#7e22ce}
+.chip.nlm-ok{background:var(--ok-s);color:var(--ok)}
+.chip.nlm-no{background:var(--warn-s);color:var(--warn)}
+dl{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;font-size:14px}
+dt{color:var(--gris);font-weight:600}
+dd a{color:var(--rojo-o)}
+.resp{display:grid;grid-template-columns:200px 1fr;gap:10px;margin-top:12px}
+.resp select{border:1px solid var(--linea);border-radius:8px;padding:8px}
+.resp textarea{border:1px solid var(--linea);border-radius:8px;padding:8px;min-height:42px;resize:vertical;width:100%}
+.nota{background:var(--warn-s);border-radius:10px;padding:12px 14px;font-size:14px;margin-top:12px}
+footer{color:var(--gris);font-size:13px;padding:20px 0 40px}
+@media (max-width:640px){dl,.resp{grid-template-columns:1fr}header h1{font-size:23px}}
+@media print{.barra,button{display:none}body{background:#fff}.item{break-inside:avoid;border:1px solid var(--linea)}header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<header><div class="ancho">
+<small>Aula Virtual Empresarial Soacha · Curso AVS-G01</small>
+<h1>Revisión del contador: La plata del negocio no es la de la casa</h1>
+<p>Cada cifra, norma y regla que aparece en el curso, con su fuente, lo que encontró la verificación con NotebookLM y lo que falta confirmar. Marca el estado de cada punto y escribe tus comentarios: se guardan en este navegador. Al terminar, usa «Descargar respuestas» y envía el archivo.</p>
+</div></header>
+
+<div class="barra"><div class="ancho">
+<div class="prog"><span id="progTxt">0 de 0 revisados</span><div><i id="progBar"></i></div></div>
+<div class="filtros"><select id="fQuien"><option value="">Todos</option><option value="contador">Solo contador</option><option value="camara">Solo Cámara / equipo</option></select>
+<select id="fEstado"><option value="">Cualquier estado</option><option value="pendiente">Pendientes</option><option value="ok">Aprobados</option><option value="corregir">Corregir</option><option value="duda">Con duda</option></select></div>
+<button id="csv">Descargar respuestas</button><button class="sec" onclick="window.print()">Imprimir</button>
+</div></div>
+
+<main class="ancho">
+<h2>1. Cifras de las fuentes</h2>
+<p class="intro">Datos de encuestas que el curso cita. NotebookLM confirmó dos de ellos contra el boletín del DANE; los demás no los encontró o no los buscó.</p>
+<div id="cifras"></div>
+
+<h2>2. Normas</h2>
+<p class="intro">Artículos y topes legales mencionados en la Unidad 3. En el curso no se muestra el valor en pesos de ningún tope.</p>
+<div id="normas"></div>
+
+<h2>3. Reglas y ejemplos del curso</h2>
+<p class="intro">Reglas prácticas que el curso propone y los ejemplos con números. Claude revisó que las cuentas de los ejemplos den; falta el visto bueno sobre el criterio.</p>
+<div id="reglas"></div>
+
+<h2>4. Textos que se publicaron sin la marca de pendiente</h2>
+<p class="intro">Antes de subir el curso se quitaron las marcas [VERIFICAR] del texto visible. Estos son los puntos que esas marcas señalaban.</p>
+<div id="textos"></div>
+
+<h2>5. Materiales para revisar completos</h2>
+<p class="intro">Piezas nuevas del curso. Revísalas de principio a fin con este registro al lado.</p>
+<div id="materiales"></div>
+
+<div class="nota"><b>Diferencias que encontró NotebookLM en otras fuentes (no se usan en el curso):</b> sin registros contables 43,4 % (DANE, EMICRON panaderías y tiendas de barrio 2020-2024) y 46 % (estudio de micronegocios en Bogotá, 2020); con RUT 22,4 % (DANE, EMICRON 2024, gráfico 8) y 45,0 % (panaderías y tiendas); gota a gota 11,3 % (panaderías y tiendas). Son universos distintos al total nacional que cita el curso.</div>
+<footer>Archivo generado por Claude para el proyecto Aula Virtual Empresarial Soacha · 10 de octubre de 2026. Las respuestas solo quedan en este navegador hasta que las descargues.</footer>
+</main>
+
+<script>
+const ITEMS = [
+ {id:"c1", g:"cifras", quien:"contador", t:"<em>68,2 %</em> de los micronegocios no lleva ningún registro contable",
+  donde:"Unidad 1: guion, mapa de la unidad, guía de estudio (PDF)", fuente:"DANE (2025). EMICRON 2024, boletín técnico.",
+  nlm:["ok","Confirmado: sección 1.7.4 Formalidad tributaria, gráfico 13."], pide:"Confirmar la cifra. La bibliografía cita pp. 21-22; NotebookLM lo ubica en el gráfico 13."},
+ {id:"c2", g:"cifras", quien:"contador", t:"<em>27,1 %</em> lleva cuentas informales (cuaderno, Excel o máquina registradora)",
+  donde:"Unidad 1: solo en el guion (fuente de los videos)", fuente:"DANE (2025). EMICRON 2024.",
+  nlm:["no","No aparece en la tabla de NotebookLM."], pide:"Confirmar la cifra y la página."},
+ {id:"c3", g:"cifras", quien:"contador", t:"<em>39 %</em> de 1.223 emprendedores mezcla la plata personal con la del negocio",
+  donde:"Unidad 1: Profundiza", fuente:"Portafolio (2025), encuesta privada Termómetro Empresarial.",
+  nlm:["no","NotebookLM solo encontró «más de la mitad» sin cifra exacta."], pide:"Decidir si se mantiene una encuesta privada como dato del curso."},
+ {id:"c4", g:"cifras", quien:"contador", t:"<em>75,1 %</em> de los micronegocios que ahorraron lo hicieron para el hogar, frente a <em>35 %</em> para el negocio",
+  donde:"Unidad 2: guía de estudio (PDF)", fuente:"Banca de las Oportunidades (2021). Reporte de micronegocios. Datos de 2019.",
+  nlm:["no","No aparece en la tabla de NotebookLM."], pide:"Confirmar cifras y página (pp. 7-8). Son datos de 2019: decidir si siguen sirviendo."},
+ {id:"c5", g:"cifras", quien:"contador", t:"<em>22,9 %</em> de los micronegocios que pidieron crédito en 2024 acudió al gota a gota",
+  donde:"Unidad 3: guion, mapa de la unidad, guía de estudio (PDF)", fuente:"DANE (2025). EMICRON 2024.",
+  nlm:["ok","Confirmado: sección 1.11 Inclusión financiera, gráfico 25."], pide:"Confirmar la cifra."},
+ {id:"c6", g:"cifras", quien:"contador", t:"¿Ya hay boletín EMICRON con datos de 2025?",
+  donde:"Bibliografía del curso", fuente:"DANE.",
+  nlm:["no","No revisado."], pide:"Si existe, actualizar las cifras de las filas anteriores."},
+ {id:"n1", g:"normas", quien:"contador", t:"Exención del 4x1000 (GMF) hasta <em>350 UVT al mes</em> en cuentas de ahorro, sumando todas las cuentas de la persona",
+  donde:"Unidad 3: Aprende (SCORM), Profundiza, guion", fuente:"Estatuto Tributario, art. 879 num. 1 y art. 881-1 (modificado por la Ley 2277 de 2022, art. 65).",
+  nlm:["ok","Confirmado el tope y los artículos (también en concepto DIAN)."], pide:"Confirmar el texto vigente y si aplica igual a depósitos de bajo monto y billeteras."},
+ {id:"n2", g:"normas", quien:"contador", t:"Valor en pesos de 350 UVT para el año en curso",
+  donde:"No se muestra en el curso (a propósito)", fuente:"UVT del año (DIAN).",
+  nlm:["no","No aplica."], pide:"Decidir si se agrega el valor del año o se deja solo en UVT."},
+ {id:"n3", g:"normas", quien:"contador", t:"«Si estás inscrito como comerciante, la ley te pide llevar contabilidad»",
+  donde:"Unidad 3: Aprende (SCORM), Profundiza", fuente:"Código de Comercio, art. 19; CTCP, concepto 2024-0309.",
+  nlm:["no","No verificado."], pide:"Confirmar y ajustar la frase para que no asuste a quien no está inscrito."},
+ {id:"n4", g:"normas", quien:"contador", t:"Cuentas corrientes no tienen la exención del 4x1000",
+  donde:"Unidad 3: guion", fuente:"Estatuto Tributario, art. 879.",
+  nlm:["no","No verificado."], pide:"Confirmar."},
+ {id:"r1", g:"reglas", quien:"contador", t:"Colchón del <em>20 %</em>: sueldo = promedio de ganancia de 3 meses × 0,80",
+  donde:"Unidad 2: Aprende, Practica, Aplica, mapa, guía, plantilla Excel", fuente:"Regla práctica del curso (el curso aclara que no es una norma).",
+  nlm:["no","No aplica."], pide:"Validar el criterio o proponer otro porcentaje."},
+ {id:"r2", g:"reglas", quien:"contador", t:"Ganancia del mes = ventas − todo lo que pagaste para el negocio (mercancía, arriendo y servicios del local, transporte)",
+  donde:"Unidad 2", fuente:"Definición simplificada del curso.",
+  nlm:["no","No aplica."], pide:"Validar que la simplificación es aceptable para el público."},
+ {id:"r3", g:"reglas", quien:"contador", t:"Fórmula de la fuga: se fue = caja inicial + ventas − pagos del negocio − caja final",
+  donde:"Unidad 1", fuente:"Fórmula del curso. Ejemplo: $200.000 + $1.800.000 − $1.100.000 = $900.000; hay $350.000 → se fueron $550.000.",
+  nlm:["ok","Cuentas revisadas por Claude: correctas."], pide:"Validar el criterio."},
+ {id:"r4", g:"reglas", quien:"contador", t:"Registro diario: saldo de hoy = saldo de ayer + entró − salió; el sueldo del dueño también sale de la cuenta del negocio",
+  donde:"Unidad 3, plantilla Excel y hoja para imprimir", fuente:"Ejemplos: $400.000 + $350.000 − $120.000 = $630.000; Marleny $1.000.000 → $850.000.",
+  nlm:["ok","Cuentas revisadas por Claude: correctas."], pide:"Validar el criterio."},
+ {id:"r5", g:"reglas", quien:"contador", t:"Mencionar Bre-B (llaves del Banco de la República) para recibir pagos en la cuenta del negocio",
+  donde:"Unidad 3: Profundiza", fuente:"Banco de la República, preguntas frecuentes de Bre-B.",
+  nlm:["no","No verificado."], pide:"Confirmar si conviene mencionarlo y si tiene costo para comercios."},
+ {id:"t1", g:"textos", quien:"contador", t:"Título exacto de la referencia de Banca de las Oportunidades",
+  donde:"Unidad 2: Profundiza", fuente:"PDF «Reporte micronegocios final».", nlm:["no","—"], pide:"Confirmar el título de la portada."},
+ {id:"t2", g:"textos", quien:"contador", t:"Título exacto de la referencia de Gerencie.com sobre la exención del GMF",
+  donde:"Unidad 3: Profundiza", fuente:"gerencie.com/exencion-gmf.html", nlm:["no","—"], pide:"Confirmar el título."},
+ {id:"t3", g:"textos", quien:"contador", t:"Aviso de los resúmenes en video",
+  donde:"Página «Resumen» de cada unidad", fuente:"Hoy dice: «Resumen generado con inteligencia artificial a partir de los contenidos del curso».", nlm:["no","—"], pide:"Cuando apruebes los videos, el aviso cambia a «…y revisado por un contador público»."},
+ {id:"t4", g:"textos", quien:"camara", t:"Número de WhatsApp de la Cámara para dudas",
+  donde:"INICIO · Bienvenida (Datos del curso)", fuente:"Hoy dice solo «Foro Comunidad».", nlm:["no","—"], pide:"Enviar el número si se quiere publicar."},
+ {id:"t5", g:"textos", quien:"camara", t:"Texto de autorización de tratamiento de datos (Ley 1581 de 2012)",
+  donde:"INICIO · Datos y perfil del negocio (página oculta, se configura en Moodle)", fuente:"Cámara de Comercio.", nlm:["no","—"], pide:"Enviar el texto oficial de la Cámara."},
+ {id:"t6", g:"textos", quien:"camara", t:"Logo definitivo para la constancia de participación",
+  donde:"CIERRE · Constancia (página oculta)", fuente:"Cámara de Comercio.", nlm:["no","—"], pide:"Enviar el logo."},
+ {id:"t7", g:"textos", quien:"camara", t:"Siguiente curso y descuento para quien termina",
+  donde:"CIERRE", fuente:"Se quitó el botón «Ver el curso [descuento por definir]».", nlm:["no","—"], pide:"Definir el curso y el descuento para volver a poner el botón."},
+ {id:"m1", g:"materiales", quien:"contador", t:"4 videos: bienvenida y resumen de las unidades 1, 2 y 3",
+  donde:"INICIO y página «Resumen» de cada unidad", fuente:"Generados con NotebookLM a partir de los guiones.", nlm:["ok","Cifras en pantalla de U1 y U2 revisadas por Claude: correctas. En U3 el ejemplo de $630.000 no sale en pantalla: escuchar."], pide:"Ver y escuchar completos; anotar cualquier cifra o frase incorrecta con el minuto."},
+ {id:"m2", g:"materiales", quien:"contador", t:"Mapas del curso y de cada unidad (4 imágenes)", donde:"INICIO y Llévatelo", fuente:"Hechos por Claude desde los guiones.", nlm:["no","—"], pide:"Revisar textos y fórmulas."},
+ {id:"m3", g:"materiales", quien:"contador", t:"Guías de estudio en PDF (3)", donde:"Llévatelo de cada unidad", fuente:"Hechas por Claude desde los guiones. Las 3 preguntas de reflexión son nuevas.", nlm:["no","—"], pide:"Revisar completas."},
+ {id:"m4", g:"materiales", quien:"contador", t:"Plantillas Excel: Calcula tu sueldo (U2) y Registro diario (U3); hoja del cuaderno para imprimir (U3)", donde:"Llévatelo de las unidades 2 y 3", fuente:"Hechas por Claude.", nlm:["ok","Fórmulas probadas con los ejemplos del curso: $1.680.000 y $630.000."], pide:"Revisar las fórmulas y los textos de ayuda."},
+];
+const EST = {pendiente:"Pendiente", ok:"Aprobado", corregir:"Corregir", duda:"Tengo una duda"};
+const CLAVE = "revision-contador-avs-g01";
+let datos = {};
+try { datos = JSON.parse(localStorage.getItem(CLAVE) || "{}"); } catch (e) {}
+function guardar(){ try { localStorage.setItem(CLAVE, JSON.stringify(datos)); } catch (e) {} progreso(); }
+function esc(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function pintar(){
+  ["cifras","normas","reglas","textos","materiales"].forEach(g => document.getElementById(g).innerHTML = "");
+  const fq = document.getElementById("fQuien").value, fe = document.getElementById("fEstado").value;
+  ITEMS.forEach(it => {
+    const d = datos[it.id] || {estado:"pendiente", nota:""};
+    if (fq && it.quien !== fq) return;
+    if (fe && d.estado !== fe) return;
+    const el = document.createElement("div");
+    el.className = "item"; el.dataset.estado = d.estado;
+    el.innerHTML = `<div class="top"><h3>${it.t}</h3></div>
+      <div class="chips"><span class="chip quien-${it.quien}">${it.quien === "contador" ? "Contador" : "Cámara / equipo"}</span>
+      <span class="chip ${it.nlm[0] === "ok" ? "nlm-ok" : "nlm-no"}">${it.nlm[0] === "ok" ? "Verificado" : "Sin verificar"}</span></div>
+      <dl><dt>Dónde aparece</dt><dd>${it.donde}</dd><dt>Fuente</dt><dd>${it.fuente}</dd><dt>Verificación</dt><dd>${it.nlm[1]}</dd><dt>Qué se pide</dt><dd><b>${it.pide}</b></dd></dl>
+      <div class="resp"><select aria-label="Estado">${Object.entries(EST).map(([k,v]) => `<option value="${k}"${k === d.estado ? " selected" : ""}>${v}</option>`).join("")}</select>
+      <textarea placeholder="Comentario o corrección">${esc(d.nota)}</textarea></div>`;
+    el.querySelector("select").onchange = e => { datos[it.id] = {...(datos[it.id] || {nota:""}), estado:e.target.value}; el.dataset.estado = e.target.value; guardar(); };
+    el.querySelector("textarea").oninput = e => { datos[it.id] = {...(datos[it.id] || {estado:"pendiente"}), nota:e.target.value}; guardar(); };
+    document.getElementById(it.g).appendChild(el);
+  });
+}
+function progreso(){
+  const hechos = ITEMS.filter(it => (datos[it.id] || {}).estado && datos[it.id].estado !== "pendiente").length;
+  document.getElementById("progTxt").textContent = `${hechos} de ${ITEMS.length} revisados`;
+  document.getElementById("progBar").style.width = (100 * hechos / ITEMS.length) + "%";
+}
+document.getElementById("fQuien").onchange = pintar;
+document.getElementById("fEstado").onchange = pintar;
+document.getElementById("csv").onclick = () => {
+  const limpio = s => '"' + s.replace(/<[^>]+>/g, "").replace(/"/g, '""') + '"';
+  const filas = [["id","punto","quien","estado","comentario"].join(";")].concat(ITEMS.map(it => {
+    const d = datos[it.id] || {estado:"pendiente", nota:""};
+    return [it.id, limpio(it.t), it.quien, EST[d.estado], limpio(d.nota || "")].join(";");
+  }));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["﻿" + filas.join("\n")], {type:"text/csv;charset=utf-8"}));
+  a.download = "revision-contador-avs-g01.csv"; a.click();
+};
+pintar(); progreso();
+</script>
+</body>
+</html>

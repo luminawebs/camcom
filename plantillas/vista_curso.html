@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITULO_CORTO__</title>
+<!-- Plantilla de vista previa de un curso. La llena armar_curso.py: no editar la copia en vista-previa/. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f6f6f7; --panel:#ffffff; --ink:#1a1a1a; --muted:#5c5c63; --line:#dcdce0;
+  --brand:#141414; --accent:#c8102e; --accent-soft:#fbe9ec; --soft:#f1f1f2; --ok:#137a50; --ok-soft:#e3f6ee;
+  --font:"Poppins",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121213; --panel:#1c1c1e; --ink:#ededee; --muted:#a3a3aa; --line:#323236;
+  --brand:#f2f2f3; --accent:#ff4d63; --accent-soft:#3a1d22; --soft:#2a2a2d; --ok:#5fd3a2; --ok-soft:#173328; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121213; --panel:#1c1c1e; --ink:#ededee; --muted:#a3a3aa; --line:#323236;
+  --brand:#f2f2f3; --accent:#ff4d63; --accent-soft:#3a1d22; --soft:#2a2a2d; --ok:#5fd3a2; --ok-soft:#173328; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 var(--font)}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 48px;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{line-height:1.2;margin:0;text-wrap:balance}
+h1{font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:700}
+h2{font-size:1.2rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0}
+.eyebrow{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.lead{color:var(--muted);max-width:70ch}
+header{display:flex;flex-direction:column;gap:10px;padding-bottom:18px;border-bottom:4px solid var(--accent)}
+.stats{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:.9rem}
+.stats b{color:var(--ink)}
+
+.visor{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:24px;align-items:start}
+@media (max-width:900px){.visor{grid-template-columns:1fr}}
+.mapa{display:flex;flex-direction:column;gap:14px;min-width:0}
+.sec{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.sec-cab{width:100%;display:flex;gap:12px;align-items:baseline;justify-content:space-between;padding:12px 14px;border:0;border-bottom:1px solid var(--line);background:var(--soft);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.sec-cab b{font-weight:700;letter-spacing:.04em}
+.sec-cab span{color:var(--muted);font-size:.85rem}
+.sec-cab .tema{flex:1;color:var(--ink);font-weight:500;font-size:.92rem}
+.fila{width:100%;display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:10px 14px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.fila:last-child{border-bottom:0}
+.fila:hover,.sec-cab:hover{background:var(--accent-soft)}
+.fila[aria-pressed="true"],.sec-cab[aria-pressed="true"]{box-shadow:inset 4px 0 0 var(--accent);background:var(--accent-soft)}
+.fila code{font:600 .75rem var(--font);color:var(--muted)}
+.fila b{font-weight:600;font-size:.92rem;display:block}
+.fila small{color:var(--muted);font-size:.8rem}
+.tag{font-size:.7rem;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--brand);white-space:nowrap}
+.tag.scorm{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:520px){.fila{grid-template-columns:1fr auto}.fila code{grid-column:1/-1}}
+.fila:focus-visible,.sec-cab:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+
+.telefono{position:sticky;top:12px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.marco{width:100%;max-width:390px;border-radius:34px;border:10px solid #111;background:#111;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+.marco iframe{display:block;width:100%;height:min(720px,78vh);border:0;border-radius:24px;background:#f6f6f7}
+.barra{width:100%;max-width:390px;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:.82rem;color:var(--muted)}
+.barra code{font-size:.75rem;overflow-wrap:anywhere}
+.btn{font:600 .8rem var(--font);padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;white-space:nowrap}
+
+.bloque{display:flex;flex-direction:column;gap:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.card p,.card li{color:var(--muted);font-size:.9rem}
+ol,ul{margin:0;padding-left:1.2em}
+.tabla{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.88rem}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow" id="eyebrow"></span>
+    <h1 id="titulo"></h1>
+    <p class="lead" id="promesa"></p>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <section class="visor">
+    <div class="mapa" id="mapa"></div>
+    <div class="telefono">
+      <div class="barra"><code id="ruta"></code><button class="btn" id="recargar">Reiniciar</button></div>
+      <div class="marco"><iframe id="vista" title="Vista previa en celular"></iframe></div>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <h2>Ficha del curso</h2>
+    <div class="grid">
+      <div class="card"><h3>Caso que sigue todo el curso</h3><p id="caso"></p></div>
+      <div class="card"><h3>Objetivos</h3><ol id="objetivos"></ol></div>
+      <div class="card"><h3>Evidencia final</h3><p id="evidencia"></p></div>
+    </div>
+    <div class="grid" id="personas"></div>
+  </section>
+
+  <section class="bloque">
+    <h2>Pendiente antes de publicar</h2>
+    <p class="lead">Lo que el contador debe validar y los medios por producir. Sale del contenido: cuando se llena o se valida, desaparece de esta lista al volver a armar el curso.</p>
+    <div class="tabla"><table><thead><tr><th>Pieza</th><th>Qué falta</th></tr></thead><tbody id="pend"></tbody></table></div>
+  </section>
+</div>
+<script>
+var D = __DATOS__;
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(m){return m>=60?Math.floor(m/60)+" h "+String(m%60).padStart(2,"0")+" min":m+" min"}
+var C = D.curso, secs = D.secciones;
+document.getElementById("eyebrow").textContent = "Aula Virtual Empresarial Soacha · " + D.nivel + " · Perfil " + D.perfil;
+document.getElementById("titulo").textContent = C.titulo;
+document.getElementById("promesa").textContent = C.promesa;
+var piezas = 0, scorm = 0;
+secs.forEach(function(s){ s.items.forEach(function(x){ piezas++; if (x.pieza) scorm++; }); });
+var medios = D.pendientes.filter(function(p){return /^Medio/.test(p[1])}).length;
+document.getElementById("stats").innerHTML = [
+  ["≈ " + fmt(D.total), "de estudiante"], [secs.length - 2, "unidades"], [piezas, "piezas"],
+  [scorm, "componentes SCORM"], [D.pendientes.length - medios, "datos por validar"], [medios, "medios por producir"]
+].map(function(x){return "<span><b>"+esc(x[0])+"</b> "+esc(x[1])+"</span>"}).join("");
+
+function cab(s){ return s.cabecera || (s.titulo === "INICIO" ? "paginas/00-cabecera-curso.html" : "paginas/99-cierre.html"); }
+document.getElementById("mapa").innerHTML = secs.map(function(s){
+  return '<div class="sec"><button class="sec-cab" data-src="' + cab(s) + '" aria-pressed="false"><b>' + esc(s.titulo) + '</b><span class="tema">' + esc(s.tema) + '</span><span>' + fmt(s.min) + '</span></button>' +
+    s.items.map(function(x){
+      var src = x.pieza ? x.pieza + "/index.html" : x.pagina;
+      return '<button class="fila" data-src="' + src + '" aria-pressed="false"><code>' + esc(x.codigo || s.titulo) + '</code><span><b>' + esc(x.nombre) + '</b><small>' + esc(x.formato) + ' · ' + x.min + ' min</small></span>' +
+        '<span class="tag' + (x.pieza ? " scorm" : "") + '">' + esc(x.actividad.split(" · ")[0].split(" (")[0].replace("Foro de preguntas y respuestas","Foro")) + '</span></button>';
+    }).join("") + "</div>";
+}).join("");
+
+document.getElementById("caso").textContent = C.caso;
+document.getElementById("objetivos").innerHTML = C.objetivos.map(function(o){return "<li>"+esc(o)+"</li>"}).join("");
+document.getElementById("evidencia").textContent = C.evidencia;
+document.getElementById("personas").innerHTML = C.personas.map(function(p){
+  return '<div class="card"><span class="eyebrow">' + esc(p.barrio) + '</span><h3>' + esc(p.nombre) + ' · ' + esc(p.negocio) + '</h3><p>' + esc(p.problema) + '</p></div>';
+}).join("");
+document.getElementById("pend").innerHTML = D.pendientes.map(function(p){return "<tr><td>"+esc(p[0])+"</td><td>"+esc(p[1])+"</td></tr>"}).join("");
+
+var vista = document.getElementById("vista"), ruta = document.getElementById("ruta"), mapa = document.getElementById("mapa");
+function abrir(src){
+  vista.src = src; ruta.textContent = src;
+  mapa.querySelectorAll("[data-src]").forEach(function(b){ b.setAttribute("aria-pressed", b.dataset.src === src); });
+  try { localStorage.setItem("pieza-" + C.titulo, src); } catch (e) {}
+}
+mapa.addEventListener("click", function(e){
+  var b = e.target.closest("[data-src]"); if (!b) return;
+  abrir(b.dataset.src);
+  if (window.innerWidth <= 900) vista.scrollIntoView({behavior:"smooth", block:"start"});
+});
+document.getElementById("recargar").onclick = function(){ vista.src = vista.src; };
+var inicial = "paginas/00-cabecera-curso.html";
+try { inicial = localStorage.getItem("pieza-" + C.titulo) || inicial; } catch (e) {}
+abrir(inicial);
+</script>
+</body>
+</html>
