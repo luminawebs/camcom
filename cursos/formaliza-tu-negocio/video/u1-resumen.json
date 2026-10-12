@@ -1,0 +1,18 @@
+{
+  "titulo": "Formal no es pagar más: es poder crecer",
+  "etiqueta": "Unidad 1 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Formal no es pagar más: es poder crecer", "texto": "Édgar · tienda de barrio en Compartir",
+     "voz": "Édgar tiene una tienda en Compartir hace ocho años. Un distribuidor le ofrece surtir a crédito, pero le pide RUT y matrícula mercantil. Y Édgar tiene miedo: cree que registrarse es empezar a pagar impuestos."},
+    {"tipo": "lista", "titulo": "Estar formal es tener tres cosas",
+     "items": [["RUT", "En la DIAN. Gratis."], ["Matrícula mercantil", "En la Cámara de Comercio."], ["Local en regla", "Ante la Alcaldía y la Policía."]],
+     "voz": "Estar formal es tener tres cosas. Uno, el RUT, en la DIAN: es gratis. Dos, la matrícula mercantil, en la Cámara de Comercio. Tres, el local en regla, ante la Alcaldía y la Policía."},
+    {"tipo": "frase", "titulo": "El RUT no es un impuesto", "texto": "Lo que pagas depende de cuánto vendes y ganas, no de tener RUT.",
+     "voz": "Ojo: el RUT no es un impuesto. Lo que pagas depende de cuánto vendes y ganas, no de tener RUT."},
+    {"tipo": "lista", "titulo": "Lo que ganas",
+     "items": [["Comprar a crédito", "A distribuidores y proveedores."], ["Venderle a empresas", "Las que piden RUT o factura."], ["Crédito en el banco", "No en el gota a gota."]],
+     "voz": "¿Y qué ganas? Comprar a crédito, venderle a empresas y pedir un crédito en el banco, no en el gota a gota."},
+    {"tipo": "cierre", "titulo": "¿En qué paso está tu negocio?", "texto": "RUT → matrícula mercantil → local en regla",
+     "voz": "En esta unidad vas a ver en qué paso está tu negocio."}
+  ]
+}
