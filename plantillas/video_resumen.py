@@ -4,7 +4,7 @@
 Uso: python3 plantillas/video_resumen.py cursos/<id> u1-resumen
 
 Lee <curso>/video/<nombre>.json: una lista de diapositivas, cada una con lo que se ve (tipo, titulo, texto o items)
-y lo que se dice ("voz"). Por cada diapositiva genera la voz con la voz de curso.json "narracion" (plantillas/narrar.py),
+y lo que se dice ("voz"); "imagen" (opcional, ruta dentro del curso) pone una ilustración arriba. Por cada diapositiva genera la voz con la voz de curso.json "narracion" (plantillas/narrar.py),
 la dibuja con Playwright y la deja en pantalla lo que dura su audio. Los subtítulos salen del mismo texto,
 frase por frase, repartidos según su largo. Salida en <curso>/medios-moodle/: <nombre>.mp4 (subtítulos quemados)
 y <nombre>.vtt (para el reproductor de Moodle). La clave va en RESEMBLE_API_KEY.
@@ -37,10 +37,12 @@ p.sub{font-size:48px;line-height:1.3;color:#3a3a40;font-weight:500}
 .rojo .marca{background:#fff}
 .ruta{font-size:50px;font-weight:700;line-height:1.35;background:#fff;color:#141414;border-radius:36px;padding:44px}
 .pie{position:absolute;left:88px;right:88px;bottom:400px;font-size:28px;color:#8d8d94}
-.rojo .pie{color:rgba(255,255,255,.75)}"""
+.rojo .pie{color:rgba(255,255,255,.75)}
+.ilus{display:block;width:100%;max-height:640px;object-fit:contain;border-radius:36px;background:#fff}
+.con-img .zona{top:230px;gap:40px}.con-img h1{font-size:76px}.con-img p.sub{font-size:44px}"""
 
 
-def dibujo(d, etiqueta, logo):
+def dibujo(d, etiqueta, logo, imagen=None):
     t = lambda s: html.escape(s)
     rojo = d["tipo"] in ("portada", "cierre", "frase")
     if d["tipo"] == "lista":
@@ -51,9 +53,11 @@ def dibujo(d, etiqueta, logo):
         cuerpo = f"<div class='marca'></div><h1>{t(d['titulo'])}</h1><div class='ruta'>{t(d['texto'])}</div>"
     else:
         cuerpo = f"<div class='marca'></div><h1>{t(d['titulo'])}</h1>" + (f"<p class='sub'>{t(d['texto'])}</p>" if d.get("texto") else "")
-    pie = "<div class='pie'>Resumen con voz generada con inteligencia artificial · Aula Virtual Empresarial Soacha</div>" if d["tipo"] == "cierre" else ""
+    if imagen:  # ilustración del curso arriba (plantillas/ilustrar.py), sin llamar a ninguna API
+        cuerpo = f"<img class='ilus' src='{imagen.as_uri()}'>" + cuerpo.replace("<div class='marca'></div>", "")
+    pie = "<div class='pie'>Voz generada con inteligencia artificial · Aula Virtual Empresarial Soacha</div>" if d["tipo"] == "cierre" else ""
     return (f"<!doctype html><html lang='es'><head><meta charset='utf-8'><style>{CSS}</style></head>"
-            f"<body class='{'rojo' if rojo else ''}'><div class='cab'>{logo}<span>{t(etiqueta)}</span></div>"
+            f"<body class='{'rojo' if rojo else ''}{' con-img' if imagen else ''}'><div class='cab'>{logo}<span>{t(etiqueta)}</span></div>"
             f"<div class='zona'>{cuerpo}</div>{pie}</body></html>")
 
 
@@ -83,7 +87,7 @@ def main():
     htmls = []
     for k, d in enumerate(spec["diapositivas"]):
         narrar.sintetizar(narrar.limpiar(d["voz"]), voz, clave, tmp / f"{k}.mp3")
-        (tmp / f"{k}.html").write_text(dibujo(d, spec["etiqueta"], logo), encoding="utf-8")
+        (tmp / f"{k}.html").write_text(dibujo(d, spec["etiqueta"], logo, curso / d["imagen"] if d.get("imagen") else None), encoding="utf-8")
         htmls.append(tmp / f"{k}.html")
     js = ("import { createRequire } from 'module'; import { execSync } from 'child_process';"
           "const { chromium } = createRequire(import.meta.url)(execSync('npm root -g').toString().trim() + '/playwright');"
