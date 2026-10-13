@@ -13,12 +13,12 @@ window.CONTENIDO = {
     {
       titulo: "Un trabajo fijo que espera un papel",
       texto: "A Yuli le ofrecen trabajo fijo en un salón de belleza, pero le piden el RUT para pagarle. Una vecina le dijo que cuesta plata y que hay que hacer fila. No es así: el RUT se saca **gratis** y **desde el celular**. Vamos paso a paso.",
-      medio: { tipo: "imagen", src: "", nota: "Ilustración: Yuli con el celular en la mano y su maletín de manicure (4:3, máx. 150 KB)." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Yuli con su celular y su maletín de manicure" }
     },
     {
       titulo: "Qué es el RUT",
       texto: "El RUT es el **Registro Único Tributario** de la DIAN. Dice quién eres, dónde trabajas y a qué te dedicas. Al sacarlo te dan un **NIT**: es tu número de cédula con un dígito de verificación al final. El RUT **no vence**: solo lo actualizas si cambias de dirección, celular o actividad.",
-      medio: { tipo: "imagen", src: "", nota: "Ejemplo de NIT: número de cédula + guion + dígito de verificación, con flechas que explican cada parte." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "Yuli con su cédula y el RUT en el celular" }
     },
     {
       titulo: "Lo que necesitas antes de empezar",

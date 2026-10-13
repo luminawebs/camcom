@@ -42,6 +42,12 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    luego `python3 plantillas/narrar.py cursos/<id>` (clave en la variable de entorno `RESEMBLE_API_KEY`). Genera MP3 mono de 64 kbps:
    el caso de cada Entrada en `medios-moodle/uN-entrada-narracion.mp3` y cada pantalla de Aprende en `piezas/uN-aprende/medios/narracion-K.mp3`.
    `narraciones.json` guarda el texto leído; solo se regenera lo que cambió.
+4b. Ilustraciones con Gemini (opcional): describe en `cursos/<id>/ilustraciones.json` el estilo, los personajes y cada escena
+   con sus destinos; luego `python3 plantillas/ilustrar.py cursos/<id>` (clave en `GEMINI_API_KEY`, modelo por defecto Gemini 2.5 Flash Image,
+   ≈ USD 0,039 por imagen). Dibuja primero una hoja por personaje y la usa de referencia en cada escena para que se vean iguales.
+   Deja la Entrada en `medios-moodle/uN-entrada.jpg` y las de las lecciones en `piezas/uN-aprende/medios/ilustracion-K.jpg`
+   (en `contenido.js`: `src: "medios/ilustracion-K.jpg", alt: "..."`). `ilustraciones/registro.json` lleva cada imagen pagada y su costo;
+   no vuelve a pagar una imagen cuyo texto no cambió (`--solo <id>` rehace una).
 5. `python3 plantillas/armar_curso.py cursos/<id> --scorm` genera `estructura.md`, `paginas/` (fragmentos llenos),
    `vista-previa/` y `scorm/`. La vista previa lista lo que falta validar y los medios por producir.
 6. `python3 moodle/publicar_curso.py cursos/<id> --corto AVS-Gnn` arma el respaldo .mbz con todos los medios.
