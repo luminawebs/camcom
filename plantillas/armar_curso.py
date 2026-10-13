@@ -167,6 +167,10 @@ def guia(c, i):
 
 def imagen_entrada(c, i, nota):
     """Ilustración de la Entrada (plantillas/ilustrar.py, Gemini) en medios-moodle/uN-entrada.jpg. Si no existe, deja el espacio."""
+    if f"u{i}-entrada.mp4" in c.get("_imagenes", ()):  # video de la Entrada (plantillas/video_entrada.py): imagen + narración
+        return (f'<video controls preload="metadata" playsinline poster="../medios-moodle/u{i}-entrada.jpg" style="display:block;width:100%;'
+                f'border-radius:8px;background:#000" src="../medios-moodle/u{i}-entrada.mp4">'
+                f'<track kind="captions" srclang="es" label="Español" src="../medios-moodle/u{i}-entrada.vtt"></video>')
     if f"u{i}-entrada.jpg" in c.get("_imagenes", ()):
         return f'<img src="../medios-moodle/u{i}-entrada.jpg" alt="{html.escape(nota.split(" (")[0])}" style="display:block;width:100%;height:auto;border-radius:8px">'
     return hueco("imagen", "Imagen", nota)
@@ -371,7 +375,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Paso 1 · Entrada · {mins['entrada']} min</span>
     <h2>{t(e['titulo'])}</h2>
-    {imagen_entrada(c, i, e['imagen'])}{narracion(c, f"u{i}-entrada-narracion", "Escucha el caso")}
+    {imagen_entrada(c, i, e['imagen'])}{"" if f"u{i}-entrada.mp4" in c.get("_imagenes", ()) else narracion(c, f"u{i}-entrada-narracion", "Escucha el caso")}
     <p>{t(e['texto'])}</p>
   </div>
   <div class="as-aviso as-aviso--marca as-pila">
@@ -544,7 +548,7 @@ def main():
         c["_guias"] = {p.stem: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "guias-pdf").glob("*.pdf"))}
     if (carpeta / "medios-moodle").is_dir():
         c["_narraciones"] = sorted(p.stem for p in (carpeta / "medios-moodle").glob("*-narracion.mp3"))
-        c["_imagenes"] = sorted(p.name for p in (carpeta / "medios-moodle").glob("u*-entrada.jpg"))
+        c["_imagenes"] = sorted(p.name for p in (carpeta / "medios-moodle").glob("u*-entrada.*") if p.suffix in (".jpg", ".mp4", ".vtt"))
     if (carpeta / "descargas").is_dir():
         c["_descargas"] = {p.name: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "descargas").iterdir())
                            if p.suffix in (".pdf", ".xlsx")}

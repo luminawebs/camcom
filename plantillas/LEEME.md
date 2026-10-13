@@ -48,6 +48,9 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    Deja la Entrada en `medios-moodle/uN-entrada.jpg` y las de las lecciones en `piezas/uN-aprende/medios/ilustracion-K.jpg`
    (en `contenido.js`: `src: "medios/ilustracion-K.jpg", alt: "..."`). `ilustraciones/registro.json` lleva cada imagen pagada y su costo;
    no vuelve a pagar una imagen cuyo texto no cambió (`--solo <id>` rehace una).
+4c. Video de Entrada (opcional): `python3 plantillas/video_entrada.py cursos/<id>` junta la ilustración de la Entrada y su narración de
+   Resemble en `medios-moodle/uN-entrada.mp4` (+ `.vtt`), con título, subtítulos y la pregunta de la unidad. No llama a ninguna API.
+   Si existe, la Entrada muestra el video en lugar de la imagen y el reproductor de audio.
 5. `python3 plantillas/armar_curso.py cursos/<id> --scorm` genera `estructura.md`, `paginas/` (fragmentos llenos),
    `vista-previa/` y `scorm/`. La vista previa lista lo que falta validar y los medios por producir.
 6. `python3 moodle/publicar_curso.py cursos/<id> --corto AVS-Gnn` arma el respaldo .mbz con todos los medios.
