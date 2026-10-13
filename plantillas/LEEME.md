@@ -37,7 +37,7 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    si no, dejan el espacio marcado. NotebookLM no se usa para los mapas porque no deja descargarlos.
    Arma las guías de estudio copiando `cursos/plata-negocio/guias-pdf/` (contenido en `armar_guias.py`, logo en `marca/`;
    luego `python3 armar_guias.py` y `node renderizar_pdf.mjs`). Si existen `guias-pdf/uN-guia.pdf`, Llévatelo pone el botón de descarga.
-4. Narraciones con Resemble AI (opcional, no reemplazan la bienvenida ni los resúmenes de NotebookLM): agrega a `curso.json`
+4. Narraciones con Resemble AI: agrega a `curso.json`
    `"narracion": {"voz": "<id de la voz>", "secciones": ["entrada", "aprende"]}` y `narracion: true` en cada `uN-aprende/contenido.js`;
    luego `python3 plantillas/narrar.py cursos/<id>` (clave en la variable de entorno `RESEMBLE_API_KEY`). Genera MP3 mono de 64 kbps:
    el caso de cada Entrada en `medios-moodle/uN-entrada-narracion.mp3` y cada pantalla de Aprende en `piezas/uN-aprende/medios/narracion-K.mp3`.
@@ -51,6 +51,11 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
 4c. Video de Entrada (opcional): `python3 plantillas/video_entrada.py cursos/<id>` junta la ilustración de la Entrada y su narración de
    Resemble en `medios-moodle/uN-entrada.mp4` (+ `.vtt`), con título, subtítulos y la pregunta de la unidad. No llama a ninguna API.
    Si existe, la Entrada muestra el video en lugar de la imagen y el reproductor de audio.
+4d. Bienvenida y resúmenes en video (automáticos, reemplazan a NotebookLM desde el curso 2): escribe `video/bienvenida.json` y
+   `video/uN-resumen.json` (5 diapositivas: portada, listas, frase y cierre, cada una con su texto en pantalla y su "voz"; "imagen"
+   opcional con una ruta de `ilustraciones/`). Toma los textos del guion de 60 s al final de `notebooklm/fuentes/uN-guion.md`.
+   Luego `python3 plantillas/video_resumen.py cursos/<id> bienvenida` y `... uN-resumen`: video vertical con voz de Resemble y
+   subtítulos en `medios-moodle/`. Inicio y el Resumen de cada unidad lo muestran solos. Ejemplo completo: `cursos/formaliza-tu-negocio/video/`.
 5. `python3 plantillas/armar_curso.py cursos/<id> --scorm` genera `estructura.md`, `paginas/` (fragmentos llenos),
    `vista-previa/` y `scorm/`. La vista previa lista lo que falta validar y los medios por producir.
 6. `python3 moodle/publicar_curso.py cursos/<id> --corto AVS-Gnn` arma el respaldo .mbz con todos los medios.
