@@ -1,0 +1,21 @@
+{
+  "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Textos de los prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto.",
+  "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people.",
+  "personajes": {
+    "gloria": "ONE single woman only, alone, no other people, no background scene. Gloria, a 47-year-old Colombian baker, medium build, warm light-brown skin, shoulder-length wavy dark-brown hair with a few grey strands under a white baker's cap, small reading glasses hanging from a cord. Wears a white short-sleeve blouse, a dark-red apron dusted with flour, dark trousers and comfortable black shoes."
+  },
+  "imagenes": [
+    {
+      "id": "u1-entrada",
+      "personajes": [
+        "gloria"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Gloria appearing only ONCE (do not copy the reference sheet pose). Early morning inside Gloria's small bakery in San Mateo, Soacha: glass display case with bread rolls, pandebono and cakes, warm light. Gloria stands behind the counter, surprised and unsure, listening to a school principal (a woman in her fifties in a navy blazer holding a folder) who stands on the customer side and proposes buying snacks for her school every day.",
+      "destinos": [
+        "medios-moodle/u1-entrada.jpg",
+        "piezas/u1-aprende/medios/ilustracion-1.jpg"
+      ]
+    }
+  ]
+}

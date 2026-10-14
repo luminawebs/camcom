@@ -1,0 +1,18 @@
+{
+  "titulo": "Habilítate gratis en la DIAN",
+  "etiqueta": "Unidad 2 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Habilítate gratis en la DIAN", "texto": "Andrés · ferretería en Quintanares",
+     "voz": "Un contratista le quiere comprar materiales a Andrés cada semana, pero solo si le factura. Y le dijeron que el programa cuesta medio millón al año."},
+    {"tipo": "lista", "titulo": "Antes de empezar",
+     "items": [["RUT al día", "Dirección, celular y actividad."], ["Correo del RUT", "Ahí llegan los códigos."], ["Usuario de la DIAN", "Y su contraseña."]],
+     "voz": "La DIAN tiene un servicio gratis para facturar. Necesitas tu RUT al día, el correo que pusiste en él y tu usuario de la DIAN."},
+    {"tipo": "lista", "titulo": "Los pasos",
+     "items": [["Regístrate", "Con el servicio gratuito, y pide tu firma."], ["Haz las pruebas", "Y escoge tu fecha de inicio."], ["Pide tu numeración", "Con su prefijo y la de contingencia."]],
+     "voz": "Te registras como facturador con el servicio gratuito, pides tu firma, haces las facturas de prueba y pides tu numeración con su prefijo."},
+    {"tipo": "frase", "titulo": "Todo es gratis", "texto": "Y habilitarte no te cambia los impuestos.",
+     "voz": "Todo es gratis. Y habilitarte no te cambia los impuestos."},
+    {"tipo": "cierre", "titulo": "Mira en qué paso vas", "texto": "Registro + firma + pruebas + numeración",
+     "voz": "En esta unidad vas a ver en qué paso vas y cuál sigue."}
+  ]
+}

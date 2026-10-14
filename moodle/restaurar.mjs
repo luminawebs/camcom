@@ -139,9 +139,9 @@ try {
   const texto = await p.locator('#region-main').innerText();
   if (!/con éxito|successfully/i.test(texto)) throw new Error('Moodle no confirmó la restauración: ' + texto.slice(0, 500));
 
-  const ir = await p.locator('a[href*="/course/view.php?id="], form[action*="/course/view.php"]').filter({ hasText: /Continuar/ }).first();
-  const enlaceFinal = (await ir.count()) ? (await ir.getAttribute('href')) || '' : '';
-  const curso = existente || Number(new URLSearchParams(enlaceFinal.split('?')[1] || '').get('id')) || null;
+  // la página final trae un formulario «Continuar» hacia course/view.php con el id del curso en un campo oculto
+  const idFinal = await p.locator('form[action*="/course/view.php"] input[name=id]').first().getAttribute('value').catch(() => null);
+  const curso = existente || Number(idFinal) || null;
   if (!curso) throw new Error('La restauración terminó pero no encuentro el curso ' + corto);
 
   paso(`Revisando que ${botRest} esté matriculado`);
