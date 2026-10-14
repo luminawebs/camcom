@@ -2,7 +2,9 @@
   "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Textos de los prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto.",
   "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people.",
   "personajes": {
-    "gloria": "ONE single woman only, alone, no other people, no background scene. Gloria, a 47-year-old Colombian baker, medium build, warm light-brown skin, shoulder-length wavy dark-brown hair with a few grey strands under a white baker's cap, small reading glasses hanging from a cord. Wears a white short-sleeve blouse, a dark-red apron dusted with flour, dark trousers and comfortable black shoes."
+    "gloria": "ONE single woman only, alone, no other people, no background scene. Gloria, a 47-year-old Colombian baker who clearly looks middle-aged (soft wrinkles around the eyes, some grey hair), medium build, warm light-brown skin, shoulder-length wavy dark-brown hair with a few grey strands under a white baker's cap, small reading glasses hanging from a cord. Wears a white short-sleeve blouse, a dark-red apron dusted with flour, dark trousers and comfortable black shoes.",
+    "andres": "ONE single man only, alone, no other people, no background scene. Andrés, a 34-year-old Colombian hardware-store owner, slim, tan skin, short straight black hair neatly combed, clean-shaven, friendly smile. Wears a charcoal polo shirt with a small red stripe on the collar, khaki work trousers, a tape measure clipped to his belt and brown boots.",
+    "doris": "ONE single woman only, alone, no other people, no background scene. Doris, a 58-year-old Colombian cook who runs a small lunch restaurant, short and sturdy, dark-brown skin, short curly black-and-grey hair, small gold stud earrings. Wears a light-grey t-shirt, a deep-red apron with pockets, a hairnet and black trousers."
   },
   "imagenes": [
     {
@@ -11,10 +13,79 @@
         "gloria"
       ],
       "proporcion": "4:3",
-      "escena": "A single scene with Gloria appearing only ONCE (do not copy the reference sheet pose). Early morning inside Gloria's small bakery in San Mateo, Soacha: glass display case with bread rolls, pandebono and cakes, warm light. Gloria stands behind the counter, surprised and unsure, listening to a school principal (a woman in her fifties in a navy blazer holding a folder) who stands on the customer side and proposes buying snacks for her school every day.",
+      "escena": "A single scene with Gloria appearing only ONCE (do not copy the reference sheet pose). Early morning inside Gloria's small bakery in San Mateo, Soacha: glass display case with bread rolls, pandebono and cakes, warm light. Gloria stands BEHIND the glass display case, on the staff side next to the bread racks, surprised and unsure, listening to a school principal (a woman in her fifties in a navy blazer holding a folder) who stands in front of the display case, on the customer side, and proposes buying snacks for her school every day.",
       "destinos": [
         "medios-moodle/u1-entrada.jpg",
         "piezas/u1-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u1-flujo",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "A simple horizontal flow diagram with three large flat icons connected by dashed red arrows, on an off-white background, no text: left, a small bakery shop front with a smartphone showing a document; middle, a classic government building with columns and a large checkmark seal; right, an email envelope arriving to a customer's smartphone, showing a document with a QR code. Infographic style, very clean.",
+      "destinos": [
+        "piezas/u1-aprende/medios/ilustracion-2.jpg"
+      ]
+    },
+    {
+      "id": "u1-quienes",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "Three simple flat icons side by side, each inside a rounded off-white card, no text: a small neighborhood shop with an awning (a merchant), a paper receipt with a percent sign (a sales-tax payer), and a briefcase with a pen (a professional). Clean infographic style.",
+      "destinos": [
+        "piezas/u1-aprende/medios/ilustracion-4.jpg"
+      ]
+    },
+    {
+      "id": "u2-entrada",
+      "personajes": [
+        "andres"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Andrés appearing only ONCE (do not copy the reference sheet pose). Inside Andrés's small hardware store in Quintanares, Soacha: shelves with paint cans, pipes, tools and bags of cement. Andrés stands behind the counter, thoughtful, while a construction contractor (a man in a yellow hard hat and reflective vest, holding a list) asks him for materials.",
+      "destinos": [
+        "medios-moodle/u2-entrada.jpg",
+        "piezas/u2-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u2-numeracion",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "A stack of three digital invoice documents fanned out, seen as flat illustration, each with a red label tag on the top corner and blank lines (no readable text, no numbers), next to a small separate paper receipt booklet marked with a red warning triangle icon for emergencies. Off-white background, clean infographic style.",
+      "destinos": [
+        "piezas/u2-aprende/medios/ilustracion-5.jpg"
+      ]
+    },
+    {
+      "id": "u3-entrada",
+      "personajes": [
+        "doris"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Doris appearing only ONCE (do not copy the reference sheet pose). Inside Doris's small lunch restaurant in downtown Soacha at midday: simple tables with plastic tablecloths, a chalkboard menu with drawings only (no text), pots on the stove. Doris sits at a table looking worried at her smartphone, which shows a document with a red mark. Medium shot.",
+      "destinos": [
+        "medios-moodle/u3-entrada.jpg",
+        "piezas/u3-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u3-partes",
+      "personajes": [],
+      "proporcion": "3:4",
+      "escena": "A single large blank invoice-shaped sheet drawn as a flat illustration with ABSOLUTELY NO WORDS, LETTERS OR NUMBERS anywhere: every text area is drawn only as plain grey bars. At the top a header area of grey bars; below it two side-by-side empty boxes filled only with grey bars; then a table of item rows made of grey bars; a bottom row filled with a solid red bar (no word); and a QR-code-like square pattern in the bottom corner. Thin red circles highlight the header, one of the boxes, the red bottom row and the QR square. No people. Off-white background.",
+      "destinos": [
+        "piezas/u3-aprende/medios/ilustracion-3.jpg"
+      ]
+    },
+    {
+      "id": "u3-contingencia",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "A paper receipt booklet with carbon copies open on a restaurant counter next to a smartphone that shows a no-signal icon (crossed-out wifi bars), a pen on the booklet. No readable text. Warm flat illustration, off-white background.",
+      "destinos": [
+        "piezas/u3-aprende/medios/ilustracion-5.jpg"
       ]
     }
   ]

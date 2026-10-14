@@ -13,7 +13,7 @@ window.CONTENIDO = {
     {
       titulo: "Un cliente semanal que pide factura",
       texto: "Un contratista le quiere comprar a Andrés materiales cada semana, pero solo si le factura. Un vendedor le dijo que el programa cuesta medio millón al año. Hay otra opción: el **servicio gratuito de la DIAN**. Vamos a ver los pasos para habilitarte.",
-      medio: { tipo: "imagen", src: "", nota: "Ilustración de Andrés en su ferretería atendiendo a un contratista de obra." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Ilustración de Andrés en su ferretería atendiendo a un contratista de obra" }
     },
     {
       titulo: "Lo que necesitas antes de empezar",
@@ -49,7 +49,7 @@ window.CONTENIDO = {
     {
       titulo: "Paso 4: tu numeración",
       texto: "Cada factura lleva un número que autoriza la DIAN. Pides un **rango**, por ejemplo de la 1 a la 1.000, y le pones un **prefijo**, unas letras que van antes del número, como **FE**. Pide también un rango para **contingencia**, por si un día se cae el sistema. Con eso, ya puedes facturar.",
-      medio: { tipo: "imagen", src: "", nota: "Ejemplo de numeración: prefijo FE + número 1 al 1.000, con el rango de contingencia aparte." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-5.jpg", alt: "Ejemplo de numeración: prefijo FE + número 1 al 1.000, con el rango de contingencia aparte" }
     },
     {
       titulo: "Lo que debes recordar",

@@ -12,7 +12,7 @@ window.CONTENIDO = {
     {
       titulo: "Un NIT mal escrito",
       texto: "Doris le hizo su primera factura a una empresa de vigilancia, pero escribió mal el NIT. La contadora se la devolvió. Doris no sabe si borrarla, hacer otra o pagar una multa. Vamos a ver qué lleva una factura y qué hacer si te equivocas.",
-      medio: { tipo: "imagen", src: "", nota: "Ilustración de Doris en su restaurante revisando una factura en el celular." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Ilustración de Doris en su restaurante revisando una factura en el celular" }
     },
     {
       titulo: "Los datos que pides antes de facturar",
@@ -30,7 +30,7 @@ window.CONTENIDO = {
     {
       titulo: "Lo que lleva tu factura",
       texto: "Tu factura dice **factura electrónica de venta** y lleva: **tus datos** y tu NIT, **los del cliente**, tu **número autorizado** con el prefijo, la **fecha y la hora**, **lo que vendiste** con cantidad y valor, los impuestos si te toca cobrarlos, la **forma de pago**, y el **código único (CUFE) con el QR**, que pone el sistema. [VERIFICAR lista con el contador]",
-      medio: { tipo: "imagen", src: "", nota: "Factura de ejemplo con cada parte señalada en rojo: datos, numeración, detalle, total, CUFE y QR." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-3.jpg", alt: "Factura de ejemplo con cada parte señalada en rojo: datos, numeración, detalle, total, CUFE y QR" }
     },
     {
       titulo: "Si te equivocas: nota crédito",
@@ -48,7 +48,7 @@ window.CONTENIDO = {
     {
       titulo: "Si se cae el sistema",
       texto: "Si un día no hay internet o falla el servicio, no dejes de vender: usa tu **factura de contingencia**, con el rango que pediste para eso. Cuando vuelva el sistema, la pasas a la DIAN. Y recuerda: no facturar estando obligado puede traer el **cierre del negocio**. [VERIFICAR plazos con el contador]",
-      medio: { tipo: "imagen", src: "", nota: "Talonario de contingencia junto al celular sin señal." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-5.jpg", alt: "Talonario de contingencia junto al celular sin señal" }
     },
     {
       titulo: "Lo que debes recordar",

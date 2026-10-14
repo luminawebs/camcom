@@ -13,12 +13,12 @@ window.CONTENIDO = {
     {
       titulo: "Una venta grande que pide un papel",
       texto: "Un colegio le quiere comprar a Gloria los refrigerios de todos los días, pero solo le paga con **factura electrónica**. Gloria cree que necesita un programa caro y un contador de planta. No es así. Vamos a ver qué es una factura electrónica y si a tu negocio le toca.",
-      medio: { tipo: "imagen", src: "", nota: "Ilustración de Gloria en el mostrador de la panadería con la rectora del colegio." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Ilustración de Gloria en el mostrador de la panadería con la rectora del colegio" }
     },
     {
       titulo: "Qué es una factura electrónica",
       texto: "Es la factura de siempre, pero hecha en el celular o el computador. Antes de llegarle a tu cliente, la **DIAN la revisa y la valida**. Cada factura lleva un **código único (CUFE)** y un **código QR** para comprobar que es real. Le llega a tu cliente al correo. No hay papel que se pierda.",
-      medio: { tipo: "imagen", src: "", nota: "Esquema: el negocio hace la factura, la DIAN la valida y le llega al correo del cliente." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "Esquema: el negocio hace la factura, la DIAN la valida y le llega al correo del cliente" }
     },
     {
       titulo: "Facturar no es pagar más impuestos",
@@ -36,7 +36,7 @@ window.CONTENIDO = {
     {
       titulo: "¿A quién le toca facturar?",
       texto: "**1.** A los **comerciantes**: quien compra y vende o presta servicios como negocio.\n**2.** A quien es **responsable de IVA** o está en el **Régimen Simple**.\n**3.** A los **profesionales** que cobran honorarios.\nHay excepciones, los **no obligados a facturar**. Por ejemplo, algunas personas que no son responsables de IVA y cumplen todas las condiciones de la ley, como vender menos de {{topeIva}} al año. [VERIFICAR con el contador]",
-      medio: { tipo: "imagen", src: "", nota: "Tres íconos: tienda (comerciante), recibo con IVA y maletín (profesional)." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-4.jpg", alt: "Tres íconos: tienda (comerciante), recibo con IVA y maletín (profesional)" }
     },
     {
       titulo: "Si no te toca, igual te puede convenir",

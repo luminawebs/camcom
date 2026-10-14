@@ -13,9 +13,9 @@ Respaldo: `moodle/facturacion-electronica/respaldo-avs-g03-facturacion-electroni
 | 3 | Guías de estudio A5 (`guias-pdf/*.pdf`) | `python3 guias-pdf/armar_guias.py` + `node guias-pdf/renderizar_pdf.mjs` | — |
 | 3 | Descargas (lista para habilitarte, chequeo de la factura) | `python3 descargas/armar_descargas.py` + `node guias-pdf/renderizar_pdf.mjs descargas` | — |
 | 4 | 21 narraciones (3 Entradas + 18 pantallas de Aprende), 6,5 min | `python3 plantillas/narrar.py cursos/facturacion-electronica` | Resemble |
-| 4b | 3 personajes + 8 ilustraciones | `python3 plantillas/ilustrar.py cursos/facturacion-electronica` | Gemini · PENDIENTE |
-| 4c | 3 videos de Entrada | `python3 plantillas/video_entrada.py cursos/facturacion-electronica` | — · PENDIENTE (necesita 4b) |
-| 4d | 3 resúmenes (30 a 35 s) y bienvenida | `python3 plantillas/video_resumen.py cursos/facturacion-electronica u1-resumen` (y `u2-resumen`, `u3-resumen`, `bienvenida`) | Resemble · bienvenida PENDIENTE (usa 4b) |
+| 4b | 3 personajes + 8 ilustraciones | `python3 plantillas/ilustrar.py cursos/facturacion-electronica` | Gemini (en un hilo aparte, sin el equipo conectado) |
+| 4c | 3 videos de Entrada (25 a 28 s) | `python3 plantillas/video_entrada.py cursos/facturacion-electronica` | — |
+| 4d | 3 resúmenes (30 a 35 s) y bienvenida (46 s) | `python3 plantillas/video_resumen.py cursos/facturacion-electronica u1-resumen` (y `u2-resumen`, `u3-resumen`, `bienvenida`) | Resemble |
 | 5 | Páginas, vista previa y 6 SCORM | `python3 plantillas/armar_curso.py cursos/facturacion-electronica --scorm` | — |
 | 6 | Respaldo .mbz con todos los medios | `python3 moodle/publicar_curso.py cursos/facturacion-electronica --corto AVS-G03` | — |
 | 6b | Curso nuevo en Moodle (curso 12) | `python3 moodle/subir_moodle.py cursos/facturacion-electronica` | Moodle |
@@ -24,17 +24,16 @@ Respaldo: `moodle/facturacion-electronica/respaldo-avs-g03-facturacion-electroni
 
 | Servicio | Uso | Costo |
 | --- | --- | --- |
-| Resemble AI (voz Jota) | Narraciones 6,5 min · resúmenes ≈ 1,6 min | ≈ 8 min de audio. El precio depende del plan (Billing en Resemble). |
-| Gemini 2.5 Flash Image | Aún nada | — |
+| Resemble AI (voz Jota) | Narraciones 6,5 min · resúmenes ≈ 1,6 min · bienvenida 0,8 min | ≈ 8 min de audio. El precio depende del plan (Billing en Resemble). |
+| Gemini 2.5 Flash Image | 18 imágenes (11 usadas y 7 rehechas: la prueba inicial, Gloria se veía joven, Andrés salió con otras personas y letreros, la factura salió con palabras en inglés) | ≈ USD 0,70. Detalle en `ilustraciones/registro.json`. |
 
-## Por qué faltan las ilustraciones
+## Ilustraciones desde otro hilo
 
-La sesión que produjo el curso estaba conectada al computador de David, y con esa conexión el entorno solo deja enviar datos a los dominios de la lista permitida. `generativelanguage.googleapis.com` no estaba en esa lista, así que Gemini respondió «request blocked». La clave sí funciona (consulta de modelos con respuesta 200). David no ha rotado la clave después del aviso de Google del 13 de octubre y autorizó usarla igual.
+La sesión que produjo el curso estaba conectada al computador de David, y con esa conexión el entorno solo deja enviar datos a los dominios de su lista; Gemini respondió «request blocked». Las ilustraciones se hicieron en el hilo «Ilustraciones curso 3», sin el equipo conectado. David no ha rotado la clave de Gemini después del aviso de Google del 13 de octubre y autorizó usarla igual (14 de octubre).
 
 ## Pendiente en este curso
 
 **Medios**
-- Ilustraciones (4b), videos de Entrada (4c) y bienvenida (4d): apenas Gemini esté permitido en la red.
 - Captura real del registro como facturador en el portal de la DIAN (Unidad 2, Aprende, pantalla 3). No se hace con IA para no inventar la página.
 - 3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.
 
@@ -48,3 +47,4 @@ La sesión que produjo el curso estaba conectada al computador de David, y con e
 
 Las agrega `moodle/subir_moodle.py`.
 - 2026-10-14 · nuevo en Moodle: https://portal.edunest.co/course/view.php?id=12 · respaldo-avs-g03-facturacion-electronica.mbz · 26/26 actividades en su sección (sin ilustraciones ni videos de Entrada)
+- 2026-10-14 21:55 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=12 · respaldo-avs-g03-facturacion-electronica.mbz · 26/26 actividades en su sección
