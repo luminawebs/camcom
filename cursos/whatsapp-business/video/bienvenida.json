@@ -1,0 +1,40 @@
+{
+ "titulo": "Vende más por WhatsApp Business",
+ "etiqueta": "Bienvenida",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Vende más por WhatsApp Business",
+   "texto": "Sandra · tortas por encargo en Hogares Soacha",
+   "imagen": "ilustraciones/originales/u1-entrada.png",
+   "voz": "Hola, te damos la bienvenida a Vende más por WhatsApp Business. Ella es Sandra. Hace tortas por encargo en Hogares Soacha y vende por su WhatsApp personal. Repite fotos y precios todo el día, y la semana pasada perdió una clienta por responder tarde."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Unidad 1 · Tu vitrina",
+   "texto": "Perfil de empresa y catálogo con precios",
+   "imagen": "ilustraciones/originales/u1-fotos.png",
+   "voz": "Primero vas a armar tu vitrina en WhatsApp Business, que es gratis: tu perfil de empresa y tu catálogo con fotos y precios."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Unidad 2 · Ningún pedido se pierde",
+   "texto": "Camilo · accesorios para celular en Ducales",
+   "imagen": "ilustraciones/originales/u2-entrada.png",
+   "voz": "Luego, con Camilo, vas a ordenar tus pedidos con etiquetas, para saber siempre a quién cobrar y qué despachar."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Unidad 3 · Responde rápido",
+   "texto": "Esperanza · frutas y verduras en El Altico",
+   "imagen": "ilustraciones/originales/u3-entrada.png",
+   "voz": "Y con Esperanza vas a responder en segundos, con mensajes automáticos y respuestas rápidas."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Tu WhatsApp de negocio listo",
+   "texto": "Tres unidades cortas, desde tu celular",
+   "voz": "Son tres unidades cortas, desde tu celular. Al final vas a tener tu WhatsApp de negocio listo para vender más. ¡Empecemos!"
+  }
+ ]
+}

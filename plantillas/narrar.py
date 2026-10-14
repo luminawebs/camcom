@@ -55,18 +55,23 @@ def limpiar(s: str, datos: dict | None = None) -> str:
 def textos(curso: Path, c: dict) -> dict:
     """{ruta relativa del mp3: texto a leer}"""
     secs = c["narracion"].get("secciones", ["entrada", "aprende"])
+    rem = c["narracion"].get("reemplazos", {})   # opcional: {"texto en pantalla": "cómo se lee"}, antes de limpiar
+    def limpiar_c(s, datos=None):
+        for a, b in rem.items():
+            s = s.replace(a, b)
+        return limpiar(s, datos)
     out = {}
     for i, u in enumerate(c["unidades"], 1):
         if "entrada" in secs:
             e = u["entrada"]
-            out[f"medios-moodle/u{i}-entrada-narracion.mp3"] = limpiar(f"{e['titulo']}. {e['texto']} La pregunta de esta unidad: {e['pregunta']}")
+            out[f"medios-moodle/u{i}-entrada-narracion.mp3"] = limpiar_c(f"{e['titulo']}. {e['texto']} La pregunta de esta unidad: {e['pregunta']}")
         js = curso / "piezas" / f"u{i}-aprende" / "contenido.js"
         if "aprende" in secs and js.exists():
             ct = leer_contenido(js)
             if not ct.get("narracion"):
                 print(f"aviso: {js.relative_to(curso)} no tiene narracion: true; el audio se genera pero la lección no lo muestra")
             for k, p in enumerate(ct["pantallas"], 1):
-                out[f"piezas/u{i}-aprende/medios/narracion-{k}.mp3"] = limpiar(f"{p['titulo']}. {p['texto']}", ct.get("datos"))
+                out[f"piezas/u{i}-aprende/medios/narracion-{k}.mp3"] = limpiar_c(f"{p['titulo']}. {p['texto']}", ct.get("datos"))
     return out
 
 

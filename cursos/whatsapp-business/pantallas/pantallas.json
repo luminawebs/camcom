@@ -1,0 +1,134 @@
+{
+ "simuladores": {
+  "1": {
+   "titulo": "Agrega un producto a tu catálogo",
+   "final": "Ahora hazlo en tu celular con tus 3 productos que más vendes: eso es el paso Aplica.",
+   "pasos": [
+    {
+     "html": "practica/u1-1.html",
+     "imagen": "pantalla-1.jpg",
+     "instruccion": "Abre el menú de la app (los tres puntos de arriba).",
+     "pista": "Busca los tres puntos en la esquina de arriba, a la derecha."
+    },
+    {
+     "html": "practica/u1-2.html",
+     "imagen": "pantalla-2.jpg",
+     "instruccion": "Entra a «Herramientas para la empresa».",
+     "pista": "Es la primera opción del menú."
+    },
+    {
+     "html": "practica/u1-3.html",
+     "imagen": "pantalla-3.jpg",
+     "instruccion": "Abre el «Catálogo».",
+     "pista": "Está en la lista, debajo de «Perfil de empresa»."
+    },
+    {
+     "html": "practica/u1-4.html",
+     "imagen": "pantalla-4.jpg",
+     "instruccion": "Agrega tu primer producto.",
+     "pista": "Toca el botón verde para añadir un artículo nuevo."
+    },
+    {
+     "html": "practica/u1-5.html",
+     "imagen": "pantalla-5.jpg",
+     "instruccion": "Ya llenaste foto, nombre, precio y descripción. Guarda el producto.",
+     "pista": "El botón para guardar está debajo de los campos."
+    }
+   ]
+  },
+  "2": {
+   "titulo": "Ponle la etiqueta a un cliente que ya pagó",
+   "final": "Ahora ponle etiqueta a todos los chats de clientes de esta semana: eso es el paso Aplica.",
+   "pasos": [
+    {
+     "html": "practica/u2-1.html",
+     "imagen": "pantalla-1.jpg",
+     "instruccion": "Laura ya le pagó a Camilo por Nequi. Selecciona su chat (mantenlo presionado).",
+     "pista": "Es el primer chat de la lista: «Ya te pagué por Nequi»."
+    },
+    {
+     "html": "practica/u2-2.html",
+     "imagen": "pantalla-2.jpg",
+     "instruccion": "Toca el ícono de etiqueta.",
+     "pista": "Está arriba, en la barra verde, junto al alfiler."
+    },
+    {
+     "html": "practica/u2-3.html",
+     "imagen": "pantalla-3.jpg",
+     "instruccion": "Elige la etiqueta que va: ya pagó, pero falta entregar.",
+     "pista": "Si ya pagó y no le ha entregado, la etapa es «Pagado»."
+    },
+    {
+     "html": "practica/u2-4.html",
+     "imagen": "pantalla-4.jpg",
+     "instruccion": "Guarda la etiqueta.",
+     "pista": "El botón para guardar está al final de la lista."
+    },
+    {
+     "html": "practica/u2-5.html",
+     "imagen": "pantalla-5.jpg",
+     "instruccion": "Es hora de cobrar. Muestra solo los clientes que todavía no han pagado.",
+     "pista": "Busca el filtro arriba de los chats."
+    }
+   ]
+  },
+  "3": {
+   "titulo": "Crea y usa una respuesta rápida",
+   "final": "Ahora crea tus 3 respuestas rápidas y tu mensaje de bienvenida y de ausencia: eso es el paso Aplica.",
+   "pasos": [
+    {
+     "html": "practica/u3-1.html",
+     "imagen": "pantalla-1.jpg",
+     "instruccion": "Abre «Respuestas rápidas».",
+     "pista": "Está al final de la lista de herramientas."
+    },
+    {
+     "html": "practica/u3-2.html",
+     "imagen": "pantalla-2.jpg",
+     "instruccion": "Crea una respuesta nueva.",
+     "pista": "Toca el botón verde de abajo a la derecha."
+    },
+    {
+     "html": "practica/u3-3.html",
+     "imagen": "pantalla-3.jpg",
+     "instruccion": "Ya escribiste el mensaje y el atajo /domicilio. Guárdala.",
+     "pista": "El botón para guardar está debajo del atajo."
+    },
+    {
+     "html": "practica/u3-4.html",
+     "imagen": "pantalla-4.jpg",
+     "instruccion": "Un cliente pregunta por el domicilio. Ya escribiste / : elige la respuesta que va.",
+     "pista": "Busca el atajo que habla del domicilio."
+    },
+    {
+     "html": "practica/u3-5.html",
+     "imagen": "pantalla-5.jpg",
+     "instruccion": "La respuesta quedó escrita. Envíala.",
+     "pista": "El botón de enviar es el círculo verde."
+    }
+   ]
+  }
+ },
+ "vistas": {
+  "u1-perfil": {
+   "html": "vistas/u1-perfil.html",
+   "destino": "piezas/u1-aprende/medios/ilustracion-3.jpg"
+  },
+  "u1-catalogo": {
+   "html": "vistas/u1-catalogo.html",
+   "destino": "piezas/u1-aprende/medios/ilustracion-4.jpg"
+  },
+  "u2-etiquetas": {
+   "html": "vistas/u2-etiquetas.html",
+   "destino": "piezas/u2-aprende/medios/ilustracion-2.jpg"
+  },
+  "u3-bienvenida": {
+   "html": "vistas/u3-bienvenida.html",
+   "destino": "piezas/u3-aprende/medios/ilustracion-2.jpg"
+  },
+  "u3-respuestas": {
+   "html": "vistas/u3-respuestas.html",
+   "destino": "piezas/u3-aprende/medios/ilustracion-4.jpg"
+  }
+ }
+}

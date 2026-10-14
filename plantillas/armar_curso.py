@@ -225,7 +225,8 @@ def estructura(c):
         items = [{"codigo": f"U{i} · Resumen", "paso": "resumen", "nombre": r[3], "formato": r[0],
                   "actividad": r[1], "min": 0, "opcional": True, "pagina": f"paginas/u{i}-resumen.html"}]
         for p in pasos:
-            formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else receta["pasos"][p]
+            ajuste = c.get("receta", {}).get(p)   # curso.json "receta": {"aprende": [formato, actividad, min c, min g, molde]}
+            formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else (tuple(ajuste) if ajuste else receta["pasos"][p])
             it = {"codigo": f"U{i} · {NOMBRE_PASO[p]}", "paso": p, "formato": formato, "actividad": act,
                   "min": mg if nivel == "g" else mc}
             if p == "profundiza":

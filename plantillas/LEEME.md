@@ -16,6 +16,9 @@ Abre `index.html` en el navegador para verlas todas en tamaño celular.
 Campos opcionales de `curso.json` para no depender de textos del curso 1: `revisor` (quién revisa los resúmenes), `mapa_curso_nota`,
 `inicio.video_nota`, `cierre.rubrica` (3 criterios del reto final), `llevatelo.etiqueta_formula` (p. ej. "La regla") y descargas como
 `{"texto": "...", "archivo": "uN-....pdf"}` con el archivo en `descargas/` (el botón se enlaza solo).
+`receta` cambia un paso de la receta del perfil solo para ese curso, con la misma forma que `RECETAS` en `armar_curso.py`:
+`"receta": {"aprende": ["Lección interactiva con pantallas", "SCORM 1.2 · HTML5", 7, 5, "leccion-interactiva"]}`
+(el curso 4, perfil P, lo usa para que Aprende sea lección narrada en lugar de screencast).
 
 ## Convenciones
 
@@ -42,6 +45,7 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    luego `python3 plantillas/narrar.py cursos/<id>` (clave en la variable de entorno `RESEMBLE_API_KEY`). Genera MP3 mono de 64 kbps:
    el caso de cada Entrada en `medios-moodle/uN-entrada-narracion.mp3` y cada pantalla de Aprende en `piezas/uN-aprende/medios/narracion-K.mp3`.
    `narraciones.json` guarda el texto leído; solo se regenera lo que cambió.
+   `"reemplazos": {"/domicilio": "barra domicilio"}` dentro de `narracion` cambia cómo se lee un texto sin tocar lo que se ve.
 4b. Ilustraciones con Gemini (opcional): describe en `cursos/<id>/ilustraciones.json` el estilo, los personajes y cada escena
    con sus destinos; luego `python3 plantillas/ilustrar.py cursos/<id>` (clave en `GEMINI_API_KEY`, modelo por defecto Gemini 2.5 Flash Image,
    ≈ USD 0,039 por imagen). Dibuja primero una hoja por personaje y la usa de referencia en cada escena para que se vean iguales.

@@ -1,0 +1,70 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>U3 paso 3</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:360px;height:760px;overflow:hidden;font-family:Roboto,Inter,'DejaVu Sans',sans-serif;background:#fff;color:#111;position:relative}
+.est{height:24px;background:#155c45;color:#fff;font-size:11px;display:flex;justify-content:space-between;align-items:center;padding:0 12px}
+.est i{font-style:normal;background:rgba(255,255,255,.18);border-radius:8px;padding:1px 7px;font-size:9.5px;letter-spacing:.04em}
+.cab{height:56px;background:#1f7a5c;color:#fff;display:flex;align-items:center;gap:14px;padding:0 10px 0 14px}
+.cab h1{font-size:19px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cab .ic{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:19px;border-radius:50%}
+.cab .av{width:34px;height:34px;border-radius:50%;background:#d8e8e1;color:#155c45;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:14px}
+.cab small{display:block;font-size:11px;font-weight:400;opacity:.85}
+.chips{display:flex;gap:8px;padding:10px 12px;overflow:hidden}
+.chip{border-radius:16px;background:#eef1f0;color:#333;font-size:13px;padding:6px 12px;white-space:nowrap}
+.chip.on{background:#d6f0e3;color:#155c45;font-weight:600}
+.chat{display:flex;gap:12px;padding:10px 14px;align-items:center}
+.chat .av{flex:none;width:46px;height:46px;border-radius:50%;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:17px}
+.chat .tx{flex:1;min-width:0;border-bottom:1px solid #eee;padding-bottom:10px}
+.chat .f1{display:flex;justify-content:space-between;font-size:15.5px;font-weight:600}
+.chat .f1 span{font-size:11.5px;font-weight:400;color:#777}
+.chat .f2{font-size:13.5px;color:#666;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.chat .et{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#444;margin-top:4px}
+.chat .et b{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chat.sel{background:#e3f1ea}
+.fab{position:absolute;right:18px;bottom:22px;width:56px;height:56px;border-radius:16px;background:#1f7a5c;color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.menu{position:absolute;right:8px;top:30px;width:236px;background:#fff;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.28);padding:6px 0;z-index:3}
+.menu div{padding:13px 18px;font-size:15px}
+.velo{position:absolute;inset:0;background:rgba(0,0,0,.08);z-index:2}
+.item{display:flex;gap:16px;align-items:center;padding:13px 18px}
+.item .ic{flex:none;width:30px;text-align:center;font-size:21px;color:#1f7a5c}
+.item b{display:block;font-size:15.5px;font-weight:500}
+.item small{display:block;font-size:12.5px;color:#777;margin-top:2px}
+.sec{font-size:13px;color:#1f7a5c;font-weight:600;padding:14px 18px 4px}
+.campo{margin:12px 16px 0;border-bottom:2px solid #1f7a5c;padding:6px 2px;font-size:15px}
+.campo small{display:block;font-size:11.5px;color:#1f7a5c;margin-bottom:3px}
+.campo.gris{border-color:#ccc}.campo.gris small{color:#777}
+.btn{display:flex;align-items:center;justify-content:center;background:#1f7a5c;color:#fff;font-weight:600;font-size:15px;border-radius:22px;height:44px;margin:18px 16px 0}
+.btn.lin{background:#fff;color:#1f7a5c;border:1.5px solid #1f7a5c}
+.foto{margin:14px 16px 0;height:150px;border-radius:10px;background:radial-gradient(circle at 50% 45%,#fff7ee,#f0dcc8);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#6b4a35;font-size:12px;gap:6px}.foto span{font-size:64px}
+.prod{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #eee;align-items:center}
+.prod .im{flex:none;width:64px;height:64px;border-radius:8px}
+.prod b{display:block;font-size:15px;font-weight:600}
+.prod small{display:block;font-size:12.5px;color:#666;margin-top:2px}
+.prod span{display:block;font-size:14px;font-weight:600;margin-top:4px}
+.fondo{background:#efe7de;position:absolute;top:80px;bottom:62px;left:0;right:0;padding:12px 10px;display:flex;flex-direction:column;gap:8px}
+.bur{max-width:80%;padding:7px 10px 16px;border-radius:9px;font-size:14px;line-height:1.35;position:relative;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.bur.el{background:#fff;align-self:flex-start}
+.bur.yo{background:#d9fdd3;align-self:flex-end}
+.bur em{position:absolute;right:8px;bottom:3px;font-size:10px;color:#777;font-style:normal}
+.bur .auto{display:block;font-size:10.5px;color:#1f7a5c;font-weight:600;margin-bottom:2px}
+.dia{align-self:center;background:#fff;border-radius:7px;font-size:11.5px;color:#555;padding:4px 10px}
+.entrada{position:absolute;left:0;right:0;bottom:0;height:62px;background:#efe7de;display:flex;gap:8px;align-items:center;padding:0 8px}
+.entrada .caja{flex:1;min-width:0;background:#fff;border-radius:24px;height:46px;display:flex;align-items:center;padding:0 16px;font-size:15px;color:#999;gap:10px}
+.entrada .caja.esc{color:#111}
+.entrada .env{flex:none;width:46px;height:46px;border-radius:50%;background:#1f7a5c;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px}
+.sug{position:absolute;left:8px;right:8px;bottom:66px;background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.2);z-index:2}
+.sug div{padding:11px 14px;border-bottom:1px solid #f0f0f0;font-size:13.5px;color:#555}
+.sug b{display:block;color:#111;font-size:14.5px}
+.hoja{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -4px 16px rgba(0,0,0,.2);padding:8px 0 16px;z-index:3}
+.hoja h3{font-size:17px;font-weight:600;padding:12px 20px 6px}
+.op{display:flex;align-items:center;gap:14px;padding:12px 20px;font-size:15.5px}
+.op b{width:16px;height:16px;border-radius:50%;display:inline-block}
+.op .ck{margin-left:auto;width:22px;height:22px;border:2px solid #999;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.op .ck.on{background:#1f7a5c;border-color:#1f7a5c}
+.perfil{text-align:center;padding:18px 16px 10px}
+.perfil .av{width:96px;height:96px;border-radius:50%;margin:0 auto;background:radial-gradient(circle at 50% 40%,#f8d7e0,#c8607a);display:flex;align-items:center;justify-content:center;font-size:40px}
+.perfil h2{font-size:21px;margin-top:10px}
+.perfil small{display:block;font-size:13px;color:#777;margin-top:3px}
+.dato{display:flex;gap:16px;padding:11px 18px;font-size:14px;line-height:1.35;border-top:1px solid #f0f0f0}
+.dato .ic{flex:none;width:24px;text-align:center;color:#1f7a5c;font-size:17px}
+
+</style></head><body><div class="est"><span>9:41</span><i>PANTALLA DE PRÁCTICA</i><span>▮▮▮ 82%</span></div><div class="cab"><span class="ic" style="margin-left:-6px">←</span><h1>Respuesta rápida</h1></div><div class="campo" style="min-height:96px"><small>Mensaje</small>¡Hola! Llevamos a domicilio en Soacha de 7 a. m. a 6 p. m. El envío vale $3.000. ¿Qué te mandamos hoy?</div><div class="campo"><small>Atajo</small>/domicilio</div><p style="font-size:12.5px;color:#777;margin:10px 18px">Escribe / en un chat y elige el atajo para enviar este mensaje.</p><div class="btn" id=objetivo>Guardar</div></body></html>
