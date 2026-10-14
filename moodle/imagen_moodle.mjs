@@ -32,10 +32,10 @@ try {
   await p.waitForTimeout(800);
 
   // quitar la imagen anterior (el campo admite un solo archivo)
-  for (let i = 0; i < 5 && (await gestor.locator('.fp-file').count()); i++) {
-    await gestor.locator('.fp-file').first().click();
-    await p.locator('.moodle-dialogue-base:visible .fp-file-delete').first().click();
-    await p.locator('.moodle-dialogue-base:visible .fp-dlg-butconfirm').first().click();
+  for (let i = 0; i < 5 && (await gestor.locator('.fp-file:visible').count()); i++) {
+    await gestor.locator('.fp-file:visible').first().click();
+    await p.locator('.fp-file-delete:visible').first().click();
+    await p.locator('.fp-dlg-butconfirm:visible, .modal-dialog:visible button[data-action=save], .modal-dialog:visible button:text-is("Sí"), .modal-dialog:visible button:text-is("Yes")').first().click();
     await p.waitForTimeout(800);
   }
 
@@ -49,7 +49,7 @@ try {
   await archivo.setInputFiles(imagen);
   if (!(await archivo.evaluate((e) => e.files.length))) throw new Error('No se pudo adjuntar la imagen en el selector de archivos');
   await p.locator('.file-picker:visible .fp-upload-btn:visible').first().click();
-  await gestor.locator('.fp-file').first().waitFor({ timeout: 120000 });
+  await gestor.locator('.fp-file:visible').first().waitFor({ timeout: 120000 });
 
   await Promise.all([p.waitForNavigation(), p.locator('#id_saveanddisplay').click()]);
   if (p.url().includes('/course/edit.php')) throw new Error('Moodle no guardó los ajustes del curso');
