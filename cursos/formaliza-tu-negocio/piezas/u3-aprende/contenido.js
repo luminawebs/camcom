@@ -13,12 +13,12 @@ window.CONTENIDO = {
     {
       titulo: "La visita al taller de Wilson",
       texto: "Wilson tiene un taller de motos en El Danubio. Sacó la matrícula mercantil hace cinco años, pero no la renueva desde hace tres. Pasó la Policía y le preguntó por la matrícula, el uso de suelo y la música del taller. En esta lección vas a ver qué te piden y cada cuánto.",
-      medio: { tipo: "imagen", src: "", nota: "Ilustración: Wilson en su taller con una moto y un radio en la pared (4:3, máx. 150 KB)." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Wilson en su taller hablando con un policía" }
     },
     {
       titulo: "La matrícula mercantil",
       texto: "Es el registro de tu negocio en la **Cámara de Comercio**. Se registran dos cosas: **tú**, como comerciante, y tu **establecimiento**: la tienda, el taller o el local. Se paga {{tarifa}}. En Soacha existe la **Cámara de Comercio de Soacha**, creada en 2023. [VERIFICAR dónde se hace hoy el trámite: Cámara de Soacha o sede de la Cámara de Bogotá]",
-      medio: { tipo: "imagen", src: "", nota: "Esquema: persona (comerciante) + establecimiento (local) = matrícula mercantil." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "Wilson más su taller es igual a la matrícula mercantil" }
     },
     {
       titulo: "Se renueva cada año",

@@ -48,7 +48,7 @@ def pagina(ruta, s, medios):
             s = quitar(nombre, s, aviso, AVISO_IA)
     # rutas relativas a archivos del curso
     for carpeta in ("mapas", "guias-pdf", "descargas", "medios-moodle"):
-        s = re.sub(rf'(src|href)="\.\./{carpeta}/([^"]+)"', r'\1="@@PLUGINFILE@@/\2"', s)
+        s = re.sub(rf'(src|href|poster)="\.\./{carpeta}/([^"]+)"', r'\1="@@PLUGINFILE@@/\2"', s)
     # descargas que ya existen
     for texto, archivo in (("Plantilla Calcula tu sueldo · Excel 40 KB", "u2-calcula-tu-sueldo.xlsx"),
                            ("Plantilla Registro diario · Excel 40 KB", "u3-registro-diario.xlsx"),

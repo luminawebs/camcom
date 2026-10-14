@@ -37,14 +37,36 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    si no, dejan el espacio marcado. NotebookLM no se usa para los mapas porque no deja descargarlos.
    Arma las guías de estudio copiando `cursos/plata-negocio/guias-pdf/` (contenido en `armar_guias.py`, logo en `marca/`;
    luego `python3 armar_guias.py` y `node renderizar_pdf.mjs`). Si existen `guias-pdf/uN-guia.pdf`, Llévatelo pone el botón de descarga.
-4. Narraciones con Resemble AI (opcional, no reemplazan la bienvenida ni los resúmenes de NotebookLM): agrega a `curso.json`
+4. Narraciones con Resemble AI: agrega a `curso.json`
    `"narracion": {"voz": "<id de la voz>", "secciones": ["entrada", "aprende"]}` y `narracion: true` en cada `uN-aprende/contenido.js`;
    luego `python3 plantillas/narrar.py cursos/<id>` (clave en la variable de entorno `RESEMBLE_API_KEY`). Genera MP3 mono de 64 kbps:
    el caso de cada Entrada en `medios-moodle/uN-entrada-narracion.mp3` y cada pantalla de Aprende en `piezas/uN-aprende/medios/narracion-K.mp3`.
    `narraciones.json` guarda el texto leído; solo se regenera lo que cambió.
+4b. Ilustraciones con Gemini (opcional): describe en `cursos/<id>/ilustraciones.json` el estilo, los personajes y cada escena
+   con sus destinos; luego `python3 plantillas/ilustrar.py cursos/<id>` (clave en `GEMINI_API_KEY`, modelo por defecto Gemini 2.5 Flash Image,
+   ≈ USD 0,039 por imagen). Dibuja primero una hoja por personaje y la usa de referencia en cada escena para que se vean iguales.
+   Deja la Entrada en `medios-moodle/uN-entrada.jpg` y las de las lecciones en `piezas/uN-aprende/medios/ilustracion-K.jpg`
+   (en `contenido.js`: `src: "medios/ilustracion-K.jpg", alt: "..."`). `ilustraciones/registro.json` lleva cada imagen pagada y su costo;
+   no vuelve a pagar una imagen cuyo texto no cambió (`--solo <id>` rehace una).
+4c. Video de Entrada (opcional): `python3 plantillas/video_entrada.py cursos/<id>` junta la ilustración de la Entrada y su narración de
+   Resemble en `medios-moodle/uN-entrada.mp4` (+ `.vtt`), con título, subtítulos y la pregunta de la unidad. No llama a ninguna API.
+   Si existe, la Entrada muestra el video en lugar de la imagen y el reproductor de audio.
+4d. Bienvenida y resúmenes en video (automáticos, reemplazan a NotebookLM desde el curso 2): escribe `video/bienvenida.json` y
+   `video/uN-resumen.json` (5 diapositivas: portada, listas, frase y cierre, cada una con su texto en pantalla y su "voz"; "imagen"
+   opcional con una ruta de `ilustraciones/`). Toma los textos del guion de 60 s al final de `notebooklm/fuentes/uN-guion.md`.
+   Luego `python3 plantillas/video_resumen.py cursos/<id> bienvenida` y `... uN-resumen`: video vertical con voz de Resemble y
+   subtítulos en `medios-moodle/`. Inicio y el Resumen de cada unidad lo muestran solos. Ejemplo completo: `cursos/formaliza-tu-negocio/video/`.
 5. `python3 plantillas/armar_curso.py cursos/<id> --scorm` genera `estructura.md`, `paginas/` (fragmentos llenos),
    `vista-previa/` y `scorm/`. La vista previa lista lo que falta validar y los medios por producir.
 6. `python3 moodle/publicar_curso.py cursos/<id> --corto AVS-Gnn` arma el respaldo .mbz con todos los medios.
+6b. `python3 moodle/subir_moodle.py cursos/<id>` lo sube a Moodle: si ya hay un curso con ese nombre corto borra su contenido
+   y restaura encima (conserva roles y matrículas); si no, crea el curso en «Categoría General» (`--categoria` para otra).
+   Recorre el asistente de restauración con Playwright (`moodle/restaurar.mjs`, cuenta `MOODLE_USER`/`MOODLE_PASS` con rol
+   Gestor en la categoría) y después, por REST con `MOODLE_TOKEN`, pone el número de ID y reubica las actividades que
+   queden fuera de su sección. Al final pone la imagen del curso (`cursos/<id>/imagen-curso.jpg`, cuadrada 1080 × 1080:
+   ilustración de la Entrada U1 arriba y título sobre panel negro abajo; la arma `python3 plantillas/imagen_curso.py cursos/<id>` si falta, y
+   `node moodle/imagen_moodle.mjs <id en Moodle> <imagen>` la cambia sola). Deja una línea en `registro-produccion.md`. `--solo-revisar <id del curso>` hace solo lo de REST.
+   Reemplazar borra el avance de quien ya hizo el curso: con estudiantes reales, confirmarlo antes.
 7. En Moodle, en cada actividad SCORM: calificación = puntuación más alta, finalización = "requiere estado aprobado o completado".
 
 Una pieza suelta sigue funcionando como antes: `python3 empaquetar.py calculadora --curso <pieza>` (lee `cursos/<pieza>/` dentro de `plantillas/`).
