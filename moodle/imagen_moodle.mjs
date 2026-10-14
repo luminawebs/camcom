@@ -46,7 +46,11 @@ try {
   const archivo = p.locator('.file-picker:visible .fp-upload-form input[type=file]:visible').first();
   await archivo.waitFor();
   await p.waitForTimeout(500);
-  await archivo.setInputFiles(imagen);
+  // nombre con huella del contenido: Moodle sirve la imagen con caché de 1 h y la misma URL, así que con el mismo
+  // nombre el navegador seguiría mostrando la imagen vieja
+  const fs = await import('fs');
+  const huella = (await import('crypto')).createHash('sha1').update(fs.readFileSync(imagen)).digest('hex').slice(0, 8);
+  await archivo.setInputFiles({ name: `imagen-curso-${huella}.jpg`, mimeType: 'image/jpeg', buffer: fs.readFileSync(imagen) });
   if (!(await archivo.evaluate((e) => e.files.length))) throw new Error('No se pudo adjuntar la imagen en el selector de archivos');
   await p.locator('.file-picker:visible .fp-upload-btn:visible').first().click();
   await gestor.locator('.fp-file:visible').first().waitFor({ timeout: 120000 });
