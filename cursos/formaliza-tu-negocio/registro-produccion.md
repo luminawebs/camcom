@@ -1,7 +1,7 @@
 # Registro de producción · Formaliza tu negocio paso a paso (AVS-G02)
 
 Curso 2 del Aula Virtual Empresarial Soacha. Gancho, perfil N, 3 unidades, ≈ 1,5 horas.
-Producido el 12 y 13 de octubre de 2026. Respaldo: `moodle/formaliza-tu-negocio/respaldo-avs-g02-formaliza-tu-negocio.mbz` (≈ 13 MB, 26 actividades, 5 secciones). Todavía no está restaurado en Moodle.
+Producido el 12 y 13 de octubre de 2026. Respaldo: `moodle/formaliza-tu-negocio/respaldo-avs-g02-formaliza-tu-negocio.mbz` (≈ 13 MB, 26 actividades, 5 secciones). En Moodle como curso 11 (AVS-G02), reemplazado el 14 de octubre con `moodle/subir_moodle.py`.
 
 ## Qué se hizo y con qué comando
 
@@ -20,6 +20,7 @@ Orden en que se corre el pipeline (detalle de cada paso en `plantillas/LEEME.md`
 | 4d | Bienvenida (47 s) y 3 resúmenes (≈ 40 s) | `python3 plantillas/video_resumen.py cursos/formaliza-tu-negocio bienvenida` (y `u1-resumen`, `u2-resumen`, `u3-resumen`) | Resemble |
 | 5 | Páginas, vista previa y 6 SCORM | `python3 plantillas/armar_curso.py cursos/formaliza-tu-negocio --scorm` | — |
 | 6 | Respaldo .mbz con todos los medios | `python3 moodle/publicar_curso.py cursos/formaliza-tu-negocio --corto AVS-G02` | — |
+| 6b | Subida a Moodle (reemplaza el curso 11) | `python3 moodle/subir_moodle.py cursos/formaliza-tu-negocio` | Moodle |
 
 ## Gasto en APIs
 
@@ -49,7 +50,7 @@ Google suspendió el proyecto de Google Cloud «Salle» (gen-lang-client-0760543
 - Número de WhatsApp de la Cámara, texto del formulario de datos y logo de la constancia.
 
 **Moodle**
-- Restaurar el .mbz como curso nuevo, poner el número de ID (AVS-G02-formaliza-tu-negocio) y revisar con REST que cada actividad quedó en su sección.
+- Hecho el 14 oct: curso 11 reemplazado con el respaldo nuevo, número de ID puesto y las 26 actividades en su sección; los 7 videos se sirven (HTTP 200).
 
 ## Pendiente en el pipeline para los siguientes cursos
 
@@ -57,3 +58,8 @@ Google suspendió el proyecto de Google Cloud «Salle» (gen-lang-client-0760543
 - `curso.json`, `contenido.js`, `ilustraciones.json` y `video/*.json` se escriben con Claude a partir de la investigación y los guiones; no hay un paso que los genere solo.
 - Las fichas de Canva, las capturas de pantalla reales y la revisión del experto siguen siendo manuales.
 - El curso 1 (La plata del negocio) usa los videos de NotebookLM que hizo David; el curso 2 es el primero con todos los videos automáticos.
+
+## Subidas a Moodle
+
+Las agrega `moodle/subir_moodle.py`.
+- 2026-10-14 00:26 UTC · reemplazo y revisión en Moodle: https://portal.edunest.co/course/view.php?id=11 · respaldo-avs-g02-formaliza-tu-negocio.mbz · 26/26 actividades en su sección

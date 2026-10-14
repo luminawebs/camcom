@@ -59,6 +59,12 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
 5. `python3 plantillas/armar_curso.py cursos/<id> --scorm` genera `estructura.md`, `paginas/` (fragmentos llenos),
    `vista-previa/` y `scorm/`. La vista previa lista lo que falta validar y los medios por producir.
 6. `python3 moodle/publicar_curso.py cursos/<id> --corto AVS-Gnn` arma el respaldo .mbz con todos los medios.
+6b. `python3 moodle/subir_moodle.py cursos/<id>` lo sube a Moodle: si ya hay un curso con ese nombre corto borra su contenido
+   y restaura encima (conserva roles y matrículas); si no, crea el curso en «Categoría General» (`--categoria` para otra).
+   Recorre el asistente de restauración con Playwright (`moodle/restaurar.mjs`, cuenta `MOODLE_USER`/`MOODLE_PASS` con rol
+   Gestor en la categoría) y después, por REST con `MOODLE_TOKEN`, pone el número de ID y reubica las actividades que
+   queden fuera de su sección. Deja una línea en `registro-produccion.md`. `--solo-revisar <id del curso>` hace solo lo de REST.
+   Reemplazar borra el avance de quien ya hizo el curso: con estudiantes reales, confirmarlo antes.
 7. En Moodle, en cada actividad SCORM: calificación = puntuación más alta, finalización = "requiere estado aprobado o completado".
 
 Una pieza suelta sigue funcionando como antes: `python3 empaquetar.py calculadora --curso <pieza>` (lee `cursos/<pieza>/` dentro de `plantillas/`).
