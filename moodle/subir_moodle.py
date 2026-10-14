@@ -10,7 +10,8 @@ Antes: python3 moodle/publicar_curso.py cursos/<id> --corto AVS-Gnn (arma moodle
    conservando roles y matrículas; si no, crea el curso en la categoría. Matricula a ClaudeBot como Profesor si falta.
 2. Por REST, con MOODLE_TOKEN (ClaudeBot): pone el número de ID (<corto>-<id del curso>) y revisa que cada actividad
    esté en la sección y el orden que trae el respaldo; las que no, las mueve (core_courseformat_update_course, cm_move).
-3. Agrega el resultado al final de cursos/<id>/registro-produccion.md.
+3. Pone la imagen del curso con moodle/imagen_moodle.mjs (la arma antes con plantillas/imagen_curso.py si falta).
+4. Agrega el resultado al final de cursos/<id>/registro-produccion.md.
 --solo-revisar se salta la restauración y hace solo el paso 2 sobre el curso que ya está en Moodle.
 """
 import argparse, json, os, re, subprocess, sys, urllib.parse, urllib.request, zipfile
@@ -125,6 +126,15 @@ def main():
         print(f"✓ curso {'creado' if accion == 'nuevo' else 'reemplazado'}: {URL}/course/view.php?id={curso}")
 
     total, faltan, movidas = revisar(curso, corto, idnumber, secciones)
+
+    # imagen del curso (tarjetas de «Mis cursos» y de la categoría): se arma si falta y se pone tras cada restauración
+    imagen = curso_dir / "imagen-curso.jpg"
+    if not a.solo_revisar:
+        if not imagen.exists():
+            subprocess.run([sys.executable, str(RAIZ / "plantillas" / "imagen_curso.py"), str(curso_dir)])
+        if imagen.exists():
+            if subprocess.run(["node", str(RAIZ / "moodle" / "imagen_moodle.mjs"), str(curso), str(imagen)]).returncode:
+                print("  (no se pudo poner la imagen del curso; reintenta con node moodle/imagen_moodle.mjs)")
 
     reg = curso_dir / "registro-produccion.md"
     if reg.exists():

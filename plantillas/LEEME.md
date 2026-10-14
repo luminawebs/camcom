@@ -63,7 +63,9 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    y restaura encima (conserva roles y matrículas); si no, crea el curso en «Categoría General» (`--categoria` para otra).
    Recorre el asistente de restauración con Playwright (`moodle/restaurar.mjs`, cuenta `MOODLE_USER`/`MOODLE_PASS` con rol
    Gestor en la categoría) y después, por REST con `MOODLE_TOKEN`, pone el número de ID y reubica las actividades que
-   queden fuera de su sección. Deja una línea en `registro-produccion.md`. `--solo-revisar <id del curso>` hace solo lo de REST.
+   queden fuera de su sección. Al final pone la imagen del curso (`cursos/<id>/imagen-curso.jpg`, 1200 × 600: título
+   sobre panel negro + ilustración de la Entrada U1; la arma `python3 plantillas/imagen_curso.py cursos/<id>` si falta, y
+   `node moodle/imagen_moodle.mjs <id en Moodle> <imagen>` la cambia sola). Deja una línea en `registro-produccion.md`. `--solo-revisar <id del curso>` hace solo lo de REST.
    Reemplazar borra el avance de quien ya hizo el curso: con estudiantes reales, confirmarlo antes.
 7. En Moodle, en cada actividad SCORM: calificación = puntuación más alta, finalización = "requiere estado aprobado o completado".
 
