@@ -1,0 +1,21 @@
+[Unit]
+Description=Conector del Pase Empresario (Wompi → Moodle)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pase
+Group=pase
+WorkingDirectory=__APP__
+EnvironmentFile=__ENV__
+ExecStart=/usr/bin/python3 -m pase.servidor
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=__DATOS__
+
+[Install]
+WantedBy=multi-user.target

@@ -183,6 +183,12 @@ class App:
             def json(self, codigo, datos):
                 self.responder(codigo, json.dumps(datos).encode(), "application/json")
 
+            def ip(self):
+                reenviada = self.headers.get("X-Forwarded-For", "")
+                if reenviada and self.client_address[0] == "127.0.0.1":
+                    return reenviada.split(",")[0].strip()
+                return self.client_address[0]
+
             def leer(self):
                 return self.rfile.read(int(self.headers.get("Content-Length") or 0))
 
@@ -229,7 +235,7 @@ class App:
                 sb = app.c.entorno == "sandbox"
                 if u.path == "/webhooks/wompi":
                     codigo, eid = app.pase.recibir_evento(
-                        self.leer(), self.headers.get("X-Event-Checksum", ""), self.client_address[0])
+                        self.leer(), self.headers.get("X-Event-Checksum", ""), self.ip())
                     if eid:
                         app.cola.put(eid)
                     return self.json(codigo, {"ok": codigo == 200})
@@ -237,7 +243,7 @@ class App:
                     datos = dict(urllib.parse.parse_qsl(self.leer().decode()))
                     try:
                         pid = app.pase.inscribir(datos, datos.get("canal") or "sin-canal",
-                                                 self.client_address[0], self.headers.get("User-Agent", ""))
+                                                 self.ip(), self.headers.get("User-Agent", ""))
                     except (ValueError, KeyError) as e:
                         return self.responder(400, pagina("Revisa tus datos", f"<h1>Revisa tus datos</h1>"
                                                           f"<p>{html.escape(str(e))}</p>", sb))
@@ -263,7 +269,9 @@ class App:
 
     def servir(self):
         self.cola.put(None)  # al arrancar, procesa lo que haya quedado pendiente
-        srv = ThreadingHTTPServer(("0.0.0.0", self.c.puerto), self.manejador())
+        # Detrás de nginx escucha solo en 127.0.0.1 (PASE_HOST); nginx pone el HTTPS.
+        srv = ThreadingHTTPServer((os.environ.get("PASE_HOST", "127.0.0.1"), self.c.puerto),
+                                  self.manejador())
         print(f"Conector Pase ({self.c.entorno}) en {self.c.url_publica} · puerto {self.c.puerto}")
         srv.serve_forever()
 

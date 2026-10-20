@@ -1,0 +1,9 @@
+[Unit]
+Description=Pase Empresario: tarea pendientes
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
