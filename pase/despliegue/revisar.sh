@@ -13,7 +13,7 @@ command -v python3 && python3 --version
 t "Puertos en escucha"
 (ss -ltnp 2>/dev/null || netstat -ltnp 2>/dev/null) | sed 's/users:.*//' | sort -u
 t "Servidores web y proxys"
-for s in nginx apache2 caddy traefik haproxy docker; do
+for s in nginx apache2 httpd caddy traefik haproxy docker; do
   printf '%-8s ' "$s"; systemctl is-active "$s" 2>/dev/null || echo "-"
 done
 t "Sitios nginx"
@@ -26,8 +26,14 @@ command -v docker >/dev/null && docker ps --format '{{.Names}}  {{.Image}}  {{.P
 t "Servicios propios (systemd, no del sistema)"
 systemctl list-units --type=service --state=running --no-legend 2>/dev/null \
   | awk '{print $1}' | grep -vE '^(systemd|dbus|cron|ssh|rsyslog|polkit|udisks|snapd|getty|serial|unattended|multipathd|networkd|ModemManager|packagekit|fwupd|irqbalance|atd|chrony|qemu|droplet|do-agent|user@)' || true
-t "Firewall"
-ufw status 2>/dev/null | head -20 || echo "sin ufw"
+t "Firewall y SELinux"
+ufw status 2>/dev/null | head -20 || true
+firewall-cmd --state 2>/dev/null && firewall-cmd --list-all 2>/dev/null | head -20 || true
+getenforce 2>/dev/null || echo "sin SELinux"
+t "Gestor de paquetes"
+command -v apt-get dnf yum 2>/dev/null
+t "Configuración nginx principal"
+grep -nE 'include|server_name|listen' /etc/nginx/nginx.conf 2>/dev/null | head -20
 t "¿Ya existe algo del Pase?"
 id pase 2>/dev/null || echo "usuario pase: no existe"
 ls -d /opt/pase /etc/pase 2>/dev/null || echo "carpetas /opt/pase y /etc/pase: no existen"
