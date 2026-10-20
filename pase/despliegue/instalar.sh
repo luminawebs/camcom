@@ -71,7 +71,8 @@ if command -v getenforce >/dev/null && [ "$(getenforce)" = Enforcing ]; then
   fi
   restorecon -R "$SITIO" "$APP" "$DATOS" /etc/pase 2>/dev/null || true
 fi
-nginx -t && systemctl reload nginx
+if ! nginx -t; then rm -f "$SITIO"; echo "nginx -t falló: se quitó el sitio del Pase"; exit 1; fi
+systemctl reload nginx
 
 echo "› Pruebas del código en el servidor"
 (cd "$APP" && PASE_LOG=0 sudo -u pase -H python3 -m unittest pase.pruebas 2>&1 | tail -3)
