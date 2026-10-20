@@ -98,11 +98,17 @@ class Simulador:
                                    d.get("currency", ""), SECRETO_INTEGRIDAD)
         if d.get("signature") != firma:
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "messages": {"signature": ["Firma inválida"]}}}
+        if not d.get("acceptance_token"):
+            return 422, {"error": {"type": "INPUT_VALIDATION_ERROR",
+                                   "messages": {"acceptance_token": ["Requerido"]}}}
         if any(t["reference"] == d["reference"] for t in self.transacciones.values()):
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "messages": {"reference": ["Ya existe"]}}}
         f = self.fuentes.get(d.get("payment_source_id"))
         if not f or f["status"] != "AVAILABLE":
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "reason": "fuente de pago"}}
+        if ("payment_method" in d) != (f["type"] == "CARD"):
+            return 422, {"error": {"type": "INPUT_VALIDATION_ERROR",
+                                   "messages": {"payment_method": ["Solo para tarjeta"]}}}
         final = self.forzado.pop(f["id"], None) or ("APPROVED" if f["aprueba"] else "DECLINED")
         tx = self._nueva_tx(d["reference"], d["amount_in_cents"], d["currency"],
                             d.get("customer_email"), f["type"], final)
@@ -185,11 +191,15 @@ def manejador(sim: Simulador):
             u = urllib.parse.urlparse(self.path)
             q = dict(urllib.parse.parse_qsl(u.query))
             p = u.path
-            if p == f"/v1/merchants/{LLAVE_PUBLICA}":
+            if p == "/v1/merchants/info":
+                if self.headers.get("x-merchant-public-key") != LLAVE_PUBLICA:
+                    return self.enviar(401, {"error": {"type": "INVALID_ACCESS_TOKEN"}})
                 return self.enviar(200, sim.comercio())
             if p.startswith("/v1/tokens/nequi/"):
                 return self.enviar(*sim.ver_token_nequi(p.rsplit("/", 1)[1]))
             if p.startswith("/v1/transactions/"):
+                if self.llave() != LLAVE_PRIVADA:  # con llave pública Wompi responde 404
+                    return self.enviar(404, {"error": {"type": "NOT_FOUND_ERROR"}})
                 tx = sim.transacciones.get(p.rsplit("/", 1)[1])
                 return self.enviar(200, {"data": tx}) if tx else self.enviar(404, {"error": {"type": "NOT_FOUND_ERROR"}})
             if p == "/v1/transactions":
@@ -224,6 +234,18 @@ def manejador(sim: Simulador):
                 return self.enviar(*sim.transaccion(d))
             if p == "/v1/payment_links":
                 return self.enviar(201, {"data": {"id": sim._id("link_"), **d}})
+            self.enviar(404, {"error": {"type": "NOT_FOUND_ERROR"}})
+
+        def do_PUT(self):
+            p = urllib.parse.urlparse(self.path).path
+            if self.llave() != LLAVE_PRIVADA:
+                return self.enviar(401, {"error": {"type": "INVALID_ACCESS_TOKEN"}})
+            if p.startswith("/v1/payment_sources/") and p.endswith("/void"):
+                f = sim.fuentes.get(int(p.split("/")[3]))
+                if not f:
+                    return self.enviar(404, {"error": {"type": "NOT_FOUND_ERROR"}})
+                f["status"] = "VOIDED"
+                return self.enviar(200, {"data": {"id": f["id"], "type": f["type"], "status": "VOIDED"}})
             self.enviar(404, {"error": {"type": "NOT_FOUND_ERROR"}})
 
     return H

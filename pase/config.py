@@ -67,6 +67,8 @@ class Config:
             for nombre, valor, prefijo in (
                 ("WOMPI_LLAVE_PUBLICA", self.llave_publica, "pub_test_"),
                 ("WOMPI_LLAVE_PRIVADA", self.llave_privada, "prv_test_"),
+                ("WOMPI_SECRETO_INTEGRIDAD", self.secreto_integridad, "test_integrity_"),
+                ("WOMPI_SECRETO_EVENTOS", self.secreto_eventos, "test_events_"),
             ):
                 if valor and not valor.startswith(prefijo):
                     raise ValueError(f"{nombre} no es de sandbox (debe empezar por {prefijo})")

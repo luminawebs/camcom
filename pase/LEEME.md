@@ -42,7 +42,7 @@ confirmado contra la API.
 | `servidor.py` | Formulario, pantalla de pago, retorno, `/webhooks/wompi`, `/estado-pago`, `/admin/resumen` |
 | `tareas.py` | `cobro`, `conciliar`, `pendientes`, `resumen` para cron |
 | `simulador_wompi.py` | Imita el sandbox de Wompi (tarjetas y Nequi de prueba, PSE, eventos firmados) |
-| `pruebas.py` | 15 pruebas de punta a punta |
+| `pruebas.py` | 16 pruebas de punta a punta |
 | `demo.py` | Simulador + conector para probarlo en el navegador |
 
 Solo usa la biblioteca estándar de Python 3.9+ (SQLite). Para producción se puede pasar a
@@ -51,7 +51,7 @@ PostgreSQL sin cambiar la lógica.
 ## Probarlo ya (sin llaves ni red)
 
 ```
-python -m unittest pase.pruebas -v     # 15 pruebas, unos 11 s
+python -m unittest pase.pruebas -v     # 16 pruebas, unos 11 s
 python -m pase.demo                     # abre http://localhost:8080/?c=wa-afiliados
 ```
 
@@ -69,8 +69,8 @@ Lo que comprueban las pruebas (criterios 1 a 5 de los requerimientos):
 
 ## Pasar al sandbox real de Wompi (lo que falta de David)
 
-1. **Llaves de sandbox** del comercio EduNest en Wompi (panel › Desarrolladores): llave pública `pub_test_…`, llave privada `prv_test_…`, secreto de integridad y secreto de eventos. Van como variables del entorno en la nube (`WOMPI_LLAVE_PUBLICA`, `WOMPI_LLAVE_PRIVADA`, `WOMPI_SECRETO_INTEGRIDAD`, `WOMPI_SECRETO_EVENTOS`), nunca en el chat.
-2. **Dominios permitidos** en el entorno: `sandbox.wompi.co`, `checkout.wompi.co` y `docs.wompi.co` (hoy están bloqueados, por eso se usó el simulador y los campos de la API salen de la documentación conocida: hay que confirmarlos).
+1. ~~Llaves de sandbox~~ (David las agregó el 20-oct; se cargan en sesiones nuevas) **Llaves de sandbox** del comercio EduNest en Wompi (panel › Desarrolladores): llave pública `pub_test_…`, llave privada `prv_test_…`, secreto de integridad y secreto de eventos. Van como variables del entorno en la nube (`WOMPI_LLAVE_PUBLICA`, `WOMPI_LLAVE_PRIVADA`, `WOMPI_SECRETO_INTEGRIDAD`, `WOMPI_SECRETO_EVENTOS`), nunca en el chat.
+2. ~~Dominios permitidos~~ Hecho el 20-oct: `sandbox.wompi.co`, `checkout.wompi.co` y `docs.wompi.co` responden.
 3. **Dónde vive el conector**: un subdominio con HTTPS (propuesto `pase.edunest.co`) en DigitalOcean, separado del Moodle, para que Wompi pueda llamar a `https://pase.edunest.co/webhooks/wompi`. Esa URL se pone en el panel de Wompi como URL de eventos del sandbox.
 4. **Moodle** (primero en un curso de prueba):
    - Cohortes de sistema con idnumber `registro-gratis` y `pase-empresario`.
@@ -94,6 +94,23 @@ Lo que comprueban las pruebas (criterios 1 a 5 de los requerimientos):
 | `PASE_SECRETO_SESION` | firma los enlaces de pago de cada persona |
 
 Cron sugerido: `cobro` y `conciliar` una vez al día (6:00), `pendientes` cada hora.
+
+## Verificado contra docs.wompi.co (20-oct-2026)
+
+Ya se pudo leer la documentación oficial y se ajustó el conector:
+
+- **Tokens de aceptación**: `GET /merchants/{llave}` deja de funcionar el **31 de octubre de 2026**. El conector usa ya `GET /merchants/info` con la cabecera `x-merchant-public-key`.
+- **Consultar una transacción** (`GET /transactions/{id}`) ahora exige la llave privada; con la pública responde 404. Corregido.
+- **Crear transacciones** exige `acceptance_token` (y `accept_personal_auth`). El primer cobro usa los que aceptó la persona; los cobros mensuales piden los prefirmados del comercio. Confirmar en la primera prueba de sandbox que Wompi los acepta así en cobros con fuente de pago.
+- `payment_method` (cuotas) solo se envía con tarjeta; `recurrent: true` activa COF en Visa/Mastercard con RBM.
+- Al cancelar se anula la fuente de pago (`PUT /payment_sources/{id}/void`), para no volver a cobrarle.
+- Firma de eventos: concatenar los valores de `signature.properties` + `timestamp` + secreto de eventos, SHA-256 (prueba con la cadena de la guía). Si el webhook no responde 200, Wompi reintenta a los 30 min, 3 h y 24 h; la conciliación diaria cubre lo que se pierda.
+- Prefijos de sandbox: `pub_test_`, `prv_test_`, `test_events_`, `test_integrity_` (el conector rechaza cualquier otro en modo sandbox).
+
+Mejoras posibles que la documentación habilita:
+
+- **Daviplata y Botón Bancolombia también se pueden tokenizar** como fuente de pago (Daviplata con código OTP), así que también podrían renovarse solos. Hoy el conector solo implementa tarjeta y Nequi.
+- **Widget en modo tokenización** (`data-widget-operation="tokenize"`): la tarjeta se captura en el widget de Wompi en vez del formulario propio, lo que reduce el alcance PCI de EduNest. Recomendado antes de producción.
 
 ## Por hacer después del sandbox
 

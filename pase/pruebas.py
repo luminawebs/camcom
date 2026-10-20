@@ -137,6 +137,22 @@ class PruebasFirmas(unittest.TestCase):
         ev["data"]["transaction"]["status"] = "VOIDED"
         self.assertFalse(w.evento_valido(ev, simw.SECRETO_EVENTOS))
 
+    def test_checksum_ejemplo_documentacion(self):
+        # Ejemplo literal de docs.wompi.co/docs/colombia/eventos (consultado 2026-10-20)
+        ev = {"data": {"transaction": {"id": "1234-1610641025-49201", "status": "APPROVED",
+                                       "amount_in_cents": 4490000}},
+              "timestamp": 1530291411,
+              "signature": {"properties": ["transaction.id", "transaction.status",
+                                           "transaction.amount_in_cents"],
+                            "checksum": ""}}
+        # La cadena del paso 3 de la guía; el hash de ejemplo que muestra la guía es ilustrativo
+        # (no corresponde a esa cadena), así que se compara contra el SHA-256 de la cadena.
+        cadena = "1234-1610641025-49201APPROVED44900001530291411prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z"
+        import hashlib
+        esperado = hashlib.sha256(cadena.encode()).hexdigest()
+        self.assertEqual(w.checksum_evento(ev, "prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z"), esperado)
+        self.assertTrue(w.evento_valido(ev, "prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z", esperado.upper()))
+
     def test_candado_produccion(self):
         os.environ.pop("PASE_PERMITIR_PRODUCCION", None)
         with self.assertRaises(ValueError):
@@ -205,6 +221,7 @@ class PruebasFlujo(Escenario):
         self.esperar_estado(pid, "cancelado")
         self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
         self.assertTrue(self.en_cohorte(pid, "registro-gratis"))  # avance y cursos gratis intactos
+        self.assertEqual(self.sim.fuentes[fuente]["status"], "VOIDED")  # no se le vuelve a cobrar
         # un día sin nada que cobrar
         self.reloj.fecha = dt.date(2026, 12, 11)
         self.assertEqual(self.pase.cobro_mensual(), [])

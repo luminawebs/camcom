@@ -48,6 +48,9 @@ TEXTO_AUTORIZACION_V1 = (
 )
 
 
+TIPO_FUENTE = {"tarjeta": "CARD", "nequi": "NEQUI"}
+
+
 def ahora():
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
@@ -183,7 +186,8 @@ class Pase:
         medio = {"CARD": "tarjeta", "NEQUI": "nequi"}[tipo]
         self._asegurar_suscripcion(persona_id, medio, str(fuente["id"]), enmascarado)
         ref = self._registrar_pago(persona_id, "inicial", medio)
-        tx = self.wompi.cobrar_fuente(fuente["id"], ref, p["correo"])
+        tx = self.wompi.cobrar_fuente(fuente["id"], ref, p["correo"], tipo,
+                                      token_aceptacion=token_aceptacion, token_datos=token_datos)
         self.q("UPDATE pagos SET wompi_transaction_id=? WHERE referencia=?", tx["id"], ref)
         self.historial(persona_id, "pago_iniciado", f"{medio} {ref}", "formulario")
         return ref, tx
@@ -353,7 +357,8 @@ class Pase:
             ref = self._registrar_pago(pid, "mensual", s["medio"], intento, corte.strftime("%Y%m"))
             self.q("UPDATE suscripciones SET intento=? WHERE persona_id=?", intento, pid)
             try:
-                tx = self.wompi.cobrar_fuente(s["payment_source_id"], ref, p["correo"])
+                tx = self.wompi.cobrar_fuente(s["payment_source_id"], ref, p["correo"],
+                                              TIPO_FUENTE.get(s["medio"], "CARD"))
                 self.q("UPDATE pagos SET wompi_transaction_id=? WHERE referencia=?", tx["id"], ref)
                 hechos.append((pid, f"cobro {ref}"))
             except w.ErrorWompi as e:
@@ -391,6 +396,13 @@ class Pase:
                   proximo_intento=NULL WHERE persona_id=?""", ahora(), motivo, persona_id)
         if p["moodle_user_id"]:
             self.moodle.quitar_de_cohorte(p["moodle_user_id"], self.c.cohorte_pase)
+        sus = self.suscripcion(persona_id)
+        if sus and sus["payment_source_id"]:
+            try:  # no se vuelve a cobrar a esa fuente; para volver se tokeniza de nuevo
+                self.wompi.anular_fuente(sus["payment_source_id"])
+                self.historial(persona_id, "fuente_anulada", sus["medio_enmascarado"] or "", origen)
+            except w.ErrorWompi as e:
+                self.historial(persona_id, "error_anular_fuente", str(e)[:300], origen)
         self.estado(persona_id, "cancelado", origen)
         self.historial(persona_id, "cancelo", motivo, origen)
         self.avisar_organizaciones("Cancelación del Pase", f"{p['nombre']}: {motivo}")

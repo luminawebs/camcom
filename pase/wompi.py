@@ -56,13 +56,15 @@ class Wompi:
     def __init__(self, config):
         self.c = config
 
-    def _llamar(self, metodo, ruta, cuerpo=None, privada=False):
+    def _llamar(self, metodo, ruta, cuerpo=None, privada=False, cabeceras=None):
         llave = self.c.llave_privada if privada else self.c.llave_publica
         datos = json.dumps(cuerpo).encode() if cuerpo is not None else None
         req = urllib.request.Request(f"{self.c.api_wompi}{ruta}", data=datos, method=metodo)
         req.add_header("Content-Type", "application/json")
-        if llave:
+        if llave and not cabeceras:
             req.add_header("Authorization", f"Bearer {llave}")
+        for k, v in (cabeceras or {}).items():
+            req.add_header(k, v)
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
                 return json.loads(r.read() or b"{}")
@@ -71,8 +73,10 @@ class Wompi:
 
     # --- Lecturas ---
     def comercio(self):
-        """Tokens de aceptación (términos y tratamiento de datos) que el usuario debe aceptar."""
-        d = self._llamar("GET", f"/merchants/{self.c.llave_publica}")["data"]
+        """Tokens de aceptación (términos y tratamiento de datos) que el usuario debe aceptar.
+        GET /merchants/{llave} deja de existir el 31-oct-2026: se usa /merchants/info."""
+        d = self._llamar("GET", "/merchants/info",
+                         cabeceras={"x-merchant-public-key": self.c.llave_publica})["data"]
         return {
             "nombre": d.get("name"),
             "aceptacion": d["presigned_acceptance"],
@@ -80,7 +84,8 @@ class Wompi:
         }
 
     def transaccion(self, transaccion_id):
-        return self._llamar("GET", f"/transactions/{transaccion_id}")["data"]
+        # Desde 2026 la consulta solo acepta la llave privada (con la pública responde 404).
+        return self._llamar("GET", f"/transactions/{transaccion_id}", privada=True)["data"]
 
     def transacciones_por_referencia(self, referencia):
         q = urllib.parse.urlencode({"reference": referencia})
@@ -94,19 +99,35 @@ class Wompi:
             cuerpo["accept_personal_auth"] = token_datos
         return self._llamar("POST", "/payment_sources", cuerpo, privada=True)["data"]
 
-    def cobrar_fuente(self, fuente_id, referencia, correo, monto_centavos=None, recurrente=True):
+    def cobrar_fuente(self, fuente_id, referencia, correo, tipo="CARD", monto_centavos=None,
+                      token_aceptacion=None, token_datos=None):
+        """POST /transactions con payment_source_id. Los tokens de aceptación son obligatorios
+        al crear transacciones: si no vienen del navegador, se piden prefirmados al comercio."""
         monto = monto_centavos or self.c.precio_centavos
+        if not token_aceptacion:
+            com = self.comercio()
+            token_aceptacion = com["aceptacion"]["acceptance_token"]
+            token_datos = (com.get("datos_personales") or {}).get("acceptance_token")
         cuerpo = {
             "amount_in_cents": monto,
             "currency": self.c.moneda,
             "signature": firma_integridad(referencia, monto, self.c.moneda, self.c.secreto_integridad),
             "customer_email": correo,
-            "payment_method": {"installments": 1},
             "reference": referencia,
             "payment_source_id": int(fuente_id),
-            "recurrent": recurrente,
+            "acceptance_token": token_aceptacion,
         }
+        if token_datos:
+            cuerpo["accept_personal_auth"] = token_datos
+        if tipo == "CARD":
+            # Cuotas solo para tarjeta; recurrent=true activa COF (Visa/Mastercard con RBM)
+            cuerpo["payment_method"] = {"installments": 1}
+            cuerpo["recurrent"] = True
         return self._llamar("POST", "/transactions", cuerpo, privada=True)["data"]
+
+    def anular_fuente(self, fuente_id):
+        """PUT /payment_sources/{id}/void: la fuente queda VOIDED y ya no se puede cobrar."""
+        return self._llamar("PUT", f"/payment_sources/{int(fuente_id)}/void", privada=True)["data"]
 
     def crear_enlace_pago(self, nombre, descripcion, referencia, monto_centavos=None, expira=None):
         cuerpo = {
