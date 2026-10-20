@@ -1,8 +1,8 @@
 # Publicar el conector del Pase en un droplet
 
-Para un droplet Ubuntu que ya tiene otro proyecto. El conector queda **aislado**: usuario
+Para un droplet con nginx que ya tiene otro proyecto (Ubuntu/Debian o AlmaLinux/Rocky con SELinux). El conector queda **aislado**: usuario
 `pase` sin shell, código en `/opt/pase`, datos en `/var/lib/pase`, configuración en
-`/etc/pase/pase.env`, un sitio nginx propio (`/etc/nginx/sites-available/pase`) y servicios
+`/etc/pase/pase.env`, un sitio nginx propio (`/etc/nginx/sites-available/pase` o `/etc/nginx/conf.d/pase.conf`) y servicios
 `pase*.service`. No modifica sitios, puertos ni servicios existentes.
 
 ## 0. Antes (David)
@@ -20,6 +20,9 @@ Muestra sistema, puertos ocupados, sitios nginx, certificados, contenedores y se
 Con eso se elige un puerto libre (por defecto 8091) y se confirma que nginx es el que
 atiende el 80/443. Si el servidor usa Caddy, Traefik o Docker en esos puertos, este kit se
 adapta antes de instalar.
+
+En SELinux «Enforcing» el instalador etiqueta solo el puerto del conector como `http_port_t`
+(no activa `httpd_can_network_connect`, que abriría a nginx todos los puertos).
 
 ## 2. Instalar
 
@@ -59,7 +62,7 @@ curl https://pase.edunest.co/salud
 | Actualizar | copiar el nuevo `pase/` y volver a correr `instalar.sh` (guarda la versión anterior en `/opt/pase/pase.anterior`) |
 | Volver atrás | `sudo mv /opt/pase/pase /opt/pase/pase.malo && sudo mv /opt/pase/pase.anterior /opt/pase/pase && sudo systemctl restart pase` |
 | Respaldo | `sqlite3 /var/lib/pase/pase.db ".backup /var/lib/pase/respaldo-$(date +%F).db"` |
-| Quitar todo | `systemctl disable --now pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer; rm /etc/nginx/sites-enabled/pase; systemctl reload nginx` |
+| Quitar todo | `systemctl disable --now pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer; rm -f /etc/nginx/sites-enabled/pase /etc/nginx/conf.d/pase.conf; systemctl reload nginx` |
 
 Mientras `PASE_MOODLE_SIMULADO=1`, las cohortes se simulan en memoria y no se toca
 portal.edunest.co. Producción de Wompi sigue bloqueada sin `PASE_PERMITIR_PRODUCCION=1`.

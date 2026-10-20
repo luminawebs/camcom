@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Instala o actualiza el conector del Pase en un droplet Ubuntu con nginx.
+# Instala o actualiza el conector del Pase en un droplet con nginx (Ubuntu/Debian o
+# AlmaLinux/Rocky/RHEL con SELinux).
 # Todo queda aparte de lo que ya corre: usuario «pase», /opt/pase, /etc/pase, un sitio
 # nginx propio y servicios systemd con prefijo pase-. Se puede correr varias veces.
 #
@@ -52,9 +53,24 @@ done
 systemctl daemon-reload
 
 echo "› Sitio nginx ($DOMINIO → 127.0.0.1:$PUERTO)"
-SITIO=/etc/nginx/sites-available/pase
-sed -e "s#__DOMINIO__#$DOMINIO#g" -e "s#__PUERTO__#$PUERTO#g" "$AQUI/nginx-pase.conf" > "$SITIO"
-ln -sf "$SITIO" /etc/nginx/sites-enabled/pase
+if [ -d /etc/nginx/sites-available ]; then
+  SITIO=/etc/nginx/sites-available/pase
+  sed -e "s#__DOMINIO__#$DOMINIO#g" -e "s#__PUERTO__#$PUERTO#g" "$AQUI/nginx-pase.conf" > "$SITIO"
+  ln -sf "$SITIO" /etc/nginx/sites-enabled/pase
+else  # AlmaLinux/RHEL: un archivo propio en conf.d, sin tocar los demás
+  SITIO=/etc/nginx/conf.d/pase.conf
+  sed -e "s#__DOMINIO__#$DOMINIO#g" -e "s#__PUERTO__#$PUERTO#g" "$AQUI/nginx-pase.conf" > "$SITIO"
+fi
+
+if command -v getenforce >/dev/null && [ "$(getenforce)" = Enforcing ]; then
+  # Solo se le permite a nginx este puerto; no se activa httpd_can_network_connect (global)
+  command -v semanage >/dev/null || dnf -y -q install policycoreutils-python-utils
+  if ! semanage port -l | awk '$1=="http_port_t"' | grep -qw "$PUERTO"; then
+    semanage port -a -t http_port_t -p tcp "$PUERTO" 2>/dev/null \
+      || semanage port -m -t http_port_t -p tcp "$PUERTO"
+  fi
+  restorecon -R "$SITIO" "$APP" "$DATOS" /etc/pase 2>/dev/null || true
+fi
 nginx -t && systemctl reload nginx
 
 echo "› Pruebas del código en el servidor"
