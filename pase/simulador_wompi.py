@@ -32,6 +32,7 @@ class Simulador:
         self.webhook, self.demora = webhook, demora
         self.ids = itertools.count(1000)
         self.tokens, self.fuentes, self.transacciones = {}, {}, {}
+        self.aceptaciones_usadas = set()  # en Wompi cada token de aceptación sirve una sola vez
         self.forzado = {}           # payment_source_id -> estado forzado para el próximo cobro
         self.eventos_enviados = []
         self.candado = threading.Lock()
@@ -42,10 +43,10 @@ class Simulador:
     def comercio(self):
         return {"data": {
             "name": "EduNest (simulador)",
-            "presigned_acceptance": {"acceptance_token": "acept_sim_" + str(int(time.time())),
+            "presigned_acceptance": {"acceptance_token": self._id("acept_sim_"),
                                      "permalink": "https://wompi.com/assets/terminos-sandbox.pdf",
                                      "type": "END_USER_POLICY"},
-            "presigned_personal_data_auth": {"acceptance_token": "datos_sim_" + str(int(time.time())),
+            "presigned_personal_data_auth": {"acceptance_token": self._id("datos_sim_"),
                                              "permalink": "https://wompi.com/assets/datos-sandbox.pdf",
                                              "type": "PERSONAL_DATA_AUTH"},
         }}
@@ -73,10 +74,19 @@ class Simulador:
             t["estado"] = "APPROVED" if t["aprueba"] else "DECLINED"
         return 200, {"data": {"id": tid, "status": t["estado"]}}
 
+    def _usar_aceptacion(self, d):
+        usados = [d[k] for k in ("acceptance_token", "accept_personal_auth") if d.get(k)]
+        if any(u in self.aceptaciones_usadas for u in usados):
+            return 422, {"error": {"type": "INPUT_VALIDATION_ERROR",
+                                   "messages": {"acceptance_token": ["El token de aceptación ya fue usado"]}}}
+        self.aceptaciones_usadas.update(usados)
+
     def fuente_pago(self, d):
         t = self.tokens.get(d.get("token"))
         if not t or not d.get("acceptance_token"):
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "reason": "token o aceptación"}}
+        if (error := self._usar_aceptacion(d)):
+            return error
         if t["tipo"] == "NEQUI" and t.get("estado") != "APPROVED":
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "reason": "token Nequi no aprobado"}}
         fid = next(self.ids)
@@ -103,6 +113,8 @@ class Simulador:
                                    "messages": {"acceptance_token": ["Requerido"]}}}
         if any(t["reference"] == d["reference"] for t in self.transacciones.values()):
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "messages": {"reference": ["Ya existe"]}}}
+        if (error := self._usar_aceptacion(d)):
+            return error
         f = self.fuentes.get(d.get("payment_source_id"))
         if not f or f["status"] != "AVAILABLE":
             return 422, {"error": {"type": "INPUT_VALIDATION_ERROR", "reason": "fuente de pago"}}

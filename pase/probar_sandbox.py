@@ -31,7 +31,9 @@ def esperar_final(api, tx_id, intentos=20):
     return tx
 
 
-def cobrar(api, tipo, token, correo, comercio):
+def cobrar(api, tipo, token, correo):
+    # Cada token de aceptación sirve una sola vez: se piden unos nuevos para cada fuente
+    comercio = api.comercio()
     fuente = api.crear_fuente_pago(tipo, token, correo, comercio["aceptacion"]["acceptance_token"],
                                    (comercio["datos_personales"] or {}).get("acceptance_token"))
     paso(f"payment_source {tipo}", fuente.get("status") == "AVAILABLE",
@@ -55,6 +57,9 @@ def main():
                              ("WOMPI_SECRETO_INTEGRIDAD", c.secreto_integridad)) if not v]
     if faltan:
         sys.exit("Faltan variables: " + ", ".join(faltan))
+    if "localhost" in c.url_publica or "127.0.0.1" in c.url_publica:
+        # El firewall de checkout.wompi.co responde 403 si redirect-url apunta a localhost
+        c.url_publica = "https://pase.edunest.co"
     api = w.Wompi(c)
     correo = "pruebas.pase@edunest.co"
 
@@ -64,7 +69,7 @@ def main():
     tarjeta = api._llamar("POST", "/tokens/cards", {"number": "4242424242424242", "cvc": "123",
                           "exp_month": "08", "exp_year": "30", "card_holder": "Prueba Pase"})["data"]
     paso("token tarjeta 4242", tarjeta["id"].startswith("tok_"), tarjeta.get("name", ""))
-    cobrar(api, "CARD", tarjeta["id"], correo, comercio)
+    cobrar(api, "CARD", tarjeta["id"], correo)
 
     nequi = api._llamar("POST", "/tokens/nequi", {"phone_number": "3991111111"})["data"]
     for _ in range(20):
@@ -73,7 +78,7 @@ def main():
         time.sleep(3)
         nequi = api._llamar("GET", f"/tokens/nequi/{nequi['id']}")["data"]
     if paso("token Nequi 3991111111", nequi["status"] == "APPROVED", nequi["status"]):
-        cobrar(api, "NEQUI", nequi["id"], correo, comercio)
+        cobrar(api, "NEQUI", nequi["id"], correo)
 
     url = api.url_web_checkout(f"PASE-PRUEBA-WC-{uuid.uuid4().hex[:8]}", correo, "Prueba Pase")
     with urllib.request.urlopen(url, timeout=20) as r:

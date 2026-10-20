@@ -180,14 +180,15 @@ class Pase:
     def pagar_con_token(self, persona_id, tipo, token, token_aceptacion, token_datos=None,
                         enmascarado=""):
         """Tarjeta o Nequi tokenizados en el navegador (directo a Wompi): crea la fuente de pago
-        y hace el primer cobro con ella. EduNest solo guarda el id de la fuente (RF-12)."""
+        y hace el primer cobro con ella. EduNest solo guarda el id de la fuente (RF-12).
+        Los tokens de aceptación del navegador se gastan al crear la fuente (Wompi los acepta
+        una sola vez); el primer cobro pide unos prefirmados nuevos, igual que la renovación."""
         p = self.persona(persona_id)
         fuente = self.wompi.crear_fuente_pago(tipo, token, p["correo"], token_aceptacion, token_datos)
         medio = {"CARD": "tarjeta", "NEQUI": "nequi"}[tipo]
         self._asegurar_suscripcion(persona_id, medio, str(fuente["id"]), enmascarado)
         ref = self._registrar_pago(persona_id, "inicial", medio)
-        tx = self.wompi.cobrar_fuente(fuente["id"], ref, p["correo"], tipo,
-                                      token_aceptacion=token_aceptacion, token_datos=token_datos)
+        tx = self.wompi.cobrar_fuente(fuente["id"], ref, p["correo"], tipo)
         self.q("UPDATE pagos SET wompi_transaction_id=? WHERE referencia=?", tx["id"], ref)
         self.historial(persona_id, "pago_iniciado", f"{medio} {ref}", "formulario")
         return ref, tx
