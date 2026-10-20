@@ -69,7 +69,7 @@ Lo que comprueban las pruebas (criterios 1 a 5 de los requerimientos):
 
 ## Pasar al sandbox real de Wompi (lo que falta de David)
 
-1. ~~Llaves de sandbox~~ (David las agregó el 20-oct; se cargan en sesiones nuevas) **Llaves de sandbox** del comercio EduNest en Wompi (panel › Desarrolladores): llave pública `pub_test_…`, llave privada `prv_test_…`, secreto de integridad y secreto de eventos. Van como variables del entorno en la nube (`WOMPI_LLAVE_PUBLICA`, `WOMPI_LLAVE_PRIVADA`, `WOMPI_SECRETO_INTEGRIDAD`, `WOMPI_SECRETO_EVENTOS`), nunca en el chat.
+1. **Llaves de sandbox** (hecho el 20-oct; se cargan en sesiones nuevas) del comercio EduNest en Wompi (panel › Desarrolladores): llave pública `pub_test_…`, llave privada `prv_test_…`, secreto de integridad y secreto de eventos. Van como variables del entorno en la nube (`WOMPI_LLAVE_PUBLICA`, `WOMPI_LLAVE_PRIVADA`, `WOMPI_SECRETO_INTEGRIDAD`, `WOMPI_SECRETO_EVENTOS`), nunca en el chat.
 2. ~~Dominios permitidos~~ Hecho el 20-oct: `sandbox.wompi.co`, `checkout.wompi.co` y `docs.wompi.co` responden.
 3. **Dónde vive el conector**: un subdominio con HTTPS (propuesto `pase.edunest.co`) en DigitalOcean, separado del Moodle, para que Wompi pueda llamar a `https://pase.edunest.co/webhooks/wompi`. Esa URL se pone en el panel de Wompi como URL de eventos del sandbox.
 4. **Moodle** (primero en un curso de prueba):
