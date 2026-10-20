@@ -1,0 +1,29 @@
+Lee tus números
+Nombre corto: AVS-G05 · Número de ID: AVS-G05-lee-tus-numeros
+
+INICIO · page · Bienvenida
+INICIO · page · [Configurar] Datos y perfil del negocio (Retroalimentación) (oculta)
+INICIO · page · [Configurar] Diagnóstico rápido (Cuestionario) (oculta)
+Unidad 1 · Ingresos, costos y gastos · page · Resumen: Resumen en video
+Unidad 1 · Ingresos, costos y gastos · page · Entrada: La plancha que Patricia quiere comprar
+Unidad 1 · Ingresos, costos y gastos · scorm · Aprende: Ingreso, costo o gasto
+Unidad 1 · Ingresos, costos y gastos · scorm · Practica: ¿Cuánto fueron los costos del mes?
+Unidad 1 · Ingresos, costos y gastos · forum · Aplica: Clasifica una semana de tu negocio
+Unidad 1 · Ingresos, costos y gastos · page · Llévatelo: Ingresos, costos y gastos en una mirada
+Unidad 1 · Ingresos, costos y gastos · page · Profundiza: Lecturas y guías
+Unidad 2 · El mes en números · page · Resumen: Resumen en video
+Unidad 2 · El mes en números · page · Entrada: El cuaderno, el Nequi y los fiados de Óscar
+Unidad 2 · El mes en números · scorm · Aprende: Junta el mes sin contar dos veces
+Unidad 2 · El mes en números · scorm · Practica: ¿Cuánto vendió Óscar en el mes?
+Unidad 2 · El mes en números · forum · Aplica: Junta un mes de tu negocio
+Unidad 2 · El mes en números · page · Llévatelo: El mes en números, en una mirada
+Unidad 2 · El mes en números · page · Profundiza: Lecturas y guías
+Unidad 3 · Tu estado de resultados del mes · page · Resumen: Resumen en video
+Unidad 3 · Tu estado de resultados del mes · page · Entrada: El mejor mes de Marisol
+Unidad 3 · Tu estado de resultados del mes · scorm · Aprende: Tu estado de resultados en una hoja
+Unidad 3 · Tu estado de resultados del mes · scorm · Practica: ¿Cuánto le quedó a la papelería?
+Unidad 3 · Tu estado de resultados del mes · forum · Aplica: Tu estado de resultados del mes
+Unidad 3 · Tu estado de resultados del mes · page · Llévatelo: Tu estado de resultados en una mirada
+Unidad 3 · Tu estado de resultados del mes · page · Profundiza: Lecturas y guías
+CIERRE · page · [Configurar] Reto final entre pares (Taller) (oculta)
+CIERRE · page · [Configurar] Constancia de participación (Certificado personalizado) (oculta)
