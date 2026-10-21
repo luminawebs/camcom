@@ -8,13 +8,10 @@ Marcas de pendiente quitadas al publicar (van al registro del contador):
 99-cierre.html: «Ver el curso [descuento por definir] ›» (quitado)
 99-constancia-de-participacion.html: «[VERIFICAR logo definitivo]» (quitado)
 u1-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
-u1-llevatelo.html: «Ficha verticalFicha 1080 × 1920 para guardar en el celular, hecha en Canva. Máx. 250 KB.» (quitado)
 u1-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
 u2-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
-u2-llevatelo.html: «Ficha verticalFicha 1080 × 1920 para guardar en el celular, hecha en Canva. Máx. 250 KB.» (quitado)
 u2-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
 u3-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
-u3-llevatelo.html: «Ficha verticalFicha 1080 × 1920 para guardar en el celular, hecha en Canva. Máx. 250 KB.» (quitado)
 u3-profundiza.html: «[VERIFICAR versión vigente]» (quitado)
 u3-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
 lee-tus-numeros-u2-aprende.zip/contenido.js: «[VERIFICAR con el contador]» (quitado)

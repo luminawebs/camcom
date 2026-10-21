@@ -157,6 +157,16 @@ def mapa(c, nombre, que):
     return hueco("imagen", "Mapa mental", f"{que}. Lo arma Claude desde los guiones: mapas/{nombre}.png")
 
 
+def ficha(c, i):
+    """Ficha vertical 1080 × 1920 para el celular: la arma plantillas/fichas.py en <curso>/fichas/ (ya no Canva)."""
+    kb = c.get("_fichas", {}).get(f"u{i}-ficha")
+    if kb:
+        return (f'<img src="../fichas/u{i}-ficha.jpg" alt="Ficha de la Unidad {i} para guardar en el celular" '
+                f'style="display:block;width:100%;max-width:360px;height:auto;margin:0 auto;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.18)">'
+                f'<a class="as-btn" href="../fichas/u{i}-ficha.jpg" download="u{i}-ficha.jpg" target="_blank">⬇ Guarda la ficha en tu celular · JPG {kb} KB</a>')
+    return hueco('vertical', 'Ficha vertical', f'Ficha 1080 × 1920 para guardar en el celular. La arma Claude con plantillas/fichas.py en fichas/u{i}-ficha.jpg. Máx. 250 KB.')
+
+
 def guia(c, i):
     """Guía de estudio en PDF: la arma Claude con el logo en <curso>/guias-pdf/ (ya no NotebookLM)."""
     kb = c.get("_guias", {}).get(f"u{i}-guia")
@@ -418,7 +428,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Paso {k_ll} · Llévatelo · {mins['llevatelo']} min</span>
     <h2>{t(L['titulo'])}</h2>
-    {hueco('vertical', 'Ficha vertical', 'Ficha 1080 × 1920 para guardar en el celular, hecha en Canva. Máx. 250 KB.')}
+    {ficha(c, i)}
   </div>
   <div class="as-tarjeta as-pila">
     <h3>En tres frases</h3>
@@ -515,6 +525,10 @@ def vista_previa(c, secs, carpeta, pags):
             for n in c[clave]:
                 n = n if "." in n else n + ".mp3"
                 shutil.copy(carpeta / carpeta_extra / n, destino / carpeta_extra / n)
+    if c.get("_fichas"):
+        (destino / "fichas").mkdir()
+        for n in c["_fichas"]:
+            shutil.copy(carpeta / "fichas" / f"{n}.jpg", destino / "fichas" / f"{n}.jpg")
     if c.get("_guias"):
         (destino / "guias-pdf").mkdir()
         for n in c["_guias"]:
@@ -556,6 +570,8 @@ def main():
         c["_mapas"] = sorted(p.stem for p in (carpeta / "mapas").glob("*.png"))
     if (carpeta / "guias-pdf").is_dir():
         c["_guias"] = {p.stem: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "guias-pdf").glob("*.pdf"))}
+    if (carpeta / "fichas").is_dir():
+        c["_fichas"] = {p.stem: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "fichas").glob("u*-ficha.jpg"))}
     if (carpeta / "medios-moodle").is_dir():
         c["_narraciones"] = sorted(p.stem for p in (carpeta / "medios-moodle").glob("*-narracion.mp3"))
         c["_videos"] = sorted(p.name for p in (carpeta / "medios-moodle").iterdir() if re.match(r"(bienvenida|u\d+-resumen)\.(mp4|vtt)$", p.name))
