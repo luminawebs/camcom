@@ -9,6 +9,7 @@ Los cursos se abren por «Sincronización de cohortes»: el conector nunca matri
 curso por curso, solo mete o saca a la persona de la cohorte.
 """
 import json
+import re
 import urllib.parse
 import urllib.request
 
@@ -23,6 +24,11 @@ def _aplanar(prefijo, valor, salida):
     else:
         salida.append((prefijo, valor))
     return salida
+
+
+def nombre_usuario(correo):
+    """Moodle solo acepta minúsculas, números y _ - . @ en el usuario (p. ej. no «+»)."""
+    return re.sub(r"[^a-z0-9_.@-]", "-", correo.strip().lower())
 
 
 class ErrorMoodle(Exception):
@@ -45,13 +51,16 @@ class Moodle:
         return res
 
     def buscar_usuario(self, correo):
-        res = self.llamar("core_user_get_users_by_field", field="email", values=[correo.lower()])
-        return res[0]["id"] if res else None
+        for campo, valor in (("email", correo.lower()), ("username", nombre_usuario(correo))):
+            res = self.llamar("core_user_get_users_by_field", field=campo, values=[valor])
+            if res:
+                return res[0]["id"]
+        return None
 
     def crear_usuario(self, persona):
         nombre, _, apellido = persona["nombre"].strip().partition(" ")
         res = self.llamar("core_user_create_users", users=[{
-            "username": persona["correo"].lower(),
+            "username": nombre_usuario(persona["correo"]),
             "createpassword": 1,  # Moodle envía la contraseña por correo
             "firstname": nombre, "lastname": apellido or "-",
             "email": persona["correo"].lower(), "auth": "manual",

@@ -153,6 +153,10 @@ class PruebasFirmas(unittest.TestCase):
         self.assertEqual(w.checksum_evento(ev, "prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z"), esperado)
         self.assertTrue(w.evento_valido(ev, "prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z", esperado.upper()))
 
+    def test_nombre_usuario_moodle(self):
+        from .moodle import nombre_usuario
+        self.assertEqual(nombre_usuario(" Dora+Pase1@Tienda.co "), "dora-pase1@tienda.co")
+
     def test_candado_produccion(self):
         os.environ.pop("PASE_PERMITIR_PRODUCCION", None)
         with self.assertRaises(ValueError):
