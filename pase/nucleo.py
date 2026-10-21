@@ -8,6 +8,7 @@ import datetime as dt
 import json
 import secrets
 import sqlite3
+import sys
 import threading
 
 from . import wompi as w
@@ -243,11 +244,25 @@ class Pase:
                 self.q("UPDATE eventos_wompi SET procesado_en=?, error=NULL WHERE id=?", ahora(), evento_id)
                 return 1
             except Exception as e:  # queda pendiente para el siguiente intento
+                print(f"Evento {evento_id} pendiente: {e!r}"[:500], file=sys.stderr, flush=True)
                 self.q("UPDATE eventos_wompi SET error=? WHERE id=?", repr(e)[:500], evento_id)
                 return 0
 
     def aplicar_transaccion(self, tx, origen="conector"):
-        """RF-19. Aplica el estado REAL de una transacción consultada en la API de Wompi."""
+        """RF-19. Aplica el estado REAL de una transacción consultada en la API de Wompi.
+
+        Todo o nada: si Moodle falla, el pago no queda APPROVED sin matrícula y el
+        siguiente intento lo vuelve a aplicar."""
+        with self.candado:
+            self.bd.execute("BEGIN")
+            try:
+                self._aplicar_transaccion(tx, origen)
+            except BaseException:
+                self.bd.execute("ROLLBACK")
+                raise
+            self.bd.execute("COMMIT")
+
+    def _aplicar_transaccion(self, tx, origen):
         pago = self.uno("SELECT * FROM pagos WHERE referencia=?", tx["reference"])
         if not pago:
             raise ValueError(f"Referencia desconocida {tx['reference']}")

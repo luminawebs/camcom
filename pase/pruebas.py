@@ -317,6 +317,25 @@ class PruebasFlujo(Escenario):
         self.assertEqual(self.pase.conciliar(), 1)
         self.assertEqual(self.estado_persona(pid), "suscrito")
 
+    def test_moodle_caido_no_deja_pago_aprobado_sin_matricula(self):
+        original, fallos = self.moodle.agregar_a_cohorte, []
+
+        def caido(uid, cohorte):
+            if cohorte == "pase-empresario" and not fallos:
+                fallos.append(cohorte)
+                raise RuntimeError("Moodle no responde")
+            return original(uid, cohorte)
+        self.moodle.agregar_a_cohorte = caido
+        pid, ref = self.pagar_tarjeta()
+        self.assertTrue(esperar(lambda: fallos and self.pase.uno(
+            "SELECT error FROM eventos_wompi")["error"]))
+        self.assertEqual(self.estado_persona(pid), "interesado")
+        self.assertNotEqual(self.pase.uno("SELECT estado FROM pagos WHERE referencia=?", ref)["estado"],
+                            "APPROVED")
+        self.assertEqual(self.pase.procesar_pendientes(), 1)  # Moodle volvió
+        self.assertEqual(self.estado_persona(pid), "suscrito")
+        self.assertTrue(self.en_cohorte(pid, "pase-empresario"))
+
 
 if __name__ == "__main__":
     unittest.main()
