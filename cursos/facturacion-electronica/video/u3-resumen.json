@@ -1,0 +1,18 @@
+{
+  "titulo": "Tu primera factura, sin errores",
+  "etiqueta": "Unidad 3 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Tu primera factura, sin errores", "texto": "Doris · almuerzos en el centro de Soacha",
+     "voz": "Doris hizo su primera factura a una empresa, pero escribió mal el NIT. Y no sabe si borrarla o pagar una multa."},
+    {"tipo": "lista", "titulo": "Pide antes de facturar",
+     "items": [["Nombre completo", "O la razón social."], ["NIT o cédula", "Revisado contra el RUT."], ["Correo", "Ahí le llega la factura."]],
+     "voz": "Antes de facturar, pide el nombre de tu cliente, su NIT o cédula, y su correo. Si no te los da, facturas a consumidor final."},
+    {"tipo": "lista", "titulo": "Lo que lleva tu factura",
+     "items": [["Tu numeración", "Con el prefijo."], ["Lo que vendiste", "Cantidad, valor y forma de pago."], ["Código único y QR", "Los pone el sistema."]],
+     "voz": "Tu factura lleva tu numeración, la fecha, lo que vendiste con su valor, y el código único con el QR."},
+    {"tipo": "frase", "titulo": "Si te equivocas", "texto": "Nota crédito y una factura nueva. No se borra.",
+     "voz": "Si te equivocas, la factura no se borra: haces una nota crédito y una factura nueva."},
+    {"tipo": "cierre", "titulo": "Haz tu primera factura", "texto": "Datos completos · error = nota crédito + factura nueva",
+     "voz": "En esta unidad vas a hacer tu primera factura y revisarla."}
+  ]
+}

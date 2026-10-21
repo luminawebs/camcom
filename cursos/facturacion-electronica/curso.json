@@ -1,0 +1,224 @@
+{
+  "id": "facturacion-electronica",
+  "titulo": "Facturación electrónica sin miedo",
+  "titulo_corto": "Facturación electrónica",
+  "nivel": "g",
+  "perfil": "N",
+  "area": "Contabilidad y finanzas",
+  "duracion": "≈ 1,5 horas",
+  "promesa": "Al terminar sabrás si tu negocio tiene que facturar, tendrás tu plan para habilitarte gratis en la DIAN y sabrás llenar tu primera factura electrónica sin errores.",
+  "certificado": "Constancia de participación",
+  "resumen_formato": "video",
+  "experto": "Contador público de la Cámara de Comercio [por definir]",
+  "revisor": "un contador de la Cámara de Comercio",
+  "narracion": {
+    "voz": "a253156d",
+    "secciones": [
+      "entrada",
+      "aprende"
+    ],
+    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad son videos automáticos (plantillas/video_resumen.py)."
+  },
+  "caso": "Gloria, 47 años, tiene una panadería en San Mateo (Soacha) hace doce años. Un colegio del barrio le quiere comprar los refrigerios de todos los días, pero le pide factura electrónica. Gloria cree que para eso necesita un programa caro, un computador y un contador de planta.",
+  "personas": [
+    {
+      "nombre": "Gloria",
+      "negocio": "Panadería",
+      "barrio": "San Mateo",
+      "problema": "Un colegio le quiere comprar los refrigerios, pero le pide factura electrónica, y ella cree que eso cuesta mucho."
+    },
+    {
+      "nombre": "Andrés",
+      "negocio": "Ferretería pequeña",
+      "barrio": "Quintanares",
+      "problema": "Un contratista de obra le quiere comprar materiales cada semana, pero solo le compra si le factura, y Andrés no sabe cómo habilitarse."
+    },
+    {
+      "nombre": "Doris",
+      "negocio": "Almuerzos corrientes",
+      "barrio": "Centro de Soacha",
+      "problema": "Hizo su primera factura a una empresa de vigilancia, se equivocó en el NIT y no sabe cómo arreglarla."
+    }
+  ],
+  "objetivos": [
+    "Saber si tu negocio tiene que facturar y qué es de verdad una factura electrónica.",
+    "Conocer los pasos para habilitarte gratis en la DIAN y en cuál vas.",
+    "Llenar una factura electrónica con los datos completos, para una empresa o para un consumidor final.",
+    "Saber qué hacer si te equivocas en una factura o si se cae el sistema."
+  ],
+  "evidencia": "Tu plan de facturación: si te toca facturar, en qué paso de la habilitación vas y tu primera factura (de práctica o real) revisada con la lista de chequeo.",
+  "mapa_curso_nota": "Mapa del curso con las 3 unidades: ¿me toca?, habilitarte gratis y tu primera factura",
+  "inicio": {
+    "bienvenida": "Hola, te damos la bienvenida a Facturación electrónica sin miedo",
+    "texto": "Gloria tiene una panadería en San Mateo hace doce años. Un colegio le quiere comprar los refrigerios de todos los días, pero le pide factura electrónica. En tres unidades cortas vas a ver si a tu negocio le toca facturar, cómo habilitarte gratis en la DIAN y cómo hacer tu primera factura sin errores.",
+    "aprobar": "Completar las 3 unidades",
+    "dudas": "Foro Comunidad o WhatsApp de la Cámara [VERIFICAR número]",
+    "video_nota": "Bienvenida de 60 s: Gloria cuenta por qué le piden factura y qué vas a lograr. Con subtítulos.",
+    "diagnostico": [
+      "¿Tu negocio ya hace factura electrónica? (Sí / No / No sé si me toca)",
+      "¿Tu negocio tiene RUT? (Sí / No / No sé)",
+      "¿Qué te frena para facturar? (Creo que es caro / No sé por dónde empezar / Me da miedo equivocarme / Ya facturo)"
+    ]
+  },
+  "unidades": [
+    {
+      "tema": "¿Me toca facturar?",
+      "objetivo": "si tu negocio tiene que facturar, qué es de verdad una factura electrónica y por qué no es pagar más impuestos",
+      "entrada": {
+        "titulo": "El colegio que le pide factura a Gloria",
+        "texto": "Gloria abre su panadería en San Mateo a las 5 de la mañana. La rectora del colegio del barrio le propone comprarle los refrigerios de 300 niños todos los días, pero le dice que solo puede pagarle con factura electrónica. Gloria piensa que para eso necesita un programa caro, un computador y un contador de planta. Y casi le dice que no.",
+        "pregunta": "¿Le toca facturar a tu negocio y qué es de verdad una factura electrónica?",
+        "reflexion": "Piensa en el último mes: ¿algún cliente te pidió factura? ¿Perdiste una venta grande por no poder dársela?",
+        "imagen": "Ilustración de Gloria en el mostrador de su panadería hablando con la rectora del colegio (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "¿Te toca facturar?",
+        "texto": "Usa el árbol de la práctica con los datos de tu negocio. Mira si te toca facturar, si te conviene aunque no te toque, o si debes confirmarlo con un contador.",
+        "entrega": "Publica en el foro qué te salió en el árbol y qué es lo que más te frena para facturar (sin datos personales). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "¿Me toca facturar? En una mirada",
+        "resumen": [
+          "Facturar no es pagar más impuestos: es dejar constancia de lo que vendes.",
+          "La factura electrónica la valida la DIAN y le llega a tu cliente al correo, con un código único y un QR.",
+          "La DIAN tiene un servicio gratis para facturar: no necesitas comprar un programa."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "Si eres comerciante o responsable de IVA, te toca facturar, salvo que la ley diga que no [confirma tu caso con un contador]",
+        "descargas": []
+      },
+      "profundiza": [
+        {
+          "apa": "Dirección de Impuestos y Aduanas Nacionales. (2023). Resolución 000165 de 2023, por la cual se desarrolla el sistema de facturación electrónica. DIAN.",
+          "url": "https://normograma.dian.gov.co/dian/compilacion/docs/resolucion_dian_0165_2023.htm",
+          "para": "Quién debe facturar (artículo 7) y los requisitos de la factura."
+        },
+        {
+          "apa": "Dirección de Impuestos y Aduanas Nacionales. (2020). Oficio 907979 de 2020. DIAN.",
+          "url": "https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_907979_2020.htm",
+          "para": "Por qué no ser responsable de IVA no significa, por sí solo, no tener que facturar."
+        },
+        {
+          "apa": "Siempre al Día. (s. f.). ¿Cuáles son las personas naturales obligadas a facturar electrónicamente? Siempre al Día.",
+          "url": "https://siemprealdia.co/colombia/impuestos/personas-naturales-obligadas-a-facturar/",
+          "para": "Explicación sencilla de quién debe facturar."
+        }
+      ]
+    },
+    {
+      "tema": "Habilítate gratis en la DIAN",
+      "objetivo": "los pasos para habilitarte como facturador con el servicio gratuito de la DIAN y en cuál vas",
+      "entrada": {
+        "titulo": "La obra que quiere comprarle a Andrés",
+        "texto": "Andrés tiene una ferretería pequeña en Quintanares. Un contratista que está construyendo cerca le quiere comprar cemento, tubos y pintura cada semana, pero solo si le factura electrónicamente. Andrés tiene RUT, pero un vendedor le dijo que el programa para facturar cuesta medio millón al año. Andrés no sabe si vale la pena.",
+        "pregunta": "¿Cómo te habilitas para facturar sin pagar un programa?",
+        "reflexion": "¿Tienes tu RUT a la mano y sabes la clave del correo que pusiste en él? Con eso empiezas.",
+        "imagen": "Ilustración de Andrés en su ferretería atendiendo a un contratista de obra (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu plan para habilitarte",
+        "texto": "Revisa en qué paso de la habilitación vas con el árbol de la práctica y la lista de esta unidad. Escribe la fecha en que vas a hacer el siguiente paso.",
+        "entrega": "Publica en el foro en qué paso vas, cuál es el siguiente y su fecha (sin datos personales). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Los pasos para habilitarte",
+        "resumen": [
+          "Empiezas con el RUT al día y el correo que pusiste en él.",
+          "Te registras como facturador eligiendo el servicio gratuito de la DIAN y pides tu certificado de firma, también gratis.",
+          "Haces las pruebas, pides tu numeración con su prefijo y ya puedes facturar."
+        ],
+        "etiqueta_formula": "La ruta",
+        "formula": "RUT al día → registro con el servicio gratuito → firma → pruebas → numeración y prefijo → a facturar",
+        "descargas": [
+          {
+            "texto": "Lista para habilitarte en la DIAN · PDF",
+            "archivo": "u2-lista-habilitacion.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Dirección de Impuestos y Aduanas Nacionales. (s. f.). Facturación gratuita. DIAN.",
+          "url": "https://www.dian.gov.co/impuestos/factura-electronica/facturacion-gratuita/Paginas/default.aspx",
+          "para": "Portal oficial del servicio gratuito de facturación. [VERIFICAR enlace]"
+        },
+        {
+          "apa": "Dirección de Impuestos y Aduanas Nacionales. (s. f.). 3 pasos para facturar electrónicamente. DIAN.",
+          "url": "https://www.dian.gov.co/Prensa/Paginas/NG-3-pasos-para-facturar-electronicamente.aspx",
+          "para": "El resumen oficial de los pasos."
+        },
+        {
+          "apa": "Actualícese. (s. f.). DIAN publica los 5 pasos para comenzar a facturar con su servicio gratuito de facturación electrónica. Actualícese.",
+          "url": "https://actualicese.com/dian-publica-los-5-pasos-para-comenzar-a-facturar-con-su-servicio-gratuito-de-facturacion-electronica/",
+          "para": "El paso a paso explicado, con la numeración y los prefijos."
+        }
+      ]
+    },
+    {
+      "tema": "Tu primera factura, sin errores",
+      "objetivo": "qué datos lleva una factura electrónica, cómo hacerla para una empresa o para un consumidor final y qué hacer si te equivocas",
+      "entrada": {
+        "titulo": "La primera factura de Doris",
+        "texto": "Doris vende almuerzos corrientes en el centro de Soacha. Una empresa de vigilancia le paga cada mes los almuerzos de diez guardas. Doris hizo su primera factura electrónica, pero escribió mal el NIT de la empresa. La contadora de la empresa se la devolvió y Doris no sabe si tiene que borrarla, hacer otra o pagar una multa.",
+        "pregunta": "¿Qué datos lleva tu factura y qué haces si te equivocas?",
+        "reflexion": "Si mañana tienes que hacerle una factura a un cliente, ¿tienes su nombre completo, su NIT o cédula y su correo?",
+        "imagen": "Ilustración de Doris en su restaurante revisando una factura en el celular (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu factura revisada",
+        "texto": "Haz una factura de práctica (o la primera real, si ya estás habilitado) y revísala con la lista de chequeo de esta unidad.",
+        "entrega": "Publica en el foro cuántos puntos de la lista cumpliste y cuál te costó más (sin datos de clientes). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tu factura en una mirada",
+        "resumen": [
+          "Pide al cliente su nombre, su NIT o cédula y su correo. Si no te los da, factura a «consumidor final» con el número 222222222222.",
+          "Tu factura lleva tu numeración autorizada, la fecha, lo que vendiste, el valor y el código único (CUFE) con el QR.",
+          "Si te equivocas, no la borras: haces una nota crédito y una factura nueva."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "Datos completos antes de facturar · error = nota crédito + factura nueva",
+        "descargas": [
+          {
+            "texto": "Lista de chequeo de tu factura · PDF",
+            "archivo": "u3-chequeo-factura.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Gerencie. (s. f.). NIT 222222222222 en la facturación electrónica. Gerencie.com.",
+          "url": "https://www.gerencie.com/nit-222222222222-en-la-facturacion-electronica.html",
+          "para": "Cuándo se usa el número del consumidor final."
+        },
+        {
+          "apa": "Dirección de Impuestos y Aduanas Nacionales. (2022). Oficio 900223 de 2022. DIAN.",
+          "url": "https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_900223_2022.htm",
+          "para": "Datos del comprador en la factura cuando no los suministra."
+        },
+        {
+          "apa": "Gerencie. (s. f.). Aceptación tácita de la factura. Gerencie.com.",
+          "url": "https://www.gerencie.com/aceptacion-tacita-de-la-factura.html",
+          "para": "Los tres días para aceptar o reclamar una factura."
+        },
+        {
+          "apa": "Gerencie. (s. f.). Sanciones por facturación. Gerencie.com.",
+          "url": "https://www.gerencie.com/sanciones-por-facturacion.html",
+          "para": "Qué pasa si no facturas estando obligado."
+        }
+      ]
+    }
+  ],
+  "cierre": {
+    "titulo": "Último paso: tu plan de facturación",
+    "texto": "Ya sabes si te toca facturar, cómo habilitarte gratis y cómo hacer una factura sin errores. Ahora arma tu plan.",
+    "reto": "Tu plan de facturación, revisado por dos compañeros",
+    "rubrica": [
+      "¿Dice si le toca facturar o qué tiene que confirmar con un contador?",
+      "¿Dice en qué paso de la habilitación va, cuál sigue y con qué fecha?",
+      "¿Incluye una factura de práctica (o real) revisada con la lista de chequeo?"
+    ],
+    "siguiente": "Facturación electrónica · Unidades 4 a 7",
+    "siguiente_texto": "Con el Pase Empresario: Régimen Simple, IVA, retenciones y tu calendario tributario, explicado para tu negocio."
+  }
+}

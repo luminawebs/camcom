@@ -1,0 +1,18 @@
+{
+  "titulo": "¿Me toca facturar?",
+  "etiqueta": "Unidad 1 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "¿Me toca facturar?", "texto": "Gloria · panadería en San Mateo",
+     "voz": "A Gloria un colegio le quiere comprar los refrigerios de todos los días, pero le pide factura electrónica. Y ella cree que necesita un programa caro."},
+    {"tipo": "lista", "titulo": "Qué es una factura electrónica",
+     "items": [["La factura de siempre", "Hecha en el celular o el computador."], ["La valida la DIAN", "Antes de llegarle a tu cliente."], ["Código único y QR", "Y le llega al correo."]],
+     "voz": "Una factura electrónica es la factura de siempre, hecha en el celular. La DIAN la valida, lleva un código único y un QR, y le llega a tu cliente al correo."},
+    {"tipo": "frase", "titulo": "Facturar no es pagar más impuestos", "texto": "Es dejar constancia de lo que vendes.",
+     "voz": "Y facturar no es pagar más impuestos: es dejar constancia de lo que vendes."},
+    {"tipo": "lista", "titulo": "¿A quién le toca?",
+     "items": [["Comerciantes", "Quien vende como negocio."], ["Responsables de IVA", "Y los del Régimen Simple."], ["Si no sabes", "Tu RUT y un contador."]],
+     "voz": "Le toca a los comerciantes y a los responsables de IVA, salvo excepciones. Si no sabes si te toca, muéstrale tu RUT a un contador."},
+    {"tipo": "cierre", "titulo": "Mira si te toca", "texto": "Facturar = constancia de la venta, no más impuestos",
+     "voz": "En esta unidad vas a ver si a tu negocio le toca facturar."}
+  ]
+}

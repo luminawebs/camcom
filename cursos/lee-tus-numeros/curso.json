@@ -1,0 +1,234 @@
+{
+  "id": "lee-tus-numeros",
+  "titulo": "Lee tus números",
+  "titulo_corto": "Lee tus números",
+  "nivel": "g",
+  "perfil": "K",
+  "area": "Contabilidad y finanzas",
+  "duracion": "≈ 1,5 horas",
+  "promesa": "Al terminar sabrás separar ingresos, costos y gastos, juntarás las ventas y los gastos de un mes y tendrás el estado de resultados de tu negocio en una hoja, listo para mostrar.",
+  "certificado": "Constancia de participación",
+  "resumen_formato": "video",
+  "experto": "Contador público de la Cámara de Comercio [por definir]",
+  "revisor": "un contador de la Cámara de Comercio",
+  "narracion": {
+    "voz": "a253156d",
+    "secciones": [
+      "entrada",
+      "aprende"
+    ],
+    "reemplazos": {
+      "÷": " dividido entre ",
+      "−": " menos ",
+      "×": " por ",
+      "= ": "es igual a "
+    },
+    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad son videos automáticos (plantillas/video_resumen.py)."
+  },
+  "caso": "Patricia, 41 años, vende perros calientes, hamburguesas y salchipapas en La Despensa (Soacha) hace siete años. La cooperativa le puede prestar para una plancha industrial, pero le pide «el estado de resultados del negocio». Patricia sabe que vende bien, pero no sabe cuánto gana.",
+  "personas": [
+    {
+      "nombre": "Patricia",
+      "negocio": "Comidas rápidas",
+      "barrio": "La Despensa",
+      "problema": "La cooperativa le pide su estado de resultados para prestarle, y ella mezcla en una sola cuenta lo que vende, lo que compra y lo que paga."
+    },
+    {
+      "nombre": "Óscar",
+      "negocio": "Tienda de mascotas",
+      "barrio": "Ciudad Verde",
+      "problema": "Anota en un cuaderno, recibe por Nequi y les fía a los vecinos del conjunto. No sabe cuánto vendió el mes pasado."
+    },
+    {
+      "nombre": "Marisol",
+      "negocio": "Papelería y fotocopias",
+      "barrio": "León XIII",
+      "problema": "Su mejor mes en ventas fue el que menos plata le dejó, y no entiende por qué."
+    }
+  ],
+  "objetivos": [
+    "Separar lo que entra (ingresos), lo que te cuesta lo que vendes (costos) y lo que pagas por tener el negocio abierto (gastos).",
+    "Juntar las ventas y los gastos de un mes con lo que ya tienes: cuaderno, Nequi, facturas y recibos.",
+    "Armar el estado de resultados del mes y calcular la utilidad.",
+    "Leer tu estado de resultados: si el mes fue bueno y qué te dice el margen."
+  ],
+  "evidencia": "El estado de resultados de un mes de tu negocio, en la plantilla del curso, con tu utilidad y tu margen.",
+  "mapa_curso_nota": "Mapa del curso con las 3 unidades: ingresos, costos y gastos; el mes en números; y tu estado de resultados",
+  "inicio": {
+    "bienvenida": "Hola, te damos la bienvenida a Lee tus números",
+    "texto": "Patricia vende comidas rápidas en La Despensa hace siete años. La cooperativa le puede prestar para una plancha industrial, pero le pide el estado de resultados del negocio. En tres unidades cortas vas a separar ingresos, costos y gastos, juntar los números de un mes y armar tu propio estado de resultados.",
+    "aprobar": "Completar las 3 unidades",
+    "dudas": "Foro Comunidad o WhatsApp de la Cámara [VERIFICAR número]",
+    "video_nota": "Bienvenida de 45 a 60 s: Patricia cuenta por qué le piden el estado de resultados y qué vas a lograr. Con subtítulos.",
+    "diagnostico": [
+      "¿Sabes cuánto ganó tu negocio el mes pasado? (Sí, con números / Más o menos / No)",
+      "¿Dónde anotas lo que vendes? (Cuaderno / Excel o app / En Nequi o el banco / No lo anoto)",
+      "¿Alguna vez te han pedido un estado financiero? (Sí, el banco o una cooperativa / Sí, un cliente o proveedor / No)"
+    ]
+  },
+  "unidades": [
+    {
+      "tema": "Ingresos, costos y gastos",
+      "objetivo": "a separar lo que entra, lo que te cuesta lo que vendes y lo que pagas por tener el negocio abierto",
+      "entrada": {
+        "titulo": "La plancha que Patricia quiere comprar",
+        "texto": "Patricia vende perros calientes, hamburguesas y salchipapas en La Despensa. En un buen mes le entran unos 6 millones de pesos. La plancha se le está dañando y la cooperativa le puede prestar 4 millones para una nueva, pero le pide el estado de resultados del negocio. Patricia mira su cuenta de Nequi: ahí entra lo que vende, sale lo que compra, sale el arriendo y sale el mercado de la casa. Todo mezclado.",
+        "pregunta": "¿Qué parte de lo que mueve tu negocio es ingreso, qué es costo y qué es gasto?",
+        "reflexion": "Piensa en lo que pagaste ayer en tu negocio. ¿Era para hacer lo que vendes o para tener el negocio abierto?",
+        "imagen": "Ilustración de Patricia en su puesto de comidas rápidas mirando el celular, con la plancha humeando (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Clasifica una semana de tu negocio",
+        "texto": "Toma 10 movimientos de tu negocio de esta semana (ventas, compras, pagos) y clasifícalos en la tabla de esta unidad: ingreso, costo, gasto o «no es del negocio».",
+        "entrega": "Publica en el foro un movimiento que te costó clasificar y en qué columna lo pusiste (sin cifras si no quieres). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Ingresos, costos y gastos en una mirada",
+        "resumen": [
+          "Ingreso es lo que vendes. Un préstamo o la plata que pones de tu bolsillo no son ingresos.",
+          "Costo es lo que te cuesta hacer o comprar lo que vendes: sube y baja con las ventas.",
+          "Gasto es lo que pagas por tener el negocio abierto, vendas o no: arriendo, servicios, sueldos (también el tuyo)."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "¿Lo vendí? Ingreso · ¿Lo necesito para hacer lo que vendo? Costo · ¿Lo pago aunque no venda? Gasto · ¿Es de la casa? No va",
+        "descargas": [
+          {
+            "texto": "Tabla para clasificar tus movimientos · PDF",
+            "archivo": "u1-clasifica-movimientos.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Departamento Administrativo Nacional de Estadística. (2025). Encuesta de Micronegocios (EMICRON) 2024: boletín técnico. DANE.",
+          "url": "https://www.dane.gov.co/files/operaciones/EMICRON/bol-EMICRON-2024.pdf",
+          "para": "Cuántos micronegocios llevan registros y de qué tipo."
+        },
+        {
+          "apa": "Instituto Nacional de Contadores Públicos. (2023). La contabilidad como herramienta estratégica para los emprendedores y microempresarios. ContArte, INCP.",
+          "url": "https://incp.org.co/ContArte/contenidos/2023/08/la-contabilidad-como-herramienta-estrategica-para-los-emprendedores-y-microempresarios/",
+          "para": "Por qué llevar las cuentas ayuda a decidir."
+        },
+        {
+          "apa": "Alegra. (s. f.). Cómo leer el estado de resultados de tu empresa sin ser contador. Blog Alegra Colombia.",
+          "url": "https://blog.alegra.com/colombia/como-leer-el-estado-de-resultados-de-tu-empresa-sin-ser-contador/",
+          "para": "Explicación sencilla de ingresos, costos y gastos."
+        }
+      ]
+    },
+    {
+      "tema": "El mes en números",
+      "objetivo": "a juntar las ventas y los gastos de un mes con lo que ya tienes: cuaderno, Nequi, recibos y fiados",
+      "entrada": {
+        "titulo": "El cuaderno, el Nequi y los fiados de Óscar",
+        "texto": "Óscar tiene una tienda de mascotas en Ciudad Verde. Las ventas en efectivo las anota en un cuaderno. Muchos clientes le pagan por Nequi. A los vecinos del conjunto les fía el concentrado hasta la quincena. Y a veces pasa plata de la caja a su Nequi para pagarle al proveedor. Un vecino le preguntó cuánto vendió en septiembre y Óscar no supo qué contestar: ¿sumaba el cuaderno, el Nequi o los dos?",
+        "pregunta": "¿Cómo juntas las ventas y los gastos de un mes sin contar nada dos veces?",
+        "reflexion": "¿En cuántos lugares queda registro de lo que vendes? Cuaderno, Nequi, Daviplata, datáfono, facturas, la memoria…",
+        "imagen": "Ilustración de Óscar en su tienda de mascotas con un cuaderno abierto y el celular en la mano (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Junta un mes de tu negocio",
+        "texto": "Con la hoja de esta unidad, junta las ventas y los gastos de tu último mes: lo del cuaderno, lo que entró por Nequi o el banco y lo que fiaste. Quita lo que no es venta.",
+        "entrega": "Publica en el foro de dónde sacaste los números, qué te faltó y qué vas a anotar distinto desde hoy (sin cifras si no quieres). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "El mes en números, en una mirada",
+        "resumen": [
+          "Junta las ventas de todas partes: cuaderno, Nequi o banco, datáfono y lo que fiaste ese mes.",
+          "No cuentes dos veces: la plata que pasas de la caja al Nequi ya estaba en las ventas.",
+          "Un préstamo, la plata que pones de tu bolsillo y la devolución de un proveedor no son ventas."
+        ],
+        "etiqueta_formula": "La fórmula",
+        "formula": "Ventas del mes = efectivo + transferencias + fiado del mes − lo que no es venta (traslados, préstamos, aportes tuyos)",
+        "descargas": [
+          {
+            "texto": "Hoja para juntar el mes · PDF",
+            "archivo": "u2-hoja-del-mes.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Banca de las Oportunidades. (2021). Reporte de micronegocios: inclusión financiera de los micronegocios en Colombia. Banca de las Oportunidades.",
+          "url": "https://bancadelasoportunidades.gov.co/sites/default/files/2021-03/Reporte%20micronegocios%20final.pdf",
+          "para": "Cómo llevar registros cambia el acceso al crédito formal."
+        },
+        {
+          "apa": "Banca de las Oportunidades. (2025). Panorama de la exclusión financiera y el crédito informal en los micronegocios colombianos. Banca de las Oportunidades.",
+          "url": "https://www.bancadelasoportunidades.gov.co/sites/default/files/2025-09/Panorama%20de%20la%20Exclusi%C3%B3n%20Financiera%20y%20el%20Cr%C3%A9dito%20Informal%20en%20los%20Micronegocios%20Colombianos.pdf",
+          "para": "Datos recientes sobre micronegocios, pagos digitales y crédito."
+        },
+        {
+          "apa": "Instituto Nacional de Contadores Públicos. (2019). Contabilidad simplificada: grupo 3. ContArte, INCP.",
+          "url": "https://incp.org.co/ContArte/contenidos/2019/08/contabilidad-simplificada-grupo-3/",
+          "para": "Qué es la contabilidad simplificada de las microempresas."
+        }
+      ]
+    },
+    {
+      "tema": "Tu estado de resultados del mes",
+      "objetivo": "a armar el estado de resultados de un mes, calcular la utilidad y leer si el mes fue bueno",
+      "entrada": {
+        "titulo": "El mejor mes de Marisol",
+        "texto": "Marisol tiene una papelería con fotocopias frente a un colegio en León XIII. En febrero, con la temporada escolar, vendió 9 millones, el doble de un mes normal. Pero a fin de mes casi no le quedó plata. Le tocó contratar una ayudante, pagar horas extra, comprar mercancía más cara a última hora y cambiar el tóner dos veces. Marisol no entiende cómo su mejor mes en ventas fue el que menos le dejó.",
+        "pregunta": "¿Cuánto ganó de verdad tu negocio el mes pasado y cómo lo muestras en una hoja?",
+        "reflexion": "Si hoy alguien te pregunta cuánto ganaste el mes pasado, ¿le dices cuánto vendiste o cuánto te quedó?",
+        "imagen": "Ilustración de Marisol en su papelería llena de útiles escolares, revisando una hoja con números (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu estado de resultados del mes",
+        "texto": "Pasa los números del mes que juntaste en la unidad 2 a la plantilla del estado de resultados. Calcula tu utilidad y tu margen.",
+        "entrega": "Publica en el foro tu margen (o solo si te dio ganancia o pérdida) y qué te sorprendió al hacer la cuenta. Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tu estado de resultados en una mirada",
+        "resumen": [
+          "El estado de resultados muestra, para un mes o un año, cuánto vendiste, cuánto te costó y cuánto te quedó.",
+          "Ventas menos costo de lo vendido es la utilidad bruta. Menos los gastos, la utilidad del mes.",
+          "El margen (utilidad ÷ ventas) te dice cuántos pesos te quedan de cada 100 que vendes. Vender más no siempre es ganar más."
+        ],
+        "etiqueta_formula": "La fórmula",
+        "formula": "Utilidad del mes = Ventas − Costo de lo vendido − Gastos · Margen = Utilidad ÷ Ventas × 100",
+        "descargas": [
+          {
+            "texto": "Plantilla del estado de resultados · PDF",
+            "archivo": "u3-estado-de-resultados.pdf"
+          },
+          {
+            "texto": "Plantilla del estado de resultados · Excel",
+            "archivo": "u3-estado-de-resultados.xlsx"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Decreto 2420 de 2015. Por medio del cual se expide el Decreto Único Reglamentario de las Normas de Contabilidad, de Información Financiera y de Aseguramiento de la Información (Anexo 3, Grupo 3). Diario Oficial.",
+          "url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=76745",
+          "para": "Qué estados financieros prepara una microempresa (párrafo 3.8 del Anexo 3). [VERIFICAR versión vigente]"
+        },
+        {
+          "apa": "Consejo Técnico de la Contaduría Pública. (2019). Concepto 676 de 2019: estados financieros de personas naturales y grupo en el que deben clasificarse. CTCP.",
+          "url": "https://accounter.co/niif/eeff-de-personas-naturales-y-grupo-niif-en-el-cual-debe-clasificarse-concepto-676-ctcp-de-2019",
+          "para": "Estados financieros de la persona natural comerciante."
+        },
+        {
+          "apa": "Alegra. (s. f.). Cómo leer el estado de resultados de tu empresa sin ser contador. Blog Alegra Colombia.",
+          "url": "https://blog.alegra.com/colombia/como-leer-el-estado-de-resultados-de-tu-empresa-sin-ser-contador/",
+          "para": "Las líneas del estado de resultados explicadas una por una."
+        }
+      ]
+    }
+  ],
+  "cierre": {
+    "titulo": "Último paso: tu estado de resultados",
+    "texto": "Ya sabes separar ingresos, costos y gastos, juntar los números de un mes y armar tu estado de resultados. Ahora preséntalo.",
+    "reto": "El estado de resultados de un mes de tu negocio, revisado por dos compañeros",
+    "rubrica": [
+      "¿Separa bien las ventas, el costo de lo vendido y los gastos (sin gastos de la casa)?",
+      "¿Incluye el sueldo del dueño o dice por qué no lo incluye?",
+      "¿Calcula la utilidad y el margen, y dice en una frase si el mes fue bueno?"
+    ],
+    "siguiente": "Lee tus números · Unidades 4 a 7",
+    "siguiente_texto": "Con el Pase Empresario: balance general, flujo de efectivo, cómo presentar tus números al banco o al contador y 3 indicadores para vigilar cada mes."
+  }
+}

@@ -13,12 +13,12 @@ window.CONTENIDO = {
     {
       titulo: "Édgar quiere crecer, pero le piden papeles",
       texto: "Édgar tiene una tienda en Compartir hace ocho años. Un distribuidor le ofrece surtir **a crédito**, pero le pide RUT y matrícula mercantil. Édgar no tiene ninguno y cree que registrarse es empezar a pagar impuestos. En esta lección vas a ver qué es de verdad estar formal.",
-      medio: { tipo: "imagen", src: "", nota: "Ilustración: Édgar en el mostrador con el distribuidor (4:3, máx. 150 KB)." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Édgar en el mostrador de su tienda hablando con el distribuidor" }
     },
     {
       titulo: "Los 3 pasos de la formalización",
       texto: "**1. RUT, en la DIAN:** dice quién eres para los impuestos. Es gratis.\n**2. Matrícula mercantil, en la Cámara de Comercio:** registra a la persona y a su negocio. Se renueva cada año.\n**3. Requisitos del local, ante la Alcaldía y la Policía:** que tu local pueda funcionar donde está.",
-      medio: { tipo: "imagen", src: "", nota: "Infografía vertical: la ruta RUT → matrícula → local, con íconos (documento, edificio, tienda)." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "La ruta: documento, edificio de la Cámara y local" }
     },
     {
       titulo: "El RUT no es un impuesto",
@@ -36,7 +36,7 @@ window.CONTENIDO = {
     {
       titulo: "Lo que ganas al estar formal",
       texto: "Con RUT y matrícula puedes **comprar a crédito** a distribuidores, **venderle a empresas** que piden factura o RUT, **pedir un crédito en un banco** y no en el gota a gota, y entrar a programas de la Cámara de Comercio. En Colombia, solo **22,4 %** de los micronegocios tiene RUT (DANE, EMICRON 2024).",
-      medio: { tipo: "imagen", src: "", nota: "Cuatro íconos: crédito con proveedor, empresa cliente, banco y Cámara de Comercio." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-4.jpg", alt: "Crédito con proveedor, empresa cliente, banco y programas de la Cámara" }
     },
     {
       titulo: "Lo que debes recordar",
