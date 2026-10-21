@@ -6,6 +6,7 @@ válida y confirmado contra la API, nunca por la página de retorno del navegado
 import calendar
 import datetime as dt
 import json
+import secrets
 import sqlite3
 import threading
 
@@ -153,7 +154,8 @@ class Pase:
     def _nueva_referencia(self, persona_id, periodo):
         n = self.uno("SELECT COUNT(*) n FROM pagos WHERE persona_id=? AND periodo=?",
                      persona_id, periodo)["n"]
-        return f"PASE-{persona_id}-{periodo}-{n + 1}"
+        # El sufijo evita chocar con referencias ya usadas en Wompi si la base se reinicia
+        return f"PASE-{persona_id}-{periodo}-{n + 1}-{secrets.token_hex(3)}"
 
     def _registrar_pago(self, persona_id, tipo, metodo, intento=1, periodo=None):
         periodo = periodo or self.hoy().strftime("%Y%m")
