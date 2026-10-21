@@ -2,7 +2,7 @@
 
 El conector usa su PROPIO usuario de servicio (p. ej. conector-pase) con un
 servicio externo que solo tiene estas funciones:
-  core_user_get_users_by_field, core_user_create_users,
+  core_webservice_get_site_info, core_user_get_users_by_field, core_user_create_users,
   core_cohort_search_cohorts, core_cohort_add_cohort_members,
   core_cohort_delete_cohort_members
 Los cursos se abren por «Sincronización de cohortes»: el conector nunca matricula
