@@ -5,7 +5,7 @@ Uso: python3 moodle/publicar_curso.py cursos/<id> --corto AVS-G01
 
 No toca la carpeta del curso: copia todo a una carpeta temporal y ahí
 - cambia los recuadros de medios (as-hueco) por el video o la imagen real de <curso>/medios-moodle/,
-- cambia las rutas ../mapas/, ../guias-pdf/ y ../descargas/ por archivos dentro de la página,
+- cambia las rutas ../mapas/, ../fichas/, ../guias-pdf/ y ../descargas/ por archivos dentro de la página,
 - quita las marcas de pendiente ([VERIFICAR …], [por definir], botones sin destino),
 - quita las marcas de los SCORM (contenido.js dentro de cada .zip),
 y llama a armar_respaldo.py. Lo que se quita queda en <salida>/quitado-al-publicar.txt para el registro del contador.
@@ -47,7 +47,7 @@ def pagina(ruta, s, medios):
         for aviso in re.findall(r"Resumen generado con inteligencia artificial y revisado por [^<]+?\.", s):
             s = quitar(nombre, s, aviso, AVISO_IA)
     # rutas relativas a archivos del curso
-    for carpeta in ("mapas", "guias-pdf", "descargas", "medios-moodle"):
+    for carpeta in ("mapas", "fichas", "guias-pdf", "descargas", "medios-moodle"):
         s = re.sub(rf'(src|href|poster)="\.\./{carpeta}/([^"]+)"', r'\1="@@PLUGINFILE@@/\2"', s)
     # descargas que ya existen
     for texto, archivo in (("Plantilla Calcula tu sueldo · Excel 40 KB", "u2-calcula-tu-sueldo.xlsx"),
@@ -88,7 +88,7 @@ def main():
     # todos los archivos que las páginas pueden citar, en un solo lugar
     mm = pub / "medios-moodle"
     mm.mkdir(exist_ok=True)
-    for carpeta, patron in (("mapas", "*.png"), ("guias-pdf", "*.pdf"), ("descargas", "*.xlsx"), ("descargas", "*.pdf")):
+    for carpeta, patron in (("mapas", "*.png"), ("fichas", "*.jpg"), ("guias-pdf", "*.pdf"), ("descargas", "*.xlsx"), ("descargas", "*.pdf")):
         for f in (pub / carpeta).glob(patron) if (pub / carpeta).is_dir() else []:
             shutil.copy(f, mm / f.name)
     medios = {f.name: f.stat().st_size for f in mm.iterdir()}
@@ -122,7 +122,7 @@ def main():
     restos = []
     for ruta in (pub / "paginas").glob("*.html"):
         frag = ruta.read_text(encoding="utf-8")
-        for patron in ("as-hueco", "as-ph", "VERIFICAR", "../mapas/", "../guias-pdf/", "../descargas/", "../medios-moodle/"):
+        for patron in ("as-hueco", "as-ph", "VERIFICAR", "../mapas/", "../fichas/", "../guias-pdf/", "../descargas/", "../medios-moodle/"):
             if patron in frag:
                 restos.append(f"{ruta.name}: {patron}")
     if restos:

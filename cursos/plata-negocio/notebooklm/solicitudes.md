@@ -84,7 +84,7 @@ Las guías de estudio de cada unidad las arma Claude desde los guiones, con el l
 
 - **Herramienta:** Infografía · orientación vertical.
 - **Fuentes a marcar:** el guion de la unidad.
-- **Uso:** solo como borrador. La ficha final se arma en Canva con la plantilla de la marca (blanco, rojo #c8102e, negro y grises), porque la infografía trae marca de agua y el texto puede salir con errores.
+- **Uso:** solo como borrador. La ficha final la arma Claude con `plantillas/fichas.py` con la marca (blanco, rojo #c8102e, negro y grises), porque la infografía trae marca de agua y el texto puede salir con errores.
 
 ```
 Infografía vertical para guardar en el celular con lo que hay que recordar de la Unidad [n]: [las 4 fugas | tu sueldo en 3 pasos | las 3 reglas de la plata] y la fórmula de la unidad. Pocas palabras, letra grande.

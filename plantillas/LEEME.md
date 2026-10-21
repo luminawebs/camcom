@@ -40,6 +40,10 @@ Campos opcionales de `curso.json` para no depender de textos del curso 1: `revis
    si no, dejan el espacio marcado. NotebookLM no se usa para los mapas porque no deja descargarlos.
    Arma las guías de estudio copiando `cursos/plata-negocio/guias-pdf/` (contenido en `armar_guias.py`, logo en `marca/`;
    luego `python3 armar_guias.py` y `node renderizar_pdf.mjs`). Si existen `guias-pdf/uN-guia.pdf`, Llévatelo pone el botón de descarga.
+   Fichas del celular (reemplazan a Canva desde 2026-10-20): `python3 plantillas/fichas.py cursos/<id>` arma `fichas/uN-ficha.jpg`
+   (1080 × 1920, máx. 250 KB) con el título, las tres frases y la fórmula del `llevatelo` de cada unidad, y la ilustración de su Entrada.
+   No llama a ninguna API. Llévatelo la muestra con el botón «Guarda la ficha en tu celular» y `publicar_curso.py` la mete en el .mbz.
+   Vuelve a correrlo si cambias el texto del Llévatelo o la ilustración (`--solo N` rehace una unidad).
 4. Narraciones con Resemble AI: agrega a `curso.json`
    `"narracion": {"voz": "<id de la voz>", "secciones": ["entrada", "aprende"]}` y `narracion: true` en cada `uN-aprende/contenido.js`;
    luego `python3 plantillas/narrar.py cursos/<id>` (clave en la variable de entorno `RESEMBLE_API_KEY`). Genera MP3 mono de 64 kbps:
