@@ -1,0 +1,9 @@
+[Unit]
+Description=Pase Empresario: tarea conciliar
+
+[Timer]
+OnCalendar=*-*-* 06:30:00 America/Bogota
+Persistent=true
+
+[Install]
+WantedBy=timers.target

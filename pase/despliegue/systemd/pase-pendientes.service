@@ -1,0 +1,14 @@
+[Unit]
+Description=Pase Empresario: tarea pendientes
+
+[Service]
+Type=oneshot
+User=pase
+Group=pase
+WorkingDirectory=__APP__
+EnvironmentFile=__ENV__
+ExecStart=/usr/bin/python3 -m pase.tareas pendientes
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__DATOS__
