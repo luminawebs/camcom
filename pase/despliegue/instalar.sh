@@ -55,12 +55,15 @@ systemctl daemon-reload
 echo "› Sitio nginx ($DOMINIO → 127.0.0.1:$PUERTO)"
 if [ -d /etc/nginx/sites-available ]; then
   SITIO=/etc/nginx/sites-available/pase
-  sed -e "s#__DOMINIO__#$DOMINIO#g" -e "s#__PUERTO__#$PUERTO#g" "$AQUI/nginx-pase.conf" > "$SITIO"
-  ln -sf "$SITIO" /etc/nginx/sites-enabled/pase
 else  # AlmaLinux/RHEL: un archivo propio en conf.d, sin tocar los demás
   SITIO=/etc/nginx/conf.d/pase.conf
+fi
+if [ -f "$SITIO" ] && grep -q "managed by Certbot" "$SITIO"; then
+  echo "  $SITIO ya tiene HTTPS de certbot: se deja como está"
+else
   sed -e "s#__DOMINIO__#$DOMINIO#g" -e "s#__PUERTO__#$PUERTO#g" "$AQUI/nginx-pase.conf" > "$SITIO"
 fi
+[ -d /etc/nginx/sites-enabled ] && ln -sf "$SITIO" /etc/nginx/sites-enabled/pase
 
 if command -v getenforce >/dev/null && [ "$(getenforce)" = Enforcing ]; then
   # Solo se le permite a nginx este puerto; no se activa httpd_can_network_connect (global)
