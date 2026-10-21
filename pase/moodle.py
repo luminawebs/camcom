@@ -47,7 +47,8 @@ class Moodle:
         with urllib.request.urlopen(f"{self.url}/webservice/rest/server.php", datos, timeout=30) as r:
             res = json.loads(r.read() or b"null")
         if isinstance(res, dict) and res.get("exception"):
-            raise ErrorMoodle(f"{funcion}: {res.get('errorcode')} {res.get('message')}")
+            raise ErrorMoodle(f"{funcion}: {res.get('errorcode')} {res.get('message')} "
+                              f"{res.get('debuginfo') or ''}".strip())
         return res
 
     def buscar_usuario(self, correo):
