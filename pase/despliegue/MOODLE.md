@@ -93,5 +93,19 @@ Luego, un pago de prueba nuevo en `https://pase.edunest.co/?c=prueba` y verifica
 
 1. La persona aparece en las dos cohortes y ve U1-U7.
 2. Se cancela el Pase de prueba: debe seguir viendo U1-U3, **dejar de ver U4-U7** y
-   conservar su avance. Si el grupo no se le quita, se cambia la acción de baja externa del
-   método «Pase Empresario» a *Dar de baja* (la persona sigue matriculada por el gratis).
+   conservar su avance. Si el grupo no se le quita, se cambia la *Acción de baja externa*
+   (ajuste de todo el sitio, no del curso: *Extensiones › Matriculaciones › Sincronización
+   de cohortes*) a *Dar de baja al usuario del curso*.
+
+## Menús en inglés (Moodle 4.3)
+
+| Paso | Ruta |
+|---|---|
+| 1 | Site administration › Plugins › Enrolments › Manage enrol plugins › **Cohort sync** |
+| 2 | Site administration › Users › Accounts › Cohorts › Add new cohort (Context: System, Cohort ID) |
+| 3 | Site administration › Users › Accounts › Add a new user (Web services authentication) |
+| 4 | Site administration › Users › Permissions › Define roles › Add a new role; luego Assign system roles |
+| 5 | Site administration › Server › Web services › External services › Add (Enabled, Authorised users only); Functions › Add functions; Authorised users |
+| 6 | Site administration › Server › Web services › Manage tokens › Create token |
+| 7 | Curso › Participants › Enrolment methods › Add method › Cohort sync (Add to group: Create new group); Restrict access › Group |
+| Baja | Site administration › Plugins › Enrolments › Cohort sync › External unenrol action |
