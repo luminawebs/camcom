@@ -40,10 +40,11 @@ Respaldo: `moodle/whatsapp-business/respaldo-avs-g04-whatsapp-business.mbz` (≈
 - Validar con el asesor de mercadeo digital de la Cámara los [VERIFICAR] (rutas de menú en Android y iPhone, nombres de las etiquetas, días de la bienvenida, cambio de número, redacción sobre la Ley 1581). Lista en `moodle/whatsapp-business/quitado-al-publicar.txt`.
 - Si el asesor toma capturas reales del celular, reemplazar las pantallas del simulador (`piezas/uN-practica/medios/`) y ajustar las zonas.
 - Enlaces directos del servicio de ayuda de WhatsApp en Profundiza (hoy van a faq.whatsapp.com).
-- 3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.
+- ~~3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.~~ Hechas el 2026-10-20 con `python3 plantillas/fichas.py cursos/whatsapp-business` (fichas/uN-ficha.jpg).
 - Número de WhatsApp de la Cámara.
 
 ## Subidas a Moodle
 
 Las agrega `moodle/subir_moodle.py`.
 - 2026-10-14 23:35 UTC · nuevo en Moodle: https://portal.edunest.co/course/view.php?id=13 · respaldo-avs-g04-whatsapp-business.mbz · 26/26 actividades en su sección
+- 2026-10-21 02:43 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=13 · respaldo-avs-g04-whatsapp-business.mbz · 26/26 actividades en su sección

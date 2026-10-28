@@ -40,7 +40,7 @@ Google suspendió el proyecto de Google Cloud «Salle» (gen-lang-client-0760543
 
 **Medios**
 - 6 capturas reales del trámite del RUT en la DIAN (Unidad 2, Aprende, pantalla 4). No se hacen con IA para no inventar la página.
-- 3 fichas 1080 × 1920 para el celular (Llévatelo de cada unidad), en Canva.
+- ~~3 fichas 1080 × 1920 para el celular (Llévatelo de cada unidad), en Canva.~~ Hechas el 2026-10-20 con `python3 plantillas/fichas.py cursos/formaliza-tu-negocio` (fichas/uN-ficha.jpg).
 - Portada del siguiente curso (Cierre), cuando se defina cuál sigue.
 
 **Validación con el asesor de la Cámara** (18 marcas [VERIFICAR]; `publicar_curso.py` las quita del respaldo pero el texto queda sin validar; lista en `moodle/formaliza-tu-negocio/quitado-al-publicar.txt`)
@@ -56,10 +56,11 @@ Google suspendió el proyecto de Google Cloud «Salle» (gen-lang-client-0760543
 
 - Rotar la clave de Gemini (ver arriba) antes de ilustrar otro curso.
 - `curso.json`, `contenido.js`, `ilustraciones.json` y `video/*.json` se escriben con Claude a partir de la investigación y los guiones; no hay un paso que los genere solo.
-- Las fichas de Canva, las capturas de pantalla reales y la revisión del experto siguen siendo manuales.
+- Las capturas de pantalla reales y la revisión del experto siguen siendo manuales.
 - El curso 1 (La plata del negocio) usa los videos de NotebookLM que hizo David; el curso 2 es el primero con todos los videos automáticos.
 
 ## Subidas a Moodle
 
 Las agrega `moodle/subir_moodle.py`.
 - 2026-10-14 00:26 UTC · reemplazo y revisión en Moodle: https://portal.edunest.co/course/view.php?id=11 · respaldo-avs-g02-formaliza-tu-negocio.mbz · 26/26 actividades en su sección
+- 2026-10-21 02:41 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=11 · respaldo-avs-g02-formaliza-tu-negocio.mbz · 26/26 actividades en su sección

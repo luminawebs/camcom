@@ -32,7 +32,7 @@ Respaldo: `moodle/lee-tus-numeros/respaldo-avs-g05-lee-tus-numeros.mbz` (≈ 14 
 ## Pendiente en este curso
 
 - Validación del contador de la Cámara de los [VERIFICAR] (`investigacion.md` y `moodle/lee-tus-numeros/quitado-al-publicar.txt`): criterio de la venta fiada, sueldo del dueño como gasto, Anexo 3 del Decreto 2420 de 2015, cifra ponderada de EMICRON.
-- 3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.
+- ~~3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.~~ Hechas el 2026-10-20 con `python3 plantillas/fichas.py cursos/lee-tus-numeros` (fichas/uN-ficha.jpg).
 - Número de WhatsApp de la Cámara y portada del siguiente curso (igual que en los cursos anteriores).
 - Tramo del Pase (U4 a U7): balance general, flujo de efectivo, presentar los números al banco o al contador, 3 indicadores.
 
@@ -40,3 +40,4 @@ Respaldo: `moodle/lee-tus-numeros/respaldo-avs-g05-lee-tus-numeros.mbz` (≈ 14 
 
 - 2026-10-20 22:20 UTC · nuevo en Moodle: https://portal.edunest.co/course/view.php?id=14 · 26/26 actividades en su sección
 - 2026-10-20 22:24 UTC · reemplazo (mismo curso, recién creado y sin estudiantes) para incluir las dos hojas de ejemplo de U2 y U3 · 26/26 actividades, 46 archivos con HTTP 200
+- 2026-10-21 02:40 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=14 · respaldo-avs-g05-lee-tus-numeros.mbz · 26/26 actividades en su sección

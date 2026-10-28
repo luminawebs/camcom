@@ -35,7 +35,7 @@ La sesión que produjo el curso estaba conectada al computador de David, y con e
 
 **Medios**
 - Captura real del registro como facturador en el portal de la DIAN (Unidad 2, Aprende, pantalla 3). No se hace con IA para no inventar la página.
-- 3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.
+- ~~3 fichas 1080 × 1920 para el celular (Llévatelo), en Canva.~~ Hechas el 2026-10-20 con `python3 plantillas/fichas.py cursos/facturacion-electronica` (fichas/uN-ficha.jpg).
 
 **Validación con el contador de la Cámara** (marcas [VERIFICAR]; `publicar_curso.py` las quita del respaldo pero el texto queda sin validar; lista en `moodle/facturacion-electronica/quitado-al-publicar.txt`)
 - Quién debe facturar y las condiciones de los no obligados (Resolución 000165 de 2023, art. 7; Decreto 1625 de 2016, art. 1.6.1.4.3).
@@ -48,3 +48,4 @@ La sesión que produjo el curso estaba conectada al computador de David, y con e
 Las agrega `moodle/subir_moodle.py`.
 - 2026-10-14 · nuevo en Moodle: https://portal.edunest.co/course/view.php?id=12 · respaldo-avs-g03-facturacion-electronica.mbz · 26/26 actividades en su sección (sin ilustraciones ni videos de Entrada)
 - 2026-10-14 21:55 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=12 · respaldo-avs-g03-facturacion-electronica.mbz · 26/26 actividades en su sección
+- 2026-10-21 02:42 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=12 · respaldo-avs-g03-facturacion-electronica.mbz · 26/26 actividades en su sección
