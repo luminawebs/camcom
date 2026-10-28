@@ -5,16 +5,19 @@ de confirmación, como ePayco:
   - POST /v1/auth/login, /payment/v1/customer/create, /payment/v1/charge/create,
     GET /payment/v1/customer/{llave}/{id}, POST /v1/remove/token
   - GET /validation/v1/reference/{ref_payco}
-  - /epayco.js (tokenización en el navegador) y /checkout.js (Checkout con botones
+  - POST /login y /payment/session/create (Apify, sesiones del Smart Checkout v2)
+  - /epayco.js (tokenización en el navegador) y /checkout-v2.js (Smart Checkout con botones
     Aprobar / Rechazar, que reemplaza a PSE, Nequi o Daviplata)
 Tarjetas: 4575 6231 8229 0326 aprueba, 4151 6115 2758 3283 rechaza.
 
     python -m pase.simulador_epayco    (puerto 8090)
 """
+import base64
 import html
 import itertools
 import json
 import os
+import secrets
 import threading
 import time
 import urllib.error
@@ -40,7 +43,7 @@ class Simulador:
         self.demora = demora
         self.ids = itertools.count(91000)
         self.jwts = set()
-        self.tokens, self.clientes, self.transacciones = {}, {}, {}
+        self.tokens, self.clientes, self.transacciones, self.sesiones = {}, {}, {}, {}
         self.forzado = {}           # token_card -> estado forzado para el próximo cobro
         self.confirmaciones = []    # (url, datos) enviadas
         self.avisar = True          # False: ePayco "no logra" llamar a la URL de confirmación
@@ -55,6 +58,23 @@ class Simulador:
         jwt = f"jwt-{self._id()}"
         self.jwts.add(jwt)
         return 200, {"token": jwt}
+
+    def login_apify(self, autorizacion):
+        esperado = base64.b64encode(f"{LLAVE_PUBLICA}:{LLAVE_PRIVADA}".encode()).decode()
+        if autorizacion != f"Basic {esperado}":
+            return 401, {"error": "Credenciales inválidas"}
+        jwt = f"apify-{self._id()}"
+        self.jwts.add(jwt)
+        return 200, {"token": jwt}
+
+    def crear_sesion(self, d):
+        faltan = [k for k in ("checkout_version", "name", "currency", "amount") if not d.get(k)]
+        if faltan or d.get("checkout_version") != "2":
+            return 400, {"success": False, "textResponse": f"Faltan {faltan}"}
+        sid = secrets.token_hex(12)
+        self.sesiones[sid] = d
+        return 200, {"success": True, "titleResponse": "Session created successfully",
+                     "data": {"sessionId": sid, "token": f"tok-{sid}"}}
 
     def token_tarjeta(self, d):
         num = str(d.get("card[number]", "")).replace(" ", "")
@@ -101,8 +121,8 @@ class Simulador:
         return 200, {"success": True, "data": {"ref_payco": int(tx["x_ref_payco"]), "factura": d["bill"],
                                                "valor": d["value"], "estado": "Pendiente", "cod_respuesta": 3}}
 
-    def _nueva_tx(self, factura, valor, moneda, franquicia, final, prueba, confirmacion):
-        ref = self._id()
+    def _nueva_tx(self, factura, valor, moneda, franquicia, final, prueba, confirmacion, ref=None):
+        ref = ref or self._id()
         tx = {"x_cust_id_cliente": CLIENTE_ID, "x_ref_payco": ref, "x_id_invoice": factura,
               "x_amount": str(valor), "x_currency_code": moneda.upper(), "x_franchise": franquicia,
               "x_transaction_id": f"{ref}{int(time.time())}", "x_test_request": "TRUE" if prueba else "FALSE",
@@ -151,28 +171,29 @@ class Simulador:
         return 200, {"success": True, "data": self.confirmacion(ref)}
 
     def pagina_checkout(self, q):
-        d = json.loads(q.get("d", "{}"))
-        if q.get("key") != LLAVE_PUBLICA:
-            return "<h1>Llave pública no válida</h1>"
+        d = self.sesiones.get(q.get("session", ""))
+        if not d:
+            return "<h1>Sesión no válida</h1>"
         datos = html.escape(urllib.parse.urlencode(q))
-        return (f"<h1>Checkout ePayco (simulador)</h1><p>Factura {html.escape(d.get('invoice', ''))} · "
-                f"${html.escape(d.get('amount', ''))} {html.escape(d.get('currency', '').upper())}"
+        return (f"<h1>Smart Checkout ePayco (simulador)</h1><p>Factura {html.escape(d.get('invoice', ''))} · "
+                f"${d.get('amount')} {html.escape(d.get('currency', '').upper())}"
                 f"{' · PRUEBA' if q.get('test') == 'true' else ''}</p>"
                 f"<form method='post' action='/checkout/pagar?{datos}'>"
                 f"<button name='r' value='APPROVED'>Aprobar (PSE / Nequi)</button> "
                 f"<button name='r' value='DECLINED'>Rechazar</button></form>")
 
     def pagar_checkout(self, q, resultado):
-        d = json.loads(q["d"])
+        d = self.sesiones[q["session"]]
+        # El Smart Checkout v2 devuelve ref_payco alfanuméricos (p. ej. 68fb83729d094878e015be00)
         tx = self._nueva_tx(d["invoice"], d["amount"], d["currency"], "PSE", resultado,
-                            q.get("test") == "true", d.get("confirmation"))
+                            q.get("test") == "true", d.get("confirmation"), secrets.token_hex(12))
         sep = "&" if "?" in d["response"] else "?"
         return f"{d['response']}{sep}ref_payco={tx['x_ref_payco']}"
 
 
 def js_checkout(base):
-    return f"""window.ePayco=window.ePayco||{{}};ePayco.checkout={{configure:function(o){{return{{open:function(d){{
-location.href='{base}/checkout?'+new URLSearchParams({{key:o.key,test:String(!!o.test),d:JSON.stringify(d)}})}}}}}}}};"""
+    return f"""window.ePayco=window.ePayco||{{}};ePayco.checkout={{configure:function(o){{return{{setHooks:function(){{}},
+open:function(){{location.href='{base}/checkout?'+new URLSearchParams({{session:o.sessionId,test:String(!!o.test)}})}}}}}}}};"""
 
 
 def js_token(base):
@@ -213,7 +234,7 @@ def manejador(sim: Simulador):
             u = urllib.parse.urlparse(self.path)
             q = dict(urllib.parse.parse_qsl(u.query))
             p = u.path
-            if p == "/checkout.js":
+            if p == "/checkout-v2.js":
                 return self.enviar(200, js_checkout(self.base()).encode(), "application/javascript")
             if p == "/epayco.js":
                 return self.enviar(200, js_token(self.base()).encode(), "application/javascript")
@@ -238,12 +259,16 @@ def manejador(sim: Simulador):
             d = json.loads(crudo or b"{}")
             if p.startswith("/control/"):
                 return self.enviar(200, control(sim, p, d))
+            if p == "/login":
+                return self.enviar(*sim.login_apify(self.headers.get("Authorization", "")))
             if p == "/v1/auth/login":
                 return self.enviar(*sim.login(d))
             if p == "/v1/tokens/navegador":
                 return self.enviar(*sim.token_tarjeta(d))
             if not self.autorizado():
                 return self.enviar(401, {"status": False, "message": "Token inválido"})
+            if p == "/payment/session/create":
+                return self.enviar(*sim.crear_sesion(d))
             if p == "/payment/v1/customer/create":
                 return self.enviar(*sim.crear_cliente(d))
             if p == "/payment/v1/charge/create":

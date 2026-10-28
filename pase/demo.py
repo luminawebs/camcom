@@ -18,7 +18,7 @@ def main():
     puerto = int(os.environ.get("PASE_PUERTO", "8080"))
     _, srv = sime.arrancar(8090, demora=1.5)
     api = "http://127.0.0.1:8090"
-    c = Config(api_epayco=api, validacion_epayco=api, checkout_js=f"{api}/checkout.js",
+    c = Config(api_epayco=api, validacion_epayco=api, apify_epayco=api, checkout_js=f"{api}/checkout-v2.js",
                token_js=f"{api}/epayco.js", cliente_id=sime.CLIENTE_ID, p_key=sime.P_KEY,
                llave_publica=sime.LLAVE_PUBLICA, llave_privada=sime.LLAVE_PRIVADA,
                url_publica=f"http://localhost:{puerto}", puerto=puerto,

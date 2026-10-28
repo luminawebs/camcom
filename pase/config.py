@@ -11,8 +11,9 @@ from dataclasses import dataclass, field
 ENTORNOS = ("sandbox", "produccion")
 API_EPAYCO = "https://api.secure.payco.co"
 VALIDACION_EPAYCO = "https://secure.epayco.co"
-CHECKOUT_JS = "https://checkout.epayco.co/checkout.js"
-TOKEN_JS = "https://s3-us-west-2.amazonaws.com/epayco/v1.0/epayco.min.js"
+APIFY_EPAYCO = "https://apify.epayco.co"  # sesiones del Smart Checkout
+CHECKOUT_JS = "https://checkout.epayco.co/checkout-v2.js"
+TOKEN_JS = "https://checkout.epayco.co/epayco.min.js"
 
 
 @dataclass
@@ -20,6 +21,7 @@ class Config:
     entorno: str = "sandbox"
     api_epayco: str = API_EPAYCO
     validacion_epayco: str = VALIDACION_EPAYCO
+    apify_epayco: str = APIFY_EPAYCO
     checkout_js: str = CHECKOUT_JS
     token_js: str = TOKEN_JS
     cliente_id: str = ""        # P_CUST_ID_CLIENTE
@@ -51,6 +53,7 @@ class Config:
             entorno=e("EPAYCO_ENTORNO", "sandbox"),
             api_epayco=e("EPAYCO_API_URL", API_EPAYCO).rstrip("/"),
             validacion_epayco=e("EPAYCO_VALIDACION_URL", VALIDACION_EPAYCO).rstrip("/"),
+            apify_epayco=e("EPAYCO_APIFY_URL", APIFY_EPAYCO).rstrip("/"),
             checkout_js=e("EPAYCO_CHECKOUT_JS", CHECKOUT_JS),
             token_js=e("EPAYCO_TOKEN_JS", TOKEN_JS),
             cliente_id=e("EPAYCO_CLIENTE", ""),

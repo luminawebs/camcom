@@ -8,6 +8,7 @@ import datetime as dt
 import hashlib
 import hmac
 import json
+import re
 import secrets
 import sqlite3
 import sys
@@ -230,7 +231,7 @@ class Pase:
     def anotar_ref_pasarela(self, referencia, ref_payco):
         """La página de retorno trae ?ref_payco=: se guarda para que la conciliación pueda
         consultarla. No activa nada; el estado siempre sale de la API de ePayco."""
-        if referencia and ref_payco and str(ref_payco).isdigit():
+        if referencia and ref_payco and re.fullmatch(r"[0-9A-Za-z]{1,40}", str(ref_payco)):
             self.q("UPDATE pagos SET ref_pasarela=? WHERE referencia=? AND ref_pasarela IS NULL "
                    "AND estado='PENDIENTE'", str(ref_payco), referencia)
 

@@ -5,7 +5,8 @@
 Lee las variables EPAYCO_* del entorno (con EPAYCO_ENTORNO=sandbox: las transacciones van
 con test=TRUE) y recorre lo que usa el conector: acceso a la API, token de la tarjeta de
 prueba (aquí por API, en el sitio lo hace epayco.js en el navegador), cliente, cobro con
-token, consulta por x_ref_payco, firma de la confirmación y borrado del token.
+token, consulta por x_ref_payco, firma de la confirmación, borrado del token y sesión del
+Smart Checkout v2.
 No imprime llaves ni secretos.
 """
 import sys
@@ -48,8 +49,10 @@ def main():
 
     paso("POST /v1/auth/login", bool(api._token_api()))
 
-    for numero, esperado in (("4575623182290326", "APPROVED"), ("4151611527583283", "DECLINED")):
-        r = api._api("POST", "/v1/tokens", {"card[number]": numero, "card[exp_year]": "2030",
+    # Tarjetas de docs.epayco.com/docs/medios-de-pruebas-1 (vencen 12/2027, CVV 123)
+    for numero, esperado in (("4575623182290326", "APPROVED"), ("4151611527583283", "DECLINED"),
+                             ("5170394490379427", "ERROR")):
+        r = api._api("POST", "/v1/tokens", {"card[number]": numero, "card[exp_year]": "2027",
                                             "card[exp_month]": "12", "card[cvc]": "123", "hasCvv": True})
         token = r.get("id") or (r.get("data") or {}).get("id")
         if not paso(f"token tarjeta {numero[-4:]}", bool(token)):
@@ -70,7 +73,9 @@ def main():
         r = api.quitar_tarjeta(fuente)
         paso("borrar token del cliente", r.get("ya_no_existe") or r.get("status") is not False, str(r)[:120])
 
-    print("Para el Checkout (PSE, Nequi, Daviplata), inscríbete en el sitio en modo prueba y usa el "
+    sesion = api.datos_checkout(f"PASE-PRUEBA-{uuid.uuid4().hex[:8]}", persona)
+    paso("sesión Smart Checkout v2 (Apify)", bool(sesion["sessionId"]), sesion["sessionId"])
+    print("Para pagar con PSE, Nequi o Daviplata, inscríbete en el sitio en modo prueba y usa el "
           "botón de PSE: la confirmación llega a /webhooks/epayco.")
 
 

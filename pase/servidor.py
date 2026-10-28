@@ -96,7 +96,7 @@ ePayco.setPublicKey(C.pub);
 function tarjeta(ev){{ev.preventDefault();msg('Procesando…');
  const num=$id('num').value.replace(/\\D/g,'');$id('num').value=num;
  ePayco.token.create(window.jQuery?jQuery('#tarjeta'):$id('tarjeta'),async function(error,token){{
-  if(error) return msg('No se pudo: '+(error.message||error));
+  if(error) return msg('No se pudo: '+(error.description||error.message||error));
   try{{const r=await fetch('/pagar/token',{{method:'POST',headers:{{'Content-Type':'application/json'}},
    body:JSON.stringify({{p:C.p,token:String(token&&token.id||token),enmascarado:'**** '+num.slice(-4)}})}});
    const j=await r.json(); if(!r.ok) throw new Error(j.error||r.status);
@@ -107,7 +107,6 @@ function tarjeta(ev){{ev.preventDefault();msg('Procesando…');
 
 def pantalla_checkout(c, datos):
     precio = f"${c.precio_centavos // 100:,}".replace(",", ".")
-    cfg = json.dumps({"key": c.llave_publica, "test": c.pruebas})
     return f"""
 <h1>Pase Empresario · {precio}</h1>
 <div class="caja"><p>Paga con PSE, Nequi, Daviplata o tarjeta en la ventana segura de ePayco.
@@ -115,8 +114,7 @@ Este pago cubre un mes; antes del corte te enviamos el enlace para renovar.</p>
 <button class="verde" onclick="abrir()">Pagar {precio}</button></div>
 <script src="{html.escape(c.checkout_js)}"></script>
 <script>
-const handler=ePayco.checkout.configure({cfg});
-function abrir(){{handler.open({json.dumps(datos)})}}
+function abrir(){{ePayco.checkout.configure({json.dumps(datos)}).open()}}
 </script>"""
 
 
@@ -216,7 +214,12 @@ class App:
                     return self.responder(302, b"", extra={"Location": url})
                 if u.path == "/checkout":
                     ref = q.get("r", "")
-                    datos = app.pase.firma_valida(f"pago:{ref}", q.get("f")) and app.pase.datos_checkout(ref)
+                    try:
+                        datos = app.pase.firma_valida(f"pago:{ref}", q.get("f")) and app.pase.datos_checkout(ref)
+                    except Exception as e:
+                        print(f"Checkout {ref}: {e!r}"[:500], flush=True)
+                        return self.responder(502, pagina("Intenta de nuevo", "<h1>No pudimos abrir el pago</h1>"
+                                                          "<p>Intenta de nuevo en unos minutos.</p>", sb))
                     if not datos:
                         return self.responder(404, pagina("Enlace vencido", "<h1>Este enlace de pago ya no "
                                                           "está disponible</h1>", sb))

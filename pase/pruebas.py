@@ -52,8 +52,8 @@ class Escenario(unittest.TestCase):
         srv.server_close()
         self.sim, self.srv_sim = sime.arrancar(0, 0.1)
         self.api = f"http://127.0.0.1:{self.srv_sim.server_address[1]}"
-        self.c = Config(api_epayco=self.api, validacion_epayco=self.api,
-                        checkout_js=f"{self.api}/checkout.js", token_js=f"{self.api}/epayco.js",
+        self.c = Config(api_epayco=self.api, validacion_epayco=self.api, apify_epayco=self.api,
+                        checkout_js=f"{self.api}/checkout-v2.js", token_js=f"{self.api}/epayco.js",
                         cliente_id=sime.CLIENTE_ID, p_key=sime.P_KEY,
                         llave_publica=sime.LLAVE_PUBLICA, llave_privada=sime.LLAVE_PRIVADA,
                         url_publica=f"http://127.0.0.1:{self.puerto}",
@@ -118,18 +118,24 @@ class Escenario(unittest.TestCase):
     def pagar_checkout(self, firma, resultado="APPROVED", seguir_retorno=True):
         status, cab, _ = self.http("GET", f"{self.c.url_publica}/pagar/checkout?p={firma}")
         self.assertEqual(status, 302)
-        status, _, pagina = self.http("GET", cab["Location"])
-        self.assertEqual(status, 200)
-        self.assertIn(self.c.checkout_js.encode(), pagina)
-        datos = json.loads(pagina.split(b"handler.open(")[1].split(b")}")[0])
-        q = urllib.parse.urlencode({"key": self.c.llave_publica, "test": "true", "d": json.dumps(datos)})
-        _, cab, _ = self.http("POST", f"{self.api}/checkout/pagar?{q}", f"r={resultado}",
-                              {"Content-Type": "application/x-www-form-urlencoded"})
-        retorno = cab["Location"]
+        retorno = self.pagar_en_checkout(cab["Location"], resultado)
         self.assertTrue(retorno.startswith(f"{self.c.url_publica}/retorno?ref="))
         if seguir_retorno:
             self.http("GET", retorno)
-        return datos["invoice"], retorno
+        return retorno
+
+    def pagar_en_checkout(self, enlace, resultado="APPROVED"):
+        """Abre nuestra página /checkout (crea la sesión v2) y paga en el Smart Checkout simulado."""
+        status, _, pagina = self.http("GET", enlace)
+        self.assertEqual(status, 200)
+        self.assertIn(self.c.checkout_js.encode(), pagina)
+        datos = json.loads(pagina.split(b"ePayco.checkout.configure(")[1].split(b").open()")[0])
+        self.assertEqual((datos["type"], datos["test"]), ("standard", True))
+        self.assertIn(datos["sessionId"], self.sim.sesiones)
+        q = urllib.parse.urlencode({"session": datos["sessionId"], "test": "true"})
+        _, cab, _ = self.http("POST", f"{self.api}/checkout/pagar?{q}", f"r={resultado}",
+                              {"Content-Type": "application/x-www-form-urlencoded"})
+        return cab["Location"]
 
     def ultima_confirmacion(self):
         return dict(self.sim.confirmaciones[-1][1])
@@ -339,7 +345,10 @@ class PruebasFlujo(Escenario):
         enlace = aviso.split("Paga aquí: ")[1]
         status, _, pagina = self.http("GET", enlace)
         self.assertEqual(status, 200)
-        self.assertIn(b"handler.open(", pagina)
+        self.assertIn(b"ePayco.checkout.configure(", pagina)
+        sesion = list(self.sim.sesiones.values())[-1]
+        self.assertEqual((sesion["amount"], sesion["currency"], sesion["confirmation"]),
+                         (29000, "COP", f"{self.c.url_publica}/webhooks/epayco"))
         status, _, _ = self.http("GET", enlace.replace("&f=", "&f=0"))  # enlace adulterado
         self.assertEqual(status, 404)
         self.reloj.fecha = dt.date(2026, 12, 4)
@@ -358,11 +367,7 @@ class PruebasFlujo(Escenario):
         self.pase.cobro_mensual()
         enlace = self.pase.uno("SELECT cuerpo FROM avisos WHERE asunto LIKE 'Renueva%'")["cuerpo"].split(
             "Paga aquí: ")[1]
-        _, _, pagina = self.http("GET", enlace)
-        datos = json.loads(pagina.split(b"handler.open(")[1].split(b")}")[0])
-        q = urllib.parse.urlencode({"key": self.c.llave_publica, "test": "true", "d": json.dumps(datos)})
-        self.http("POST", f"{self.api}/checkout/pagar?{q}", "r=APPROVED",
-                  {"Content-Type": "application/x-www-form-urlencoded"})
+        self.pagar_en_checkout(enlace)
         self.esperar_estado(pid, "activo")
         self.assertEqual(self.pase.suscripcion(pid)["proximo_corte"], "2027-01-03")
         status, _, _ = self.http("GET", enlace)  # ya pagado: el enlace deja de servir
@@ -387,7 +392,10 @@ class PruebasFlujo(Escenario):
         self.sim.avisar = False
         firma = self.firma_inscripcion()
         pid = int(firma.split(".")[0])
-        self.pagar_checkout(firma)
+        retorno = self.pagar_checkout(firma)
+        ref_payco = urllib.parse.parse_qs(urllib.parse.urlparse(retorno).query)["ref_payco"][0]
+        self.assertFalse(ref_payco.isdigit())  # formato alfanumérico del Smart Checkout v2
+        self.assertEqual(self.pase.uno("SELECT ref_pasarela FROM pagos")["ref_pasarela"], ref_payco)
         time.sleep(0.3)
         self.assertEqual(self.estado_persona(pid), "interesado")
         self.assertEqual(self.pase.conciliar(), 1)

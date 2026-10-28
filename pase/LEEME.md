@@ -18,7 +18,7 @@ Formulario EduNest  ── «Solo registro gratis» ──► Moodle: usuario + 
    ▼ «Quiero el Pase»
 Pantalla de pago
    ├─ Tarjeta → token en el navegador (epayco.js) → cliente ePayco → primer cobro con token
-   └─ PSE, Nequi, Daviplata → Checkout de ePayco (renovación manual con enlace cada mes)
+   └─ PSE, Nequi, Daviplata → Smart Checkout v2 (sesión creada en el backend; renovación manual con enlace cada mes)
    │
    ▼  ePayco llama a la URL de confirmación (campos x_…, x_signature con P_KEY)
 POST /webhooks/epayco ── firma OK, se guarda, responde 200 ── cola
@@ -75,8 +75,8 @@ Lo que comprueban las pruebas:
 ## Pasar a ePayco real en modo prueba (lo que falta de David)
 
 1. **Cuenta ePayco** de EduNest con la cuenta de Banco Caja Social inscrita para retiros.
-2. **Credenciales** (panel › Integraciones › Llaves API): `P_CUST_ID_CLIENTE`, `P_KEY`, `PUBLIC_KEY`, `PRIVATE_KEY`. Van como `EPAYCO_CLIENTE`, `EPAYCO_P_KEY`, `EPAYCO_LLAVE_PUBLICA`, `EPAYCO_LLAVE_PRIVADA` en el entorno de la nube y en `/etc/pase/pase.env`, nunca en el chat.
-3. **Dominios permitidos** en el entorno de la nube: `epayco.com`, `docs.epayco.com`, `secure.epayco.co`, `apify.epayco.co`, `checkout.epayco.co`, `api.secure.payco.co`, `secure.payco.co`. Con eso: `python -m pase.probar_sandbox`.
+2. **Credenciales** (dashboard.epayco.com › Configuración › Personalizaciones › Llaves secretas): `P_CUST_ID_CLIENTE`, `P_KEY`, `PUBLIC_KEY`, `PRIVATE_KEY`. Van como `EPAYCO_CLIENTE`, `EPAYCO_P_KEY`, `EPAYCO_LLAVE_PUBLICA`, `EPAYCO_LLAVE_PRIVADA` en el entorno de la nube y en `/etc/pase/pase.env`, nunca en el chat.
+3. ~~Dominios permitidos~~ Hecho el 28-oct. Con las llaves en una sesión nueva: `python -m pase.probar_sandbox`.
 4. **Servidor**: actualizar pase.edunest.co (ver «Pasar el servidor de Wompi a ePayco» en `despliegue/DESPLIEGUE.md`) y poner `https://pase.edunest.co/webhooks/epayco` como URL de confirmación en el panel.
 5. **Moodle**: igual que antes (`despliegue/MOODLE.md`): cohortes, usuario `conector-pase`, curso de prueba.
 
@@ -87,7 +87,7 @@ Lo que comprueban las pruebas:
 | `EPAYCO_ENTORNO` | `sandbox` = modo prueba (o `produccion`, bloqueado sin `PASE_PERMITIR_PRODUCCION=1`) |
 | `EPAYCO_CLIENTE`, `EPAYCO_P_KEY` | del panel de ePayco (firma de confirmaciones) |
 | `EPAYCO_LLAVE_PUBLICA`, `EPAYCO_LLAVE_PRIVADA` | del panel de ePayco (API, epayco.js y Checkout) |
-| `EPAYCO_API_URL`, `EPAYCO_VALIDACION_URL`, `EPAYCO_CHECKOUT_JS`, `EPAYCO_TOKEN_JS` | solo si ePayco cambia sus direcciones |
+| `EPAYCO_API_URL`, `EPAYCO_VALIDACION_URL`, `EPAYCO_APIFY_URL`, `EPAYCO_CHECKOUT_JS`, `EPAYCO_TOKEN_JS` | solo si ePayco cambia sus direcciones |
 | `PASE_PRECIO_CENTAVOS` | `2900000` ($29.000; ePayco cobra en pesos enteros) |
 | `PASE_URL_PUBLICA` | `https://pase.edunest.co` |
 | `PASE_MOODLE_URL`, `PASE_MOODLE_TOKEN`, `PASE_MOODLE_SIMULADO` | `https://portal.edunest.co`, token de `conector-pase`, `1` |
@@ -96,17 +96,18 @@ Lo que comprueban las pruebas:
 | `PASE_ADMIN_TOKEN` | protege `/admin/resumen` |
 | `PASE_SECRETO_SESION` | firma los enlaces de pago de cada persona |
 
-## Supuestos por verificar en el modo prueba real
+## Verificado contra docs.epayco.com (28-oct-2026)
 
-La documentación de ePayco no se pudo abrir desde la nube (dominios bloqueados). Rutas y campos
-salen del SDK oficial `epayco-sdk-node` 1.4.4 (septiembre de 2025) y de la guía pública de la
-página de confirmación:
+Con los dominios ya permitidos se revisó la documentación vigente y se ajustó el conector:
 
-- Login `POST api.secure.payco.co/v1/auth/login`; cliente `/payment/v1/customer/create`; cobro `/payment/v1/charge/create`; borrar token `/v1/remove/token`.
-- Validación `GET secure.epayco.co/validation/v1/reference/{ref_payco}`.
-- `epayco.js` (tokenización en el navegador, usa jQuery) y `checkout.js` con `ePayco.checkout.configure({key, test}).open({...})`. ePayco tiene un Checkout más nuevo que puede pedir crear una sesión antes; si es así se ajusta `pantalla_checkout`.
-- Tarjetas de prueba 4575 6231 8229 0326 (aprobada) y 4151 6115 2758 3283 (rechazada).
-- Nequi y Daviplata como pago recurrente: por ahora no; van por Checkout con renovación manual.
+- **Llaves**: dashboard.epayco.com › Configuración › Personalizaciones › Llaves secretas.
+- **Firma de la confirmación** `x_signature` = SHA-256 de `p_cust_id_cliente^p_key^x_ref_payco^x_transaction_id^x_amount^x_currency_code`, y estados `x_cod_transaction_state` 1 a 11: coinciden con lo implementado.
+- **Validación** `GET secure.epayco.co/validation/v1/reference/{ref_payco}`: confirmada (con una referencia inexistente responde `status:false`, que el conector trata como «no encontrada»).
+- **Smart Checkout v2**: el Checkout actual ya no se abre solo con la llave pública; el backend crea una sesión (`POST apify.epayco.co/login` con Basic `PUBLIC_KEY:PRIVATE_KEY` y luego `POST /payment/session/create`) y el navegador abre `checkout-v2.js` con el `sessionId`. Cambiado. Sus `ref_payco` son alfanuméricos (p. ej. `68fb83729d094878e015be00`), ya aceptados en el retorno.
+- **Tokenización**: `https://checkout.epayco.co/epayco.min.js` (antes apuntaba a una copia vieja en S3), con jQuery y campos `data-epayco="card[…]"`. Probado en Chromium con la librería real: lee el formulario, cifra y llama a `api.secure.payco.co/token/tokenize`; con llaves falsas ePayco responde 400 y la página muestra el error.
+- **Tarjetas de prueba** (vencen 12/2027, CVV 123): 4575 6231 8229 0326 aceptada, 4151 6115 2758 3283 fondos insuficientes, 5170 3944 9037 9427 fallida, 3731 1885 6457 642 pendiente.
+
+Falta comprobar con llaves reales (`python -m pase.probar_sandbox`): cliente con token, cobro con token y borrar token, que la documentación pública remite al SDK y a la colección de Postman de Apify. Nequi y Daviplata siguen por Checkout con renovación manual.
 
 ## Por hacer después
 

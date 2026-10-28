@@ -1,14 +1,15 @@
 """Cliente mínimo de la API de ePayco (Colombia) y verificación de confirmaciones.
 
-Rutas y campos tomados del SDK oficial epayco-sdk-node 1.4.4 (septiembre de 2025) y de la
-guía de «Página de confirmación» de ePayco. La documentación vigente no se pudo abrir desde
-la nube (dominios bloqueados), así que todo esto se verifica con `python -m pase.probar_sandbox`
-antes de pasar a producción.
+Fuentes: docs.epayco.com (consultado el 28-oct-2026: Smart Checkout v2, páginas de respuesta y
+confirmación, tokenización con epayco.min.js, medios de prueba) y, para cliente, cobro con
+token y borrar token, el SDK oficial epayco-sdk-node 1.4.4 (septiembre de 2025). Se verifica
+con `python -m pase.probar_sandbox` antes de pasar a producción.
 
 El resto del conector no conoce los campos `x_…` de ePayco: este módulo convierte cada
 transacción a la forma interna {id, reference, amount_in_cents, currency, status,
 payment_method_type, prueba}, con los estados APPROVED, DECLINED, PENDING, ERROR y VOIDED.
 """
+import base64
 import hashlib
 import hmac
 import json
@@ -99,6 +100,7 @@ class Epayco:
     def __init__(self, config):
         self.c = config
         self._jwt, self._jwt_hasta = None, 0.0
+        self._apify, self._apify_hasta = None, 0.0
         self._candado = threading.Lock()
 
     # --- HTTP ---
@@ -126,6 +128,18 @@ class Epayco:
                     raise ErrorEpayco(401, "sin token de acceso: revisa EPAYCO_LLAVE_PUBLICA y PRIVADA")
                 self._jwt, self._jwt_hasta = jwt, time.time() + 600
             return self._jwt
+
+    def _token_apify(self, renovar=False):
+        """POST apify.epayco.co/login con Basic PUBLIC_KEY:PRIVATE_KEY → token (dura unos 20 min)."""
+        with self._candado:
+            if renovar or not self._apify or time.time() > self._apify_hasta:
+                basico = base64.b64encode(f"{self.c.llave_publica}:{self.c.llave_privada}".encode()).decode()
+                r = self._http("POST", f"{self.c.apify_epayco}/login", {},
+                               {"Authorization": f"Basic {basico}"})
+                if not r.get("token"):
+                    raise ErrorEpayco(401, "Apify sin token: revisa EPAYCO_LLAVE_PUBLICA y PRIVADA")
+                self._apify, self._apify_hasta = r["token"], time.time() + 600
+            return self._apify
 
     def _api(self, metodo, ruta, cuerpo=None):
         for renovar in (False, True):
@@ -205,20 +219,32 @@ class Epayco:
             "franchise": tarjeta.get("franchise"), "mask": tarjeta.get("mask"),
             "customer_id": fuente["cliente"]})
 
-    # --- Checkout (PSE, Nequi, Daviplata, tarjeta sin guardar) ---
+    # --- Smart Checkout v2 (PSE, Nequi, Daviplata, tarjeta sin guardar) ---
     def datos_checkout(self, referencia, persona, monto_centavos=None):
-        """Parámetros de handler.open() del Checkout de ePayco (checkout.js)."""
+        """Crea la sesión del Smart Checkout en el backend (POST /payment/session/create) y
+        devuelve lo que necesita ePayco.checkout.configure() en el navegador."""
         monto = monto_centavos or self.c.precio_centavos
-        return {
-            "name": "Pase Empresario", "description": "Pase Empresario · Aula Virtual Empresarial",
-            "invoice": referencia, "currency": self.c.moneda.lower(), "amount": pesos(monto),
-            "tax_base": "0", "tax": "0", "country": "co", "lang": "es", "external": "false",
-            "confirmation": f"{self.c.url_publica}/webhooks/epayco",
+        cuerpo = {
+            "checkout_version": "2", "name": "Pase Empresario",
+            "description": "Pase Empresario · Aula Virtual Empresarial",
+            "currency": self.c.moneda, "amount": monto // 100, "invoice": referencia,
+            "lang": "ES", "country": "CO", "taxBase": 0, "tax": 0, "taxIco": 0,
             "response": f"{self.c.url_publica}/retorno?ref={urllib.parse.quote(referencia)}",
-            "name_billing": persona["nombre"], "email_billing": persona["correo"],
-            "type_doc_billing": (persona.get("tipo_doc") or "CC").lower(),
-            "number_doc_billing": persona["documento"],
-            "mobilephone_billing": persona.get("whatsapp") or "",
-            "extra1": referencia,
-            "methodconfirmation": "POST",
+            "confirmation": f"{self.c.url_publica}/webhooks/epayco", "method": "POST",
+            "extras": {"extra1": referencia},
+            "billing": {"email": persona["correo"], "name": persona["nombre"],
+                        "typeDoc": persona.get("tipo_doc") or "CC", "numberDoc": persona["documento"],
+                        "callingCode": "+57", "mobilePhone": persona.get("whatsapp") or ""},
         }
+        for renovar in (False, True):
+            try:
+                r = self._http("POST", f"{self.c.apify_epayco}/payment/session/create", cuerpo,
+                               {"Authorization": f"Bearer {self._token_apify(renovar)}"})
+                break
+            except ErrorEpayco as e:
+                if e.estado != 401 or renovar:
+                    raise
+        sesion = (r.get("data") or {}).get("sessionId")
+        if not r.get("success") or not sesion:
+            raise ErrorEpayco(422, f"ePayco no creó la sesión: {json.dumps(r, ensure_ascii=False)[:300]}")
+        return {"sessionId": sesion, "type": "standard", "test": self.c.pruebas}
