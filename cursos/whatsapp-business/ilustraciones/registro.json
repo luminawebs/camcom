@@ -1,0 +1,127 @@
+{
+ "hechas": {
+  "personaje-sandra": "d704d66d32dc",
+  "personaje-camilo": "105eb741a5c9",
+  "personaje-esperanza": "867d5ccf7d31",
+  "u1-entrada": "509fb068a4a0",
+  "u1-fotos": "cc66545e8b65",
+  "u2-entrada": "5dd4553df518",
+  "u2-etapas": "d776cdd70a20",
+  "u3-entrada": "7d886f88fae3",
+  "u3-horario": "73dfe7ef420c"
+ },
+ "llamadas": [
+  {
+   "id": "personaje-sandra",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:05",
+   "tokens_entrada": 244,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-camilo",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:10",
+   "tokens_entrada": 237,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-esperanza",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:17",
+   "tokens_entrada": 251,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:25",
+   "tokens_entrada": 503,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u1-fotos",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:32",
+   "tokens_entrada": 222,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:40",
+   "tokens_entrada": 503,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u2-etapas",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:46",
+   "tokens_entrada": 210,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:23:54",
+   "tokens_entrada": 498,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-horario",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:24:00",
+   "tokens_entrada": 200,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-sandra",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:24:44",
+   "tokens_entrada": 244,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-camilo",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:24:51",
+   "tokens_entrada": 237,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-esperanza",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:24:57",
+   "tokens_entrada": 251,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-etapas",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:25:02",
+   "tokens_entrada": 227,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-horario",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T23:25:07",
+   "tokens_entrada": 217,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  }
+ ]
+}

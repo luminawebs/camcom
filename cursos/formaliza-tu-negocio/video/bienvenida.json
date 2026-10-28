@@ -1,0 +1,20 @@
+{
+  "titulo": "Formaliza tu negocio paso a paso",
+  "etiqueta": "Bienvenida",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Formaliza tu negocio paso a paso", "texto": "Édgar · tienda de barrio en Compartir",
+     "imagen": "ilustraciones/originales/u1-entrada.png",
+     "voz": "Hola, te damos la bienvenida a Formaliza tu negocio paso a paso. Él es Édgar. Tiene una tienda en Compartir hace ocho años. Un distribuidor le ofrece mercancía a crédito, pero le pide RUT y matrícula mercantil. Y Édgar cree que formalizarse es empezar a pagar impuestos que no puede pagar."},
+    {"tipo": "frase", "titulo": "Formal no es pagar más: es poder crecer", "texto": "Comprar a crédito, venderle a empresas y pedir un crédito en el banco.",
+     "imagen": "ilustraciones/originales/u1-beneficios.png",
+     "voz": "En este curso vas a ver que estar formal no es pagar más: es poder crecer. Comprar a crédito, venderle a empresas y pedir un crédito en el banco."},
+    {"tipo": "frase", "titulo": "Unidad 2 · El RUT, gratis y desde el celular", "texto": "Yuli · uñas y peinados a domicilio en Ciudad Latina",
+     "imagen": "ilustraciones/originales/u2-entrada.png",
+     "voz": "Primero vas a ver qué registros necesita tu negocio. Luego, con Yuli, vas a sacar tu RUT gratis, desde el celular."},
+    {"tipo": "frase", "titulo": "Unidad 3 · Matrícula mercantil y tu local", "texto": "Wilson · taller de motos en El Danubio",
+     "imagen": "ilustraciones/originales/u3-entrada.png",
+     "voz": "Y con Wilson vas a revisar la matrícula mercantil y lo que le piden a tu local."},
+    {"tipo": "cierre", "titulo": "Tu ruta de formalización", "texto": "Tres unidades cortas, desde tu celular",
+     "voz": "Son tres unidades cortas, desde tu celular. Al final vas a tener tu ruta: qué tienes, qué te falta y en qué fecha lo vas a hacer. ¡Empecemos!"}
+  ]
+}

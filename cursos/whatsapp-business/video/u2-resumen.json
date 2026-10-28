@@ -1,0 +1,62 @@
+{
+ "titulo": "Ningún pedido se pierde",
+ "etiqueta": "Unidad 2 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Ningún pedido se pierde",
+   "texto": "Camilo · accesorios para celular en Ducales",
+   "voz": "Camilo tiene más de doscientos chats abiertos. Un viernes se le olvidó despachar tres pedidos que ya le habían pagado."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Una etiqueta",
+   "texto": "Un color con nombre que le pones a cada chat",
+   "voz": "La solución son las etiquetas: un color con nombre que le pones a cada chat, para saber en qué va ese cliente."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Las etapas del pedido",
+   "items": [
+    [
+     "Nuevo pedido",
+     "Ya dijo qué quiere."
+    ],
+    [
+     "Pago pendiente",
+     "Falta que pague."
+    ],
+    [
+     "Pagado → Entregado",
+     "Falta entregar, y listo."
+    ]
+   ],
+   "voz": "Usa pocas, en el orden del pedido: nuevo pedido, pago pendiente, pagado y entregado."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Tu rutina de 10 minutos",
+   "items": [
+    [
+     "«Pago pendiente»",
+     "A quién cobrar."
+    ],
+    [
+     "«Pagado»",
+     "Qué despachar."
+    ],
+    [
+     "Al entregar",
+     "Cambia la etiqueta."
+    ]
+   ],
+   "voz": "Y cada noche filtras: en pago pendiente está a quién cobrar, y en pagado, lo que tienes que despachar."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Ordena tus pedidos",
+   "texto": "Nuevo → Pago pendiente → Pagado → Entregado",
+   "voz": "En esta unidad vas a ponerle etiqueta a cada pedido, para que ninguno se pierda."
+  }
+ ]
+}

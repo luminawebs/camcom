@@ -1,0 +1,128 @@
+{
+ "medios-moodle/u1-entrada-narracion.mp3": {
+  "texto": "El colegio que le pide factura a Gloria. Gloria abre su panadería en San Mateo a las 5 de la mañana. La rectora del colegio del barrio le propone comprarle los refrigerios de 300 niños todos los días, pero le dice que solo puede pagarle con factura electrónica. Gloria piensa que para eso necesita un programa caro, un computador y un contador de planta. Y casi le dice que no. La pregunta de esta unidad: ¿Le toca facturar a tu negocio y qué es de verdad una factura electrónica?",
+  "firma": "b1817806f8eb",
+  "segundos": 26.3,
+  "kb": 206
+ },
+ "piezas/u1-aprende/medios/narracion-1.mp3": {
+  "texto": "Una venta grande que pide un papel. Un colegio le quiere comprar a Gloria los refrigerios de todos los días, pero solo le paga con factura electrónica. Gloria cree que necesita un programa caro y un contador de planta. No es así. Vamos a ver qué es una factura electrónica y si a tu negocio le toca.",
+  "firma": "9df1ac038ee2",
+  "segundos": 17.0,
+  "kb": 133
+ },
+ "piezas/u1-aprende/medios/narracion-2.mp3": {
+  "texto": "Qué es una factura electrónica. Es la factura de siempre, pero hecha en el celular o el computador. Antes de llegarle a tu cliente, la DIAN la revisa y la valida. Cada factura lleva un código único (CUFE) y un código QR para comprobar que es real. Le llega a tu cliente al correo. No hay papel que se pierda.",
+  "firma": "0219ff5d69ef",
+  "segundos": 17.0,
+  "kb": 133
+ },
+ "piezas/u1-aprende/medios/narracion-3.mp3": {
+  "texto": "Facturar no es pagar más impuestos. La factura es una constancia de lo que vendiste. Los impuestos dependen de lo que te quedó en el RUT y de cuánto vendes, no de si facturas. Con factura puedes venderle a empresas, a colegios y al Estado, que solo pagan con factura, y tienes tus ventas en orden para pedir un crédito.",
+  "firma": "f8bf6bbadddf",
+  "segundos": 17.7,
+  "kb": 138
+ },
+ "piezas/u1-aprende/medios/narracion-4.mp3": {
+  "texto": "¿A quién le toca facturar?. Uno: A los comerciantes: quien compra y vende o presta servicios como negocio. Dos: A quien es responsable de IVA o está en el Régimen Simple. Tres: A los profesionales que cobran honorarios. Hay excepciones, los no obligados a facturar. Por ejemplo, algunas personas que no son responsables de IVA y cumplen todas las condiciones de la ley, como vender menos de 3500 UVT al año.",
+  "firma": "27b710dcbc6e",
+  "segundos": 23.4,
+  "kb": 183
+ },
+ "piezas/u1-aprende/medios/narracion-5.mp3": {
+  "texto": "Si no te toca, igual te puede convenir. Si eres no obligado a facturar, la empresa que te compra hace un documento soporte para poder descontar la compra. Pero muchas empresas prefieren comprarle a quien factura. Y facturar es gratis con el servicio de la DIAN. Si no sabes si te toca, muéstrale tu RUT a un contador o pregunta en la Cámara.",
+  "firma": "65d9f5e8d276",
+  "segundos": 18.3,
+  "kb": 143
+ },
+ "piezas/u1-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. La factura electrónica la valida la DIAN y le llega a tu cliente al correo, con un código único y un QR. Facturar no es pagar más impuestos. A los comerciantes y a los responsables de IVA les toca, salvo excepciones: confirma tu caso con un contador.",
+  "firma": "686f9549d5ef",
+  "segundos": 16.4,
+  "kb": 128
+ },
+ "medios-moodle/u2-entrada-narracion.mp3": {
+  "texto": "La obra que quiere comprarle a Andrés. Andrés tiene una ferretería pequeña en Quintanares. Un contratista que está construyendo cerca le quiere comprar cemento, tubos y pintura cada semana, pero solo si le factura electrónicamente. Andrés tiene RUT, pero un vendedor le dijo que el programa para facturar cuesta medio millón al año. Andrés no sabe si vale la pena. La pregunta de esta unidad: ¿Cómo te habilitas para facturar sin pagar un programa?",
+  "firma": "100139066459",
+  "segundos": 24.4,
+  "kb": 191
+ },
+ "piezas/u2-aprende/medios/narracion-1.mp3": {
+  "texto": "Un cliente semanal que pide factura. Un contratista le quiere comprar a Andrés materiales cada semana, pero solo si le factura. Un vendedor le dijo que el programa cuesta medio millón al año. Hay otra opción: el servicio gratuito de la DIAN. Vamos a ver los pasos para habilitarte.",
+  "firma": "391bdc24249d",
+  "segundos": 15.4,
+  "kb": 121
+ },
+ "piezas/u2-aprende/medios/narracion-2.mp3": {
+  "texto": "Lo que necesitas antes de empezar. Uno: Tu RUT al día, con tu dirección, celular y actividad correctos. Dos: Acceso al correo que pusiste en el RUT: ahí te llegan los códigos. Tres: Tu usuario y contraseña de la DIAN. Cuatro: Un celular o computador con internet. No necesitas comprar nada.",
+  "firma": "bf2f37e738a4",
+  "segundos": 17.3,
+  "kb": 136
+ },
+ "piezas/u2-aprende/medios/narracion-3.mp3": {
+  "texto": "Paso 1 y 2: regístrate y pide tu firma. Uno: Entra al portal de la DIAN con tu usuario y busca factura electrónica, registro como facturador. Dos: Escoge el servicio gratuito: Facturación Gratuita DIAN. Tres: Pide tu certificado de firma digital. Es gratis y sirve para firmar tus facturas.",
+  "firma": "2d2316dbcd99",
+  "segundos": 18.0,
+  "kb": 141
+ },
+ "piezas/u2-aprende/medios/narracion-4.mp3": {
+  "texto": "Paso 3: las pruebas. Antes de facturar de verdad, la DIAN te pide hacer unas facturas de prueba. Llenas unos datos de ejemplo y el sistema revisa que salgan bien. Cuando las pasas, quedas habilitado y tu RUT queda con la responsabilidad 52 (facturador electrónico). También escoges desde qué fecha vas a facturar.",
+  "firma": "064910a31c6a",
+  "segundos": 18.3,
+  "kb": 143
+ },
+ "piezas/u2-aprende/medios/narracion-5.mp3": {
+  "texto": "Paso 4: tu numeración. Cada factura lleva un número que autoriza la DIAN. Pides un rango, por ejemplo de la 1 a la 1000, y le pones un prefijo, unas letras que van antes del número, como FE. Pide también un rango para contingencia, por si un día se cae el sistema. Con eso, ya puedes facturar.",
+  "firma": "99432789f7f9",
+  "segundos": 18.0,
+  "kb": 141
+ },
+ "piezas/u2-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. Con el RUT al día y tu correo, te registras como facturador con el servicio gratuito de la DIAN, pides tu firma, haces las pruebas y pides tu numeración con su prefijo. Todo es gratis y no cambia tus impuestos.",
+  "firma": "071cac94fa4b",
+  "segundos": 12.9,
+  "kb": 101
+ },
+ "medios-moodle/u3-entrada-narracion.mp3": {
+  "texto": "La primera factura de Doris. Doris vende almuerzos corrientes en el centro de Soacha. Una empresa de vigilancia le paga cada mes los almuerzos de diez guardas. Doris hizo su primera factura electrónica, pero escribió mal el NIT de la empresa. La contadora de la empresa se la devolvió y Doris no sabe si tiene que borrarla, hacer otra o pagar una multa. La pregunta de esta unidad: ¿Qué datos lleva tu factura y qué haces si te equivocas?",
+  "firma": "90c0d43f9911",
+  "segundos": 23.4,
+  "kb": 183
+ },
+ "piezas/u3-aprende/medios/narracion-1.mp3": {
+  "texto": "Un NIT mal escrito. Doris le hizo su primera factura a una empresa de vigilancia, pero escribió mal el NIT. La contadora se la devolvió. Doris no sabe si borrarla, hacer otra o pagar una multa. Vamos a ver qué lleva una factura y qué hacer si te equivocas.",
+  "firma": "3e96c0e21168",
+  "segundos": 14.8,
+  "kb": 116
+ },
+ "piezas/u3-aprende/medios/narracion-2.mp3": {
+  "texto": "Los datos que pides antes de facturar. Uno: El nombre completo o la razón social de tu cliente. Dos: Su NIT o cédula. Si es empresa, pídele el RUT. Tres: Su correo: ahí le llega la factura. Cuatro: Si no te quiere dar sus datos, factura a consumidor final con el número 222222222222.",
+  "firma": "6191e9f587b0",
+  "segundos": 19.3,
+  "kb": 151
+ },
+ "piezas/u3-aprende/medios/narracion-3.mp3": {
+  "texto": "Lo que lleva tu factura. Tu factura dice factura electrónica de venta y lleva: tus datos y tu NIT, los del cliente, tu número autorizado con el prefijo, la fecha y la hora, lo que vendiste con cantidad y valor, los impuestos si te toca cobrarlos, la forma de pago, y el código único (CUFE) con el QR, que pone el sistema.",
+  "firma": "571ac85ede88",
+  "segundos": 18.3,
+  "kb": 143
+ },
+ "piezas/u3-aprende/medios/narracion-4.mp3": {
+  "texto": "Si te equivocas: nota crédito. Una factura no se borra. Si te equivocaste en un dato o en el valor, haces una nota crédito que anula la factura (o la parte que estaba mal) y después una factura nueva con los datos correctos. Hazlo apenas te des cuenta: si el cliente ya aceptó la factura, ya no se puede corregir así.",
+  "firma": "f5bcb298a25b",
+  "segundos": 17.3,
+  "kb": 136
+ },
+ "piezas/u3-aprende/medios/narracion-5.mp3": {
+  "texto": "Si se cae el sistema. Si un día no hay internet o falla el servicio, no dejes de vender: usa tu factura de contingencia, con el rango que pediste para eso. Cuando vuelva el sistema, la pasas a la DIAN. Y recuerda: no facturar estando obligado puede traer el cierre del negocio.",
+  "firma": "a5e2b2b4aa26",
+  "segundos": 15.7,
+  "kb": 123
+ },
+ "piezas/u3-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. Antes de facturar, pide el nombre, el NIT o la cédula y el correo de tu cliente; si no te los da, factura a consumidor final. Tu factura lleva tu numeración, la fecha, lo que vendiste, el valor y el código único con el QR. Si te equivocas, haces una nota crédito y una factura nueva.",
+  "firma": "e70d5ea9ffef",
+  "segundos": 18.6,
+  "kb": 146
+ }
+}

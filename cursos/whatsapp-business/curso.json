@@ -1,0 +1,241 @@
+{
+  "id": "whatsapp-business",
+  "titulo": "Vende más por WhatsApp Business",
+  "titulo_corto": "WhatsApp Business",
+  "nivel": "g",
+  "perfil": "P",
+  "area": "Mercadeo y ventas",
+  "duracion": "≈ 1,5 horas",
+  "promesa": "Al terminar tendrás tu WhatsApp de negocio en orden: perfil de empresa y catálogo con precios, etiquetas para que ningún pedido se pierda y mensajes automáticos para responder rápido sin vivir pegado al celular.",
+  "certificado": "Constancia de participación",
+  "resumen_formato": "video",
+  "experto": "Asesor de mercadeo digital de la Cámara de Comercio [por definir]",
+  "revisor": "un asesor de mercadeo digital de la Cámara de Comercio",
+  "receta": {
+    "aprende": [
+      "Lección interactiva con pantallas",
+      "SCORM 1.2 · HTML5",
+      7,
+      5,
+      "leccion-interactiva"
+    ]
+  },
+  "receta_nota": "Perfil P: Aprende va como lección narrada con pantallas simplificadas (no screencast) para que funcione con datos limitados y comparta el pipeline de narración. Practica usa el simulador de pantalla con pantallas armadas en pantallas/armar_pantallas.py.",
+  "narracion": {
+    "voz": "a253156d",
+    "secciones": [
+      "entrada",
+      "aprende"
+    ],
+    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad son videos automáticos (plantillas/video_resumen.py).",
+    "reemplazos": {
+      "escribes / y": "escribes la barra y",
+      "/domicilio": "barra domicilio",
+      "/pagos": "barra pagos",
+      "7 a. m.": "7 de la mañana",
+      "para 12": "para doce"
+    }
+  },
+  "caso": "Sandra, 41 años, hace tortas y postres por encargo en su casa en Hogares Soacha. Vende por su WhatsApp personal: los pedidos se le mezclan con los chats de la familia, manda las mismas fotos y precios una y otra vez, y contesta a medianoche. La semana pasada una clienta se fue con otra repostera porque Sandra tardó en responderle.",
+  "personas": [
+    {
+      "nombre": "Sandra",
+      "negocio": "Tortas y postres por encargo",
+      "barrio": "Hogares Soacha",
+      "problema": "Vende por su WhatsApp personal, repite fotos y precios todo el día y pierde clientas por responder tarde."
+    },
+    {
+      "nombre": "Camilo",
+      "negocio": "Accesorios para celular a domicilio",
+      "barrio": "Ducales",
+      "problema": "Tiene más de 200 chats abiertos y un viernes se le olvidó despachar tres pedidos que ya le habían pagado."
+    },
+    {
+      "nombre": "Esperanza",
+      "negocio": "Frutas y verduras a domicilio",
+      "barrio": "El Altico",
+      "problema": "Recibe 40 mensajes al día con las mismas preguntas y no alcanza a contestar cuando está comprando en la plaza."
+    }
+  ],
+  "objetivos": [
+    "Pasar tu negocio a WhatsApp Business con un perfil de empresa completo.",
+    "Armar tu catálogo con foto, nombre, precio y descripción de cada producto.",
+    "Organizar tus pedidos con etiquetas para que ninguno se pierda.",
+    "Configurar el mensaje de bienvenida, el de ausencia y tus respuestas rápidas."
+  ],
+  "evidencia": "Tu WhatsApp de negocio listo: perfil de empresa completo, catálogo con al menos 5 productos, etiquetas de pedidos en uso y tus mensajes automáticos y respuestas rápidas configurados.",
+  "mapa_curso_nota": "Mapa del curso con las 3 unidades: tu vitrina (perfil y catálogo), tus pedidos con etiquetas y tus respuestas rápidas",
+  "inicio": {
+    "bienvenida": "Hola, te damos la bienvenida a Vende más por WhatsApp Business",
+    "texto": "Sandra hace tortas por encargo en Hogares Soacha y vende por su WhatsApp personal: repite fotos y precios todo el día y pierde clientas por responder tarde. En tres unidades cortas vas a poner tu negocio en WhatsApp Business con perfil y catálogo, ordenar tus pedidos con etiquetas y responder rápido con mensajes automáticos.",
+    "aprobar": "Completar las 3 unidades",
+    "dudas": "Foro Comunidad o WhatsApp de la Cámara [VERIFICAR número]",
+    "video_nota": "Bienvenida de 60 s: Sandra cuenta por qué pierde ventas en el chat y qué vas a lograr. Con subtítulos.",
+    "diagnostico": [
+      "¿Tu negocio ya usa WhatsApp Business? (Sí / No, uso mi WhatsApp personal / No uso WhatsApp para vender)",
+      "¿Tienes tus productos con precio en un catálogo? (Sí / No / Los mando en fotos sueltas)",
+      "¿Qué te cuesta más al vender por WhatsApp? (Responder a tiempo / Organizar los pedidos / Mostrar los productos / Cobrar)"
+    ]
+  },
+  "unidades": [
+    {
+      "tema": "Tu vitrina en WhatsApp: perfil y catálogo",
+      "objetivo": "pasar tu negocio a WhatsApp Business, completar tu perfil de empresa y armar tu catálogo con foto, nombre, precio y descripción",
+      "entrada": {
+        "titulo": "Las fotos de Sandra se pierden en el chat",
+        "texto": "Sandra hace tortas y postres por encargo en su casa en Hogares Soacha. Cada día le escriben diez personas preguntando lo mismo: qué tortas tiene, cuánto valen y si hace domicilio. Ella busca las fotos en la galería y las manda una por una. El sábado, entre el chat de la familia y los pedidos, tardó tres horas en contestarle a una clienta, que terminó comprándole a otra repostera.",
+        "pregunta": "¿Cómo pones tu negocio en WhatsApp para que el cliente vea qué vendes y cuánto vale sin tener que preguntarte?",
+        "reflexion": "Cuenta cuántas veces escribiste ayer «¿cuánto vale?» o mandaste la misma foto. Ese tiempo lo puede hacer tu catálogo.",
+        "imagen": "Ilustración de Sandra en su cocina con tortas, mirando el celular lleno de mensajes (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu vitrina lista",
+        "texto": "Instala WhatsApp Business (o pasa tu número), completa tu perfil de empresa y sube al menos tres productos a tu catálogo con foto, nombre, precio y descripción.",
+        "entrega": "Publica en el foro la descripción de tu perfil y el texto de uno de tus productos (nombre, precio y descripción). Comenta la publicación de un compañero: ¿qué le preguntarías si fueras su cliente?"
+      },
+      "llevatelo": {
+        "titulo": "Tu vitrina en una mirada",
+        "resumen": [
+          "WhatsApp Business es gratis y separa tu negocio de tu chat personal.",
+          "Tu perfil de empresa dice quién eres, qué vendes, dónde estás y a qué hora atiendes.",
+          "Cada producto del catálogo lleva foto clara, nombre, precio y una descripción corta."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "Perfil completo + catálogo con foto, precio y descripción = el cliente compra sin preguntar",
+        "descargas": [
+          {
+            "texto": "Ficha para armar tu catálogo · PDF",
+            "archivo": "u1-ficha-catalogo.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "WhatsApp. (s. f.). Cómo crear un catálogo. Servicio de ayuda de WhatsApp.",
+          "url": "https://faq.whatsapp.com/",
+          "para": "Ayuda oficial: busca «catálogo» en el servicio de ayuda. [VERIFICAR enlace directo]"
+        },
+        {
+          "apa": "WhatsApp. (s. f.). WhatsApp Business: aplicación para pequeñas empresas. WhatsApp.",
+          "url": "https://business.whatsapp.com/products/business-app",
+          "para": "Qué trae la app de empresa y en qué se diferencia de WhatsApp normal."
+        },
+        {
+          "apa": "Tiendanube. (s. f.). Cómo hacer un catálogo en WhatsApp en 7 pasos. Tiendanube Blog.",
+          "url": "https://www.tiendanube.com/blog/como-hacer-un-catalogo-en-whatsapp",
+          "para": "Paso a paso del catálogo con ejemplos de productos."
+        }
+      ]
+    },
+    {
+      "tema": "Ningún pedido se pierde: etiquetas",
+      "objetivo": "organizar tus chats con etiquetas para saber qué pedidos son nuevos, cuáles faltan por pagar, cuáles despachar y cuáles ya entregaste",
+      "entrada": {
+        "titulo": "Los 200 chats de Camilo",
+        "texto": "Camilo vende forros, cargadores y audífonos a domicilio en Ducales. Tiene más de 200 chats abiertos: clientes que preguntan, otros que ya pagaron por Nequi y otros que solo saludan. Un viernes se le olvidó despachar tres pedidos que ya estaban pagos. Uno de los clientes lo contó en el grupo del conjunto y Camilo perdió dos ventas más esa semana.",
+        "pregunta": "¿Cómo ordenas tus chats para saber en un minuto qué pedido falta por pagar, cuál despachar y cuál ya entregaste?",
+        "reflexion": "Abre tu WhatsApp y busca: ¿hay algún cliente que te pagó y todavía no le has entregado? ¿Cuánto te demoraste en saberlo?",
+        "imagen": "Ilustración de Camilo con una caja de domicilios, mirando preocupado el celular lleno de chats (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tus pedidos con etiquetas",
+        "texto": "Crea o ajusta tus etiquetas de pedido y ponle etiqueta a todos los chats de clientes de esta semana. Al final del día revisa la de «Pago pendiente» y la de «Pagado».",
+        "entrega": "Publica en el foro los nombres de tus etiquetas y cuántos chats quedaron en cada una al final del día (sin nombres de clientes). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tus pedidos en una mirada",
+        "resumen": [
+          "Una etiqueta es un color con nombre que le pones a un chat para saber en qué va ese cliente.",
+          "Usa pocas etiquetas, en el orden del pedido: nuevo, pago pendiente, pagado, entregado.",
+          "Al cerrar el día, filtra «Pago pendiente» y «Pagado»: ahí están tu plata por cobrar y tus despachos."
+        ],
+        "etiqueta_formula": "La ruta",
+        "formula": "Nuevo pedido → Pago pendiente → Pagado → Entregado",
+        "descargas": [
+          {
+            "texto": "Rutina diaria de pedidos · PDF",
+            "archivo": "u2-rutina-pedidos.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "WhatsApp. (s. f.). Cómo usar las etiquetas. Servicio de ayuda de WhatsApp.",
+          "url": "https://faq.whatsapp.com/",
+          "para": "Ayuda oficial: busca «etiquetas» en el servicio de ayuda. [VERIFICAR enlace directo]"
+        },
+        {
+          "apa": "Leadsales. (s. f.). ¿Cómo usar etiquetas en WhatsApp Business? Guía completa. Leadsales Blog.",
+          "url": "https://leadsales.io/blog/etiquetas-de-whatsapp-business-organizacion-en-tus-chats/",
+          "para": "Etiquetas predeterminadas, cómo crear las tuyas y cómo filtrar."
+        },
+        {
+          "apa": "Platzi. (s. f.). Manejo de etiquetas en WhatsApp para optimizar ventas. Platzi.",
+          "url": "https://platzi.com/cursos/whatsapp-for-business/maneja-el-caos-con-etiquetas/",
+          "para": "Ejemplos de etiquetas por etapa de venta."
+        }
+      ]
+    },
+    {
+      "tema": "Responde rápido sin vivir pegado al celular",
+      "objetivo": "configurar el mensaje de bienvenida, el mensaje de ausencia y tus respuestas rápidas para contestar en segundos lo que te preguntan todos los días",
+      "entrada": {
+        "titulo": "Las 40 preguntas de Esperanza",
+        "texto": "Esperanza vende frutas y verduras a domicilio en El Altico. Cada día le llegan unos 40 mensajes con las mismas preguntas: hasta qué hora atiende, si lleva a domicilio, cuánto vale el aguacate y si recibe Nequi. A las 4 de la mañana está comprando en la plaza y no alcanza a contestar. Cuando por fin responde, al mediodía, varios clientes ya le compraron a otro.",
+        "pregunta": "¿Cómo contestas en segundos lo que te preguntan todos los días, aunque estés ocupada?",
+        "reflexion": "Escribe las tres preguntas que más te hacen tus clientes por WhatsApp. Esas van a ser tus primeras respuestas rápidas.",
+        "imagen": "Ilustración de Esperanza en la plaza de mercado, con cajas de frutas y el celular sonando en el bolsillo (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tus mensajes listos",
+        "texto": "Configura tu mensaje de bienvenida, tu mensaje de ausencia con tu horario y tres respuestas rápidas para las preguntas que más te hacen.",
+        "entrega": "Publica en el foro tu mensaje de bienvenida y una de tus respuestas rápidas con su atajo. Comenta la publicación de un compañero: ¿qué le cambiarías para que suene más amable o más claro?"
+      },
+      "llevatelo": {
+        "titulo": "Tus respuestas en una mirada",
+        "resumen": [
+          "El mensaje de bienvenida saluda solo al cliente que te escribe por primera vez.",
+          "El mensaje de ausencia avisa a qué hora vuelves cuando no puedes atender.",
+          "Las respuestas rápidas guardan lo que más te preguntan: escribes / y eliges."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "Bienvenida + ausencia + 3 respuestas rápidas = respondes en segundos",
+        "descargas": [
+          {
+            "texto": "Tus mensajes listos para copiar · PDF",
+            "archivo": "u3-mensajes-listos.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "WhatsApp. (s. f.). Cómo usar las respuestas rápidas. Servicio de ayuda de WhatsApp.",
+          "url": "https://faq.whatsapp.com/",
+          "para": "Ayuda oficial: busca «respuestas rápidas» y «mensaje de ausencia». [VERIFICAR enlace directo]"
+        },
+        {
+          "apa": "Leadsales. (s. f.). ¿Cómo crear mensajes automáticos en WhatsApp Business? Leadsales Blog.",
+          "url": "https://leadsales.io/blog/como-tener-respuestas-automaticas-en-whatsapp/",
+          "para": "Bienvenida, ausencia y respuestas rápidas, con ejemplos de textos."
+        },
+        {
+          "apa": "Congreso de Colombia. (2012). Ley Estatutaria 1581 de 2012, por la cual se dictan disposiciones generales para la protección de datos personales. Diario Oficial 48.587.",
+          "url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981",
+          "para": "Por qué pedir permiso antes de mandar promociones a tus clientes."
+        }
+      ]
+    }
+  ],
+  "cierre": {
+    "titulo": "Último paso: tu WhatsApp de negocio listo",
+    "texto": "Ya tienes tu vitrina, tus pedidos en orden y tus respuestas rápidas. Ahora muéstralo.",
+    "reto": "Tu WhatsApp de negocio, revisado por dos compañeros",
+    "rubrica": [
+      "¿El perfil de empresa dice qué vende, dónde está y a qué hora atiende?",
+      "¿El catálogo tiene al menos 5 productos con foto, nombre, precio y descripción?",
+      "¿Muestra sus etiquetas de pedido y sus mensajes automáticos o respuestas rápidas?"
+    ],
+    "siguiente": "Vende más por WhatsApp Business · Unidades 4 a 7",
+    "siguiente_texto": "Con el Pase Empresario: listas de difusión y estados que venden, cobros con link de pago, Nequi y Daviplata, y cómo medir tus ventas por WhatsApp."
+  }
+}

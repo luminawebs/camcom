@@ -94,7 +94,7 @@ INICIO_GANCHO = [
 PEER_G = ("Comparte y comenta", "Foro de preguntas y respuestas", 15, 8, None)
 # Resumen de unidad: video O audio, nunca los dos. curso.json "resumen_formato" (o unidad.resumen.formato).
 RESUMEN = {
-    "video": ("Video de 60 s (NotebookLM)", "H5P · Video interactivo", "▶ Resumen en video · 1 min", "Resumen en video"),
+    "video": ("Video de 60 s (automático o NotebookLM)", "H5P · Video interactivo", "▶ Resumen en video · 1 min", "Resumen en video"),
     "audio": ("Audio de 5 min (NotebookLM)", "Página con audio", "♪ Resumen en audio · 5 min", "Resumen en audio"),
 }
 
@@ -165,6 +165,26 @@ def guia(c, i):
     return f'<a class="as-btn as-btn--sec" href="#">⬇ <em class="as-ph">[Guía de estudio de la Unidad {i} · PDF A5. La arma Claude en guias-pdf/u{i}-guia.pdf]</em></a>'
 
 
+def video_vertical(c, nombre, alterno):
+    """Video vertical hecho con plantillas/video_resumen.py en medios-moodle/<nombre>.mp4 (bienvenida, uN-resumen). Si no existe, el espacio."""
+    if f"{nombre}.mp4" not in c.get("_videos", ()):
+        return alterno
+    pista = f'<track kind="captions" srclang="es" label="Español" src="../medios-moodle/{nombre}.vtt">' if f"{nombre}.vtt" in c["_videos"] else ""
+    return (f'<video controls preload="metadata" playsinline style="width:100%;max-width:420px;display:block;margin:0 auto;border-radius:12px;'
+            f'background:#000" src="../medios-moodle/{nombre}.mp4">{pista}</video>')
+
+
+def imagen_entrada(c, i, nota):
+    """Ilustración de la Entrada (plantillas/ilustrar.py, Gemini) en medios-moodle/uN-entrada.jpg. Si no existe, deja el espacio."""
+    if f"u{i}-entrada.mp4" in c.get("_imagenes", ()):  # video de la Entrada (plantillas/video_entrada.py): imagen + narración
+        return (f'<video controls preload="metadata" playsinline poster="../medios-moodle/u{i}-entrada.jpg" style="display:block;width:100%;'
+                f'border-radius:8px;background:#000" src="../medios-moodle/u{i}-entrada.mp4">'
+                f'<track kind="captions" srclang="es" label="Español" src="../medios-moodle/u{i}-entrada.vtt"></video>')
+    if f"u{i}-entrada.jpg" in c.get("_imagenes", ()):
+        return f'<img src="../medios-moodle/u{i}-entrada.jpg" alt="{html.escape(nota.split(" (")[0])}" style="display:block;width:100%;height:auto;border-radius:8px">'
+    return hueco("imagen", "Imagen", nota)
+
+
 def narracion(c, nombre, que):
     """Narración de Resemble AI (plantillas/narrar.py) en medios-moodle/<nombre>.mp3. Si no existe, no se muestra nada."""
     if nombre not in c.get("_narraciones", ()):
@@ -205,7 +225,8 @@ def estructura(c):
         items = [{"codigo": f"U{i} · Resumen", "paso": "resumen", "nombre": r[3], "formato": r[0],
                   "actividad": r[1], "min": 0, "opcional": True, "pagina": f"paginas/u{i}-resumen.html"}]
         for p in pasos:
-            formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else receta["pasos"][p]
+            ajuste = c.get("receta", {}).get(p)   # curso.json "receta": {"aprende": [formato, actividad, min c, min g, molde]}
+            formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else (tuple(ajuste) if ajuste else receta["pasos"][p])
             it = {"codigo": f"U{i} · {NOMBRE_PASO[p]}", "paso": p, "formato": formato, "actividad": act,
                   "min": mg if nivel == "g" else mc}
             if p == "profundiza":
@@ -280,7 +301,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Inicio · Bienvenida</span>
     <h2>{t(ini['bienvenida'])}</h2>
-    {hueco('vertical', 'Video vertical', ini.get('video_nota', 'Bienvenida de 60 s: Luz Dary cuenta su problema y qué vas a lograr. Con subtítulos.'))}
+    {video_vertical(c, 'bienvenida', hueco('vertical', 'Video vertical', ini.get('video_nota', 'Bienvenida de 60 s: Luz Dary cuenta su problema y qué vas a lograr. Con subtítulos.')))}
     <p>{t(ini['texto'])}</p>
   </div>
   <div class="as-tarjeta as-pila">
@@ -336,7 +357,7 @@ def paginas(c, secs):
     <span class="as-eti">Unidad {i} · Resumen · opcional</span>
     <h2>{t(u['tema'])} en un minuto</h2>
     <p class="as-sec">Míralo antes de empezar como adelanto, o al final para repasar.</p>
-    {hueco('video', 'Video', f'Resumen en video de 60 s generado con NotebookLM (solicitud 2A, Unidad {i}). H5P, con subtítulos.')}
+    {video_vertical(c, f'u{i}-resumen', hueco('video', 'Video', f'Resumen en video de 60 s (plantillas/video_resumen.py con video/u{i}-resumen.json, o NotebookLM). Con subtítulos.'))}
   </div>"""
         else:
             cuerpo_res = f"""
@@ -364,7 +385,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Paso 1 · Entrada · {mins['entrada']} min</span>
     <h2>{t(e['titulo'])}</h2>
-    {hueco('imagen', 'Imagen', e['imagen'])}{narracion(c, f"u{i}-entrada-narracion", "Escucha el caso")}
+    {imagen_entrada(c, i, e['imagen'])}{"" if f"u{i}-entrada.mp4" in c.get("_imagenes", ()) else narracion(c, f"u{i}-entrada-narracion", "Escucha el caso")}
     <p>{t(e['texto'])}</p>
   </div>
   <div class="as-aviso as-aviso--marca as-pila">
@@ -488,9 +509,9 @@ def vista_previa(c, secs, carpeta, pags):
         (destino / "mapas").mkdir()
         for n in c["_mapas"]:
             shutil.copy(carpeta / "mapas" / f"{n}.png", destino / "mapas" / f"{n}.png")
-    for carpeta_extra, clave in (("medios-moodle", "_narraciones"), ("descargas", "_descargas")):
+    for carpeta_extra, clave in (("medios-moodle", "_narraciones"), ("medios-moodle", "_imagenes"), ("medios-moodle", "_videos"), ("descargas", "_descargas")):
         if c.get(clave):
-            (destino / carpeta_extra).mkdir()
+            (destino / carpeta_extra).mkdir(exist_ok=True)
             for n in c[clave]:
                 n = n if "." in n else n + ".mp3"
                 shutil.copy(carpeta / carpeta_extra / n, destino / carpeta_extra / n)
@@ -537,6 +558,8 @@ def main():
         c["_guias"] = {p.stem: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "guias-pdf").glob("*.pdf"))}
     if (carpeta / "medios-moodle").is_dir():
         c["_narraciones"] = sorted(p.stem for p in (carpeta / "medios-moodle").glob("*-narracion.mp3"))
+        c["_videos"] = sorted(p.name for p in (carpeta / "medios-moodle").iterdir() if re.match(r"(bienvenida|u\d+-resumen)\.(mp4|vtt)$", p.name))
+        c["_imagenes"] = sorted(p.name for p in (carpeta / "medios-moodle").glob("u*-entrada.*") if p.suffix in (".jpg", ".mp4", ".vtt"))
     if (carpeta / "descargas").is_dir():
         c["_descargas"] = {p.name: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "descargas").iterdir())
                            if p.suffix in (".pdf", ".xlsx")}
