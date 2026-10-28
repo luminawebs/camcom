@@ -1,10 +1,11 @@
-"""Pruebas de punta a punta contra el simulador de Wompi y un Moodle simulado.
+"""Pruebas de punta a punta contra el simulador de ePayco y un Moodle simulado.
 
     python -m unittest pase.pruebas -v
 
 Cubren los criterios de aceptación 1 a 5 de requerimientos-tablero-pase.md.
 """
 import datetime as dt
+import hashlib
 import http.client
 import json
 import os
@@ -16,8 +17,8 @@ import urllib.parse
 import urllib.request
 from http.server import ThreadingHTTPServer
 
-from . import simulador_wompi as simw
-from . import wompi as w
+from . import epayco as ep
+from . import simulador_epayco as sime
 from .config import Config
 from .moodle import MoodleSimulado
 from .nucleo import Pase
@@ -49,11 +50,12 @@ class Escenario(unittest.TestCase):
         srv = ThreadingHTTPServer(("127.0.0.1", 0), None)  # reserva puerto del conector
         self.puerto = srv.server_address[1]
         srv.server_close()
-        self.sim, self.srv_sim = simw.arrancar(0, f"http://127.0.0.1:{self.puerto}/webhooks/wompi", 0.1)
-        api = f"http://127.0.0.1:{self.srv_sim.server_address[1]}"
-        self.c = Config(api_wompi=f"{api}/v1", checkout_wompi=f"{api}/p/",
-                        llave_publica=simw.LLAVE_PUBLICA, llave_privada=simw.LLAVE_PRIVADA,
-                        secreto_integridad=simw.SECRETO_INTEGRIDAD, secreto_eventos=simw.SECRETO_EVENTOS,
+        self.sim, self.srv_sim = sime.arrancar(0, 0.1)
+        self.api = f"http://127.0.0.1:{self.srv_sim.server_address[1]}"
+        self.c = Config(api_epayco=self.api, validacion_epayco=self.api,
+                        checkout_js=f"{self.api}/checkout.js", token_js=f"{self.api}/epayco.js",
+                        cliente_id=sime.CLIENTE_ID, p_key=sime.P_KEY,
+                        llave_publica=sime.LLAVE_PUBLICA, llave_privada=sime.LLAVE_PRIVADA,
                         url_publica=f"http://127.0.0.1:{self.puerto}",
                         base_datos=os.path.join(self.tmp.name, "pase.db"),
                         avisos_correo=["camara@ejemplo.co", "pase@edunest.co"], puerto=self.puerto)
@@ -89,28 +91,52 @@ class Escenario(unittest.TestCase):
         return self.http("POST", f"{self.c.url_publica}/inscripcion", datos,
                          {"Content-Type": "application/x-www-form-urlencoded"})
 
-    def tokenizar(self, ruta, cuerpo):
-        req = urllib.request.Request(f"{self.c.api_wompi}{ruta}", json.dumps(cuerpo).encode(),
-                                     {"Authorization": f"Bearer {self.c.llave_publica}",
-                                      "Content-Type": "application/json"})
-        return json.loads(urllib.request.urlopen(req).read())["data"]
-
-    def pagar_tarjeta(self, numero="4242424242424242", correo="dora@tienda.co"):
-        status, cab, _ = self.inscribir_por_formulario(correo=correo)
+    def firma_inscripcion(self):
+        status, cab, _ = self.inscribir_por_formulario()
         self.assertEqual(status, 303)
-        firma = urllib.parse.parse_qs(urllib.parse.urlparse(cab["Location"]).query)["p"][0]
+        return urllib.parse.parse_qs(urllib.parse.urlparse(cab["Location"]).query)["p"][0]
+
+    def tokenizar(self, numero):
+        """Lo que hace epayco.js en el navegador."""
+        req = urllib.request.Request(f"{self.api}/v1/tokens/navegador", json.dumps({
+            "public_key": self.c.llave_publica, "card[number]": numero, "card[cvc]": "123",
+            "card[exp_month]": "08", "card[exp_year]": "2028", "card[name]": "Dora Perez"}).encode(),
+            {"Content-Type": "application/json"})
+        return json.loads(urllib.request.urlopen(req).read())["id"]
+
+    def pagar_tarjeta(self, numero=sime.TARJETA_APRUEBA):
+        firma = self.firma_inscripcion()
         _, _, pagina = self.http("GET", f"{self.c.url_publica}/pagar?p={firma}")
         self.assertIn(b"Pase Empresario", pagina)
-        tok = self.tokenizar("/tokens/cards", {"number": numero, "cvc": "123", "exp_month": "08",
-                                               "exp_year": "28", "card_holder": "Dora Perez"})
-        comercio = self.pase.wompi.comercio()
+        self.assertIn(b'data-epayco="card[number]"', pagina)
         status, _, cuerpo = self.http("POST", f"{self.c.url_publica}/pagar/token", json.dumps({
-            "p": firma, "tipo": "CARD", "token": tok["id"],
-            "acept": comercio["aceptacion"]["acceptance_token"],
-            "datos": comercio["datos_personales"]["acceptance_token"], "enmascarado": "**** 4242"}),
+            "p": firma, "token": self.tokenizar(numero), "enmascarado": "**** " + numero[-4:]}),
             {"Content-Type": "application/json"})
         self.assertEqual(status, 200, cuerpo)
         return int(firma.split(".")[0]), json.loads(cuerpo)["referencia"]
+
+    def pagar_checkout(self, firma, resultado="APPROVED", seguir_retorno=True):
+        status, cab, _ = self.http("GET", f"{self.c.url_publica}/pagar/checkout?p={firma}")
+        self.assertEqual(status, 302)
+        status, _, pagina = self.http("GET", cab["Location"])
+        self.assertEqual(status, 200)
+        self.assertIn(self.c.checkout_js.encode(), pagina)
+        datos = json.loads(pagina.split(b"handler.open(")[1].split(b")}")[0])
+        q = urllib.parse.urlencode({"key": self.c.llave_publica, "test": "true", "d": json.dumps(datos)})
+        _, cab, _ = self.http("POST", f"{self.api}/checkout/pagar?{q}", f"r={resultado}",
+                              {"Content-Type": "application/x-www-form-urlencoded"})
+        retorno = cab["Location"]
+        self.assertTrue(retorno.startswith(f"{self.c.url_publica}/retorno?ref="))
+        if seguir_retorno:
+            self.http("GET", retorno)
+        return datos["invoice"], retorno
+
+    def ultima_confirmacion(self):
+        return dict(self.sim.confirmaciones[-1][1])
+
+    def confirmar(self, datos):
+        return self.http("POST", f"{self.c.url_publica}/webhooks/epayco", urllib.parse.urlencode(datos),
+                         {"Content-Type": "application/x-www-form-urlencoded"})[0]
 
     def estado_persona(self, pid):
         return self.pase.persona(pid)["estado"]
@@ -123,35 +149,32 @@ class Escenario(unittest.TestCase):
         self.assertTrue(esperar(lambda: self.estado_persona(pid) == estado),
                         f"esperaba {estado}, está {self.estado_persona(pid)}")
 
+    def fuente(self, pid):
+        return json.loads(self.pase.suscripcion(pid)["payment_source_id"])
+
 
 class PruebasFirmas(unittest.TestCase):
-    def test_firma_integridad(self):
-        import hashlib
-        esperado = hashlib.sha256(b"PASE-1-202611-12900000COPsecreto").hexdigest()
-        self.assertEqual(w.firma_integridad("PASE-1-202611-1", 2900000, "COP", "secreto"), esperado)
+    def test_firma_confirmacion(self):
+        esperado = hashlib.sha256(b"900001^pkey^123456^987654321^29000.00^COP").hexdigest()
+        self.assertEqual(ep.firma_confirmacion("900001", "pkey", "123456", "987654321", "29000.00", "COP"),
+                         esperado)
+        datos = {"x_ref_payco": "123456", "x_transaction_id": "987654321", "x_amount": "29000.00",
+                 "x_currency_code": "COP", "x_signature": esperado.upper()}
+        self.assertTrue(ep.confirmacion_valida(datos, "900001", "pkey"))
+        self.assertFalse(ep.confirmacion_valida({**datos, "x_amount": "100.00"}, "900001", "pkey"))
+        self.assertFalse(ep.confirmacion_valida(datos, "900001", "otra"))
+        self.assertFalse(ep.confirmacion_valida(datos, "", ""))  # sin llaves no se acepta nada
 
-    def test_checksum_evento(self):
-        sim = simw.Simulador(None)
-        ev = sim.evento({"id": "1-2", "status": "APPROVED", "amount_in_cents": 2900000})
-        self.assertTrue(w.evento_valido(ev, simw.SECRETO_EVENTOS))
-        ev["data"]["transaction"]["status"] = "VOIDED"
-        self.assertFalse(w.evento_valido(ev, simw.SECRETO_EVENTOS))
-
-    def test_checksum_ejemplo_documentacion(self):
-        # Ejemplo literal de docs.wompi.co/docs/colombia/eventos (consultado 2026-10-20)
-        ev = {"data": {"transaction": {"id": "1234-1610641025-49201", "status": "APPROVED",
-                                       "amount_in_cents": 4490000}},
-              "timestamp": 1530291411,
-              "signature": {"properties": ["transaction.id", "transaction.status",
-                                           "transaction.amount_in_cents"],
-                            "checksum": ""}}
-        # La cadena del paso 3 de la guía; el hash de ejemplo que muestra la guía es ilustrativo
-        # (no corresponde a esa cadena), así que se compara contra el SHA-256 de la cadena.
-        cadena = "1234-1610641025-49201APPROVED44900001530291411prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z"
-        import hashlib
-        esperado = hashlib.sha256(cadena.encode()).hexdigest()
-        self.assertEqual(w.checksum_evento(ev, "prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z"), esperado)
-        self.assertTrue(w.evento_valido(ev, "prod_events_OcHnIzeBl5socpwByQ4hA52Em3USQ93Z", esperado.upper()))
+    def test_normalizar(self):
+        tx = ep.normalizar({"x_ref_payco": 77, "x_id_invoice": "PASE-1", "x_amount": "29000.00",
+                            "x_currency_code": "cop", "x_cod_transaction_state": "1",
+                            "x_test_request": "TRUE", "x_franchise": "PSE"})
+        self.assertEqual((tx["id"], tx["reference"], tx["amount_in_cents"], tx["currency"], tx["status"],
+                          tx["prueba"]), ("77", "PASE-1", 2900000, "COP", "APPROVED", True))
+        for codigo, estado in (("2", "DECLINED"), ("3", "PENDING"), ("4", "ERROR"), ("6", "VOIDED"),
+                               ("10", "DECLINED"), ("99", "PENDING")):
+            self.assertEqual(ep.normalizar({"x_ref_payco": 1, "x_amount": "1", "x_cod_response": codigo})
+                             ["status"], estado)
 
     def test_nombre_usuario_moodle(self):
         from .moodle import nombre_usuario
@@ -159,10 +182,19 @@ class PruebasFirmas(unittest.TestCase):
 
     def test_candado_produccion(self):
         os.environ.pop("PASE_PERMITIR_PRODUCCION", None)
+        llaves = dict(cliente_id="1", p_key="k", llave_publica="a", llave_privada="b",
+                      url_publica="https://pase.edunest.co")
         with self.assertRaises(ValueError):
-            Config(entorno="produccion", llave_privada="prv_prod_x").validar()
+            Config(entorno="produccion", **llaves).validar()
+        os.environ["PASE_PERMITIR_PRODUCCION"] = "1"
+        try:
+            Config(entorno="produccion", **llaves).validar()
+            with self.assertRaises(ValueError):
+                Config(entorno="produccion", **{**llaves, "p_key": ""}).validar()
+        finally:
+            os.environ.pop("PASE_PERMITIR_PRODUCCION")
         with self.assertRaises(ValueError):
-            Config(entorno="sandbox", llave_privada="prv_prod_x").validar()
+            Config(entorno="pruebas").validar()
 
 
 class PruebasFlujo(Escenario):
@@ -177,55 +209,73 @@ class PruebasFlujo(Escenario):
         self.assertEqual(destinos, {"dora@tienda.co", "camara@ejemplo.co", "pase@edunest.co"})
         sus = self.pase.suscripcion(pid)
         self.assertEqual((sus["estado"], sus["proximo_corte"], sus["medio_enmascarado"]),
-                         ("activa", "2026-12-03", "**** 4242"))
+                         ("activa", "2026-12-03", "**** 0326"))
+        self.assertEqual(set(self.fuente(pid)), {"cliente", "token"})  # solo ids, nada de la tarjeta
         _, _, est = self.http("GET", f"{self.c.url_publica}/estado-pago?ref={ref}")
         self.assertEqual(json.loads(est)["estado"], "APPROVED")
 
-    def test_2_evento_repetido_no_duplica(self):
+    def test_2_confirmacion_repetida_no_duplica(self):
         pid, _ = self.pagar_tarjeta()
         self.esperar_estado(pid, "suscrito")
         antes = (self.pase.uno("SELECT COUNT(*) n FROM historial")["n"], len(self.moodle.llamadas))
-        status, _, _ = self.http("POST", f"{self.sim.webhook}", json.dumps(self.sim.eventos_enviados[-1]),
-                                 {"Content-Type": "application/json"})
-        self.assertEqual(status, 200)
+        self.assertEqual(self.confirmar(self.ultima_confirmacion()), 200)
         self.pase.procesar_pendientes()
         despues = (self.pase.uno("SELECT COUNT(*) n FROM historial")["n"], len(self.moodle.llamadas))
         self.assertEqual(antes, despues)
-        self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM eventos_wompi")["n"], 1)
+        self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM eventos_pasarela")["n"], 1)
 
     def test_3_firma_alterada_se_rechaza(self):
-        pid, _ = self.pagar_tarjeta("4111111111111111")  # rechazada: sigue interesado
+        pid, _ = self.pagar_tarjeta(sime.TARJETA_RECHAZA)  # rechazada: sigue interesado
         self.assertTrue(esperar(lambda: self.pase.uno("SELECT estado FROM pagos")["estado"] == "DECLINED"))
-        falso = json.loads(json.dumps(self.sim.eventos_enviados[-1]))
-        falso["data"]["transaction"]["status"] = "APPROVED"  # alguien intenta aprobarse solo
-        status, _, _ = self.http("POST", self.sim.webhook, json.dumps(falso), {"Content-Type": "application/json"})
-        self.assertEqual(status, 401)
+        falso = self.ultima_confirmacion()
+        falso["x_amount"] = "100"  # alguien cambia el monto sin poder firmar
+        self.assertEqual(self.confirmar(falso), 401)
         self.assertEqual(self.pase.resumen()["eventos_rechazados"], 1)
         self.assertEqual(self.estado_persona(pid), "interesado")
         self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
 
+    def test_3a_estado_alterado_no_activa(self):
+        # La firma de ePayco no cubre el estado: por eso se consulta siempre la API.
+        pid, _ = self.pagar_tarjeta(sime.TARJETA_RECHAZA)
+        self.assertTrue(esperar(lambda: self.pase.uno("SELECT estado FROM pagos")["estado"] == "DECLINED"))
+        falso = self.ultima_confirmacion()
+        falso.update(x_cod_response="1", x_cod_transaction_state="1", x_respuesta="Aceptada")
+        self.assertEqual(self.confirmar(falso), 200)
+        self.pase.procesar_pendientes()
+        self.assertEqual(self.estado_persona(pid), "interesado")
+        self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
+        self.assertEqual(self.pase.uno("SELECT estado FROM pagos")["estado"], "DECLINED")
+
     def test_3b_retorno_del_navegador_no_activa(self):
-        pid, ref = self.pagar_tarjeta("4111111111111111")
-        self.http("GET", f"{self.c.url_publica}/retorno?ref={ref}&id=cualquiera")
+        pid, ref = self.pagar_tarjeta(sime.TARJETA_RECHAZA)
+        self.http("GET", f"{self.c.url_publica}/retorno?ref={ref}&ref_payco=123")
         time.sleep(0.4)
+        self.assertEqual(self.estado_persona(pid), "interesado")
+
+    def test_3c_transaccion_de_prueba_no_sirve_en_produccion(self):
+        pid, ref = self.pagar_tarjeta(sime.TARJETA_RECHAZA)
+        self.c.entorno = "produccion"
+        with self.assertRaises(ValueError):
+            self.pase.aplicar_transaccion({"id": "1", "reference": ref, "amount_in_cents": 2900000,
+                                           "currency": "COP", "status": "APPROVED", "prueba": True})
+        self.c.entorno = "sandbox"
         self.assertEqual(self.estado_persona(pid), "interesado")
 
     def test_4_tres_rechazos_cancelan_y_pagar_reactiva(self):
         pid, _ = self.pagar_tarjeta()
         self.esperar_estado(pid, "suscrito")
-        fuente = int(self.pase.suscripcion(pid)["payment_source_id"])
-        for dia in ("2026-12-03", "2026-12-06", "2026-12-10"):
+        fuente = self.fuente(pid)
+        for n, dia in enumerate(("2026-12-03", "2026-12-06", "2026-12-10"), 1):
             self.reloj.fecha = dt.date.fromisoformat(dia)
-            self.sim.forzado[fuente] = "DECLINED"
+            self.sim.forzado[fuente["token"]] = "DECLINED"
             self.assertTrue(self.pase.cobro_mensual(), f"no cobró el {dia}")
             self.assertTrue(esperar(lambda: self.pase.uno(
-                "SELECT COUNT(*) n FROM pagos WHERE estado='DECLINED'")["n"] == ["2026-12-03", "2026-12-06",
-                                                                                  "2026-12-10"].index(dia) + 1))
+                "SELECT COUNT(*) n FROM pagos WHERE estado='DECLINED'")["n"] == n))
             time.sleep(0.1)
         self.esperar_estado(pid, "cancelado")
         self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
         self.assertTrue(self.en_cohorte(pid, "registro-gratis"))  # avance y cursos gratis intactos
-        self.assertEqual(self.sim.fuentes[fuente]["status"], "VOIDED")  # no se le vuelve a cobrar
+        self.assertEqual(self.sim.clientes[fuente["cliente"]]["cards"], [])  # no se le vuelve a cobrar
         # un día sin nada que cobrar
         self.reloj.fecha = dt.date(2026, 12, 11)
         self.assertEqual(self.pase.cobro_mensual(), [])
@@ -257,6 +307,13 @@ class PruebasFlujo(Escenario):
         self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM pagos")["n"], 1)
         self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
 
+    def test_4d_reversion_vuelve_a_mora(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        ref_payco = self.pase.uno("SELECT ref_pasarela FROM pagos")["ref_pasarela"]
+        self.sim.cambiar_estado(ref_payco, "VOIDED")
+        self.esperar_estado(pid, "en_mora")
+
     def test_5_registro_gratis(self):
         status, _, cuerpo = self.inscribir_por_formulario("gratis")
         self.assertEqual(status, 200, cuerpo)
@@ -268,37 +325,23 @@ class PruebasFlujo(Escenario):
         self.inscribir_por_formulario("gratis")
         self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM personas")["n"], 1)
 
-    def test_nequi(self):
-        status, cab, _ = self.inscribir_por_formulario()
-        firma = urllib.parse.parse_qs(urllib.parse.urlparse(cab["Location"]).query)["p"][0]
+    def test_checkout_y_renovacion_manual(self):
+        firma = self.firma_inscripcion()
         pid = int(firma.split(".")[0])
-        tok = self.tokenizar("/tokens/nequi", {"phone_number": "3991111111"})
-        self.assertTrue(esperar(lambda: self.pase.wompi._llamar("GET", f"/tokens/nequi/{tok['id']}")
-                                ["data"]["status"] == "APPROVED"))
-        acept = self.pase.wompi.comercio()["aceptacion"]["acceptance_token"]
-        self.pase.pagar_con_token(pid, "NEQUI", tok["id"], acept)
+        self.pagar_checkout(firma)
         self.esperar_estado(pid, "suscrito")
-        self.assertEqual(self.pase.suscripcion(pid)["medio"], "nequi")
-
-    def test_pse_web_checkout_y_renovacion_manual(self):
-        status, cab, _ = self.inscribir_por_formulario()
-        firma = urllib.parse.parse_qs(urllib.parse.urlparse(cab["Location"]).query)["p"][0]
-        pid = int(firma.split(".")[0])
-        status, cab, _ = self.http("GET", f"{self.c.url_publica}/pagar/pse?p={firma}")
-        self.assertEqual(status, 302)
-        checkout = cab["Location"]
-        _, _, pag = self.http("GET", checkout)
-        self.assertIn(b"Aprobar", pag)  # la firma de integridad fue aceptada
-        q = urllib.parse.urlparse(checkout).query
-        status, cab, _ = self.http("POST", f"{self.c.checkout_wompi}pagar?{q}", "r=APPROVED",
-                                   {"Content-Type": "application/x-www-form-urlencoded"})
-        self.assertTrue(cab["Location"].startswith(f"{self.c.url_publica}/retorno?id="))
-        self.esperar_estado(pid, "suscrito")
-        self.assertTrue(self.pase.suscripcion(pid)["renovacion_manual"])
+        sus = self.pase.suscripcion(pid)
+        self.assertEqual((sus["medio"], sus["renovacion_manual"]), ("checkout", 1))
         # 5 días antes del corte llega el enlace; si no paga, se cancela al agotar el plazo
         self.reloj.fecha = dt.date(2026, 11, 28)
         self.assertEqual(len(self.pase.cobro_mensual()), 1)
-        self.assertTrue(self.pase.uno("SELECT 1 FROM avisos WHERE asunto LIKE 'Renueva%'"))
+        aviso = self.pase.uno("SELECT cuerpo FROM avisos WHERE asunto LIKE 'Renueva%'")["cuerpo"]
+        enlace = aviso.split("Paga aquí: ")[1]
+        status, _, pagina = self.http("GET", enlace)
+        self.assertEqual(status, 200)
+        self.assertIn(b"handler.open(", pagina)
+        status, _, _ = self.http("GET", enlace.replace("&f=", "&f=0"))  # enlace adulterado
+        self.assertEqual(status, 404)
         self.reloj.fecha = dt.date(2026, 12, 4)
         self.pase.cobro_mensual()
         self.assertEqual(self.estado_persona(pid), "en_mora")
@@ -306,16 +349,45 @@ class PruebasFlujo(Escenario):
         self.pase.cobro_mensual()
         self.assertEqual(self.estado_persona(pid), "cancelado")
 
+    def test_checkout_renovacion_pagada(self):
+        firma = self.firma_inscripcion()
+        pid = int(firma.split(".")[0])
+        self.pagar_checkout(firma)
+        self.esperar_estado(pid, "suscrito")
+        self.reloj.fecha = dt.date(2026, 11, 29)
+        self.pase.cobro_mensual()
+        enlace = self.pase.uno("SELECT cuerpo FROM avisos WHERE asunto LIKE 'Renueva%'")["cuerpo"].split(
+            "Paga aquí: ")[1]
+        _, _, pagina = self.http("GET", enlace)
+        datos = json.loads(pagina.split(b"handler.open(")[1].split(b")}")[0])
+        q = urllib.parse.urlencode({"key": self.c.llave_publica, "test": "true", "d": json.dumps(datos)})
+        self.http("POST", f"{self.api}/checkout/pagar?{q}", "r=APPROVED",
+                  {"Content-Type": "application/x-www-form-urlencoded"})
+        self.esperar_estado(pid, "activo")
+        self.assertEqual(self.pase.suscripcion(pid)["proximo_corte"], "2027-01-03")
+        status, _, _ = self.http("GET", enlace)  # ya pagado: el enlace deja de servir
+        self.assertEqual(status, 404)
+
     def test_monto_alterado_no_activa(self):
-        pid, ref = self.pagar_tarjeta("4111111111111111")
+        pid, ref = self.pagar_tarjeta(sime.TARJETA_RECHAZA)
         with self.assertRaises(ValueError):
             self.pase.aplicar_transaccion({"id": "x", "reference": ref, "amount_in_cents": 100,
                                            "currency": "COP", "status": "APPROVED"})
         self.assertEqual(self.estado_persona(pid), "interesado")
 
-    def test_conciliacion_recupera_evento_perdido(self):
-        self.sim.webhook = None  # Wompi no logra avisar
+    def test_conciliacion_recupera_confirmacion_perdida(self):
+        self.sim.avisar = False  # ePayco no logra llamar a la URL de confirmación
         pid, _ = self.pagar_tarjeta()
+        time.sleep(0.3)
+        self.assertEqual(self.estado_persona(pid), "interesado")
+        self.assertEqual(self.pase.conciliar(), 1)
+        self.assertEqual(self.estado_persona(pid), "suscrito")
+
+    def test_conciliacion_checkout_con_ref_del_retorno(self):
+        self.sim.avisar = False
+        firma = self.firma_inscripcion()
+        pid = int(firma.split(".")[0])
+        self.pagar_checkout(firma)
         time.sleep(0.3)
         self.assertEqual(self.estado_persona(pid), "interesado")
         self.assertEqual(self.pase.conciliar(), 1)
@@ -332,13 +404,20 @@ class PruebasFlujo(Escenario):
         self.moodle.agregar_a_cohorte = caido
         pid, ref = self.pagar_tarjeta()
         self.assertTrue(esperar(lambda: fallos and self.pase.uno(
-            "SELECT error FROM eventos_wompi")["error"]))
+            "SELECT error FROM eventos_pasarela")["error"]))
         self.assertEqual(self.estado_persona(pid), "interesado")
         self.assertNotEqual(self.pase.uno("SELECT estado FROM pagos WHERE referencia=?", ref)["estado"],
                             "APPROVED")
         self.assertEqual(self.pase.procesar_pendientes(), 1)  # Moodle volvió
         self.assertEqual(self.estado_persona(pid), "suscrito")
         self.assertTrue(self.en_cohorte(pid, "pase-empresario"))
+
+    def test_base_de_wompi_no_arranca(self):
+        import sqlite3
+        ruta = os.path.join(self.tmp.name, "vieja.db")
+        sqlite3.connect(ruta).execute("CREATE TABLE eventos_wompi (id INTEGER)")
+        with self.assertRaises(RuntimeError):
+            Pase(Config(base_datos=ruta), self.moodle)
 
 
 if __name__ == "__main__":

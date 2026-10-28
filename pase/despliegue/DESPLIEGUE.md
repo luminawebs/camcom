@@ -8,7 +8,8 @@ Para un droplet con nginx que ya tiene otro proyecto (Ubuntu/Debian o AlmaLinux/
 ## 0. Antes (David)
 
 - Registro DNS **A** `pase` → IP del droplet en el administrador de DNS de edunest.co.
-- En Wompi, sandbox: URL de eventos `https://pase.edunest.co/webhooks/wompi` (después del paso 3).
+- En ePayco: URL de confirmación `https://pase.edunest.co/webhooks/epayco` (método POST) y URL de
+  respuesta `https://pase.edunest.co/retorno` (después del paso 3). El conector también las manda en cada pago.
 
 ## 1. Revisar (solo lectura)
 
@@ -32,7 +33,8 @@ ssh <droplet> 'sudo bash /tmp/pase/despliegue/instalar.sh /tmp/pase pase.edunest
 ```
 
 La primera vez crea `/etc/pase/pase.env` desde `pase.env.ejemplo` y **no arranca** el
-servicio. Se completan las llaves de sandbox de Wompi y los dos secretos de sesión
+servicio. Se completan las cuatro credenciales de ePayco (`EPAYCO_*`, con `EPAYCO_ENTORNO=sandbox`) y los dos secretos
+(`PASE_SECRETO_SESION` y `PASE_ADMIN_TOKEN`)
 (`openssl rand -hex 32`) directamente en el servidor:
 
 ```
@@ -65,4 +67,19 @@ curl https://pase.edunest.co/salud
 | Quitar todo | `systemctl disable --now pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer; rm -f /etc/nginx/sites-enabled/pase /etc/nginx/conf.d/pase.conf; systemctl reload nginx` |
 
 Mientras `PASE_MOODLE_SIMULADO=1`, las cohortes se simulan en memoria y no se toca
-portal.edunest.co. Producción de Wompi sigue bloqueada sin `PASE_PERMITIR_PRODUCCION=1`.
+portal.edunest.co. Producción de ePayco sigue bloqueada sin `PASE_PERMITIR_PRODUCCION=1`.
+
+## Pasar el servidor de Wompi a ePayco
+
+El servidor de pase.edunest.co quedó instalado con la versión de Wompi (solo pagos de sandbox).
+Para actualizarlo, con el visto bueno de David:
+
+```
+sudo systemctl stop pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer
+sudo mv /var/lib/pase/pase.db /var/lib/pase/pase-wompi-sandbox-$(date +%F).db   # se archiva, no se borra
+sudo nano /etc/pase/pase.env      # quitar WOMPI_* y poner EPAYCO_* (ver pase.env.ejemplo)
+scp -r pase <droplet>:/tmp/pase
+sudo bash /tmp/pase/despliegue/instalar.sh /tmp/pase pase.edunest.co 8091
+```
+
+El conector se niega a arrancar con la base de Wompi para no mezclar los dos esquemas.

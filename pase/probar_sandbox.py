@@ -1,18 +1,18 @@
-"""Prueba de punta a punta contra el sandbox real de Wompi, sin webhook (conciliación).
+"""Prueba de punta a punta contra ePayco en modo prueba, sin URL de confirmación (consulta).
 
     python -m pase.probar_sandbox
 
-Lee las llaves WOMPI_* del entorno (el candado de config exige llaves de sandbox) y
-recorre lo que usa el conector: comercio y tokens de aceptación, token de tarjeta 4242,
-token Nequi 3991111111, fuentes de pago, cobro recurrente firmado, consulta por id y por
-referencia, y la URL de Web Checkout. No imprime llaves ni secretos.
+Lee las variables EPAYCO_* del entorno (con EPAYCO_ENTORNO=sandbox: las transacciones van
+con test=TRUE) y recorre lo que usa el conector: acceso a la API, token de la tarjeta de
+prueba (aquí por API, en el sitio lo hace epayco.js en el navegador), cliente, cobro con
+token, consulta por x_ref_payco, firma de la confirmación y borrado del token.
+No imprime llaves ni secretos.
 """
 import sys
 import time
-import urllib.request
 import uuid
 
-from . import wompi as w
+from . import epayco as ep
 from .config import Config
 
 
@@ -21,74 +21,61 @@ def paso(nombre, ok, detalle=""):
     return ok
 
 
-def esperar_final(api, tx_id, intentos=20):
-    tx = api.transaccion(tx_id)
+def esperar_final(api, ref_payco, intentos=20):
+    tx = api.transaccion(ref_payco)
     for _ in range(intentos):
         if tx["status"] != "PENDING":
             break
         time.sleep(3)
-        tx = api.transaccion(tx_id)
-    return tx
-
-
-def cobrar(api, tipo, token, correo):
-    # Cada token de aceptación sirve una sola vez: se piden unos nuevos para cada fuente
-    comercio = api.comercio()
-    fuente = api.crear_fuente_pago(tipo, token, correo, comercio["aceptacion"]["acceptance_token"],
-                                   (comercio["datos_personales"] or {}).get("acceptance_token"))
-    paso(f"payment_source {tipo}", fuente.get("status") == "AVAILABLE",
-         f"id {fuente.get('id')} estado {fuente.get('status')}")
-    ref = f"PASE-PRUEBA-{tipo}-{uuid.uuid4().hex[:8]}"
-    tx = api.cobrar_fuente(fuente["id"], ref, correo, tipo)
-    tx = esperar_final(api, tx["id"])
-    paso(f"cobro recurrente {tipo}", tx["status"] == "APPROVED",
-         f"{tx['status']} · {tx.get('payment_method_type')} · {tx['amount_in_cents']} {tx['currency']}")
-    lista = api.transacciones_por_referencia(ref)
-    paso(f"GET /transactions?reference {tipo}", any(t["id"] == tx["id"] for t in lista),
-         f"{len(lista)} resultado(s)")
+        tx = api.transaccion(ref_payco)
     return tx
 
 
 def main():
     c = Config.desde_entorno()
-    if c.entorno != "sandbox":
-        sys.exit("Esta prueba solo corre en sandbox.")
-    faltan = [n for n, v in (("WOMPI_LLAVE_PUBLICA", c.llave_publica), ("WOMPI_LLAVE_PRIVADA", c.llave_privada),
-                             ("WOMPI_SECRETO_INTEGRIDAD", c.secreto_integridad)) if not v]
+    if not c.pruebas:
+        sys.exit("Esta prueba solo corre con EPAYCO_ENTORNO=sandbox.")
+    faltan = [n for n, v in (("EPAYCO_CLIENTE", c.cliente_id), ("EPAYCO_P_KEY", c.p_key),
+                             ("EPAYCO_LLAVE_PUBLICA", c.llave_publica),
+                             ("EPAYCO_LLAVE_PRIVADA", c.llave_privada)) if not v]
     if faltan:
         sys.exit("Faltan variables: " + ", ".join(faltan))
     if "localhost" in c.url_publica or "127.0.0.1" in c.url_publica:
-        # El firewall de checkout.wompi.co responde 403 si redirect-url apunta a localhost
         c.url_publica = "https://pase.edunest.co"
-    api = w.Wompi(c)
-    correo = "pruebas.pase@edunest.co"
+    api = ep.Epayco(c)
+    persona = {"nombre": "Prueba Pase", "correo": "pruebas.pase@edunest.co", "documento": "1000000001",
+               "tipo_doc": "CC", "whatsapp": "3001234567", "municipio": "Soacha"}
 
-    comercio = api.comercio()
-    paso("GET /merchants", bool(comercio["aceptacion"].get("acceptance_token")), comercio["nombre"] or "")
+    paso("POST /v1/auth/login", bool(api._token_api()))
 
-    tarjeta = api._llamar("POST", "/tokens/cards", {"number": "4242424242424242", "cvc": "123",
-                          "exp_month": "08", "exp_year": "30", "card_holder": "Prueba Pase"})["data"]
-    paso("token tarjeta 4242", tarjeta["id"].startswith("tok_"), tarjeta.get("name", ""))
-    cobrar(api, "CARD", tarjeta["id"], correo)
+    for numero, esperado in (("4575623182290326", "APPROVED"), ("4151611527583283", "DECLINED")):
+        r = api._api("POST", "/v1/tokens", {"card[number]": numero, "card[exp_year]": "2030",
+                                            "card[exp_month]": "12", "card[cvc]": "123", "hasCvv": True})
+        token = r.get("id") or (r.get("data") or {}).get("id")
+        if not paso(f"token tarjeta {numero[-4:]}", bool(token)):
+            print(r)
+            continue
+        fuente = api.crear_cliente(token, persona)
+        paso("cliente con token", bool(fuente["cliente"]), fuente["cliente"])
+        ref = f"PASE-PRUEBA-{uuid.uuid4().hex[:8]}"
+        tx = api.cobrar_tarjeta(fuente, ref, persona, "190.0.0.1")
+        paso("cobro con token", bool(tx["id"]), f"x_ref_payco {tx['id']}")
+        tx = esperar_final(api, tx["id"])
+        paso(f"validación por x_ref_payco ({esperado})", tx["status"] == esperado and tx["reference"] == ref,
+             f"{tx['status']} · {tx['amount_in_cents']} {tx['currency']} · ref {tx['reference']}")
+        paso("marcada como prueba", tx["prueba"] is True)
+        datos = api._http("GET", f"{c.validacion_epayco}/validation/v1/reference/{tx['id']}")["data"]
+        if "x_signature" in datos:
+            paso("x_signature con P_KEY", ep.confirmacion_valida(datos, c.cliente_id, c.p_key))
+        r = api.quitar_tarjeta(fuente)
+        paso("borrar token del cliente", r.get("ya_no_existe") or r.get("status") is not False, str(r)[:120])
 
-    nequi = api._llamar("POST", "/tokens/nequi", {"phone_number": "3991111111"})["data"]
-    for _ in range(20):
-        if nequi["status"] != "PENDING":
-            break
-        time.sleep(3)
-        nequi = api._llamar("GET", f"/tokens/nequi/{nequi['id']}")["data"]
-    if paso("token Nequi 3991111111", nequi["status"] == "APPROVED", nequi["status"]):
-        cobrar(api, "NEQUI", nequi["id"], correo)
-
-    url = api.url_web_checkout(f"PASE-PRUEBA-WC-{uuid.uuid4().hex[:8]}", correo, "Prueba Pase")
-    with urllib.request.urlopen(url, timeout=20) as r:
-        paso("Web Checkout con firma", r.status == 200, f"HTTP {r.status}")
-    print("Abre esta URL en un navegador para ver el checkout y pagar con PSE de prueba:")
-    print(url)
+    print("Para el Checkout (PSE, Nequi, Daviplata), inscríbete en el sitio en modo prueba y usa el "
+          "botón de PSE: la confirmación llega a /webhooks/epayco.")
 
 
 if __name__ == "__main__":
     try:
         main()
-    except (ValueError, w.ErrorWompi) as e:
+    except (ValueError, ep.ErrorEpayco) as e:
         sys.exit(f"Detenido: {e}")

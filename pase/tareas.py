@@ -1,8 +1,8 @@
 """Tareas programadas del conector (cron diario o cada hora).
 
     python -m pase.tareas cobro       cobro mensual, reintentos y cancelaciones (diario)
-    python -m pase.tareas conciliar   recupera eventos perdidos consultando Wompi (diario)
-    python -m pase.tareas pendientes  reprocesa eventos guardados sin procesar (cada hora)
+    python -m pase.tareas conciliar   recupera confirmaciones perdidas consultando ePayco (diario)
+    python -m pase.tareas pendientes  reprocesa confirmaciones guardadas sin procesar (cada hora)
     python -m pase.tareas resumen     cifras rápidas en JSON
 """
 import json
