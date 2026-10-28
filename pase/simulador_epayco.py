@@ -4,7 +4,8 @@ Imita lo que usa el conector y manda las confirmaciones firmadas (campos x_…) 
 de confirmación, como ePayco:
   - POST /v1/auth/login, /payment/v1/customer/create, /payment/v1/charge/create,
     GET /payment/v1/customer/{llave}/{id}, POST /v1/remove/token
-  - GET /validation/v1/reference/{ref_payco}
+  - GET /validation/v1/reference/{ref_payco} (Smart Checkout) y
+    /restpagos/transaction/response.json (cobros con token)
   - POST /login y /payment/session/create (Apify, sesiones del Smart Checkout v2)
   - /epayco.js (tokenización en el navegador) y /checkout-v2.js (Smart Checkout con botones
     Aprobar / Rechazar, que reemplaza a PSE, Nequi o Daviplata)
@@ -166,9 +167,17 @@ class Simulador:
             return None
 
     def validacion(self, ref):
-        if ref not in self.transacciones:
-            return 200, {"success": False, "title_response": "Error", "data": {}}
+        """Como en ePayco real: /validation/v1/reference solo encuentra los ref_payco
+        alfanuméricos del Smart Checkout v2; los numéricos (cobros con token) dan error."""
+        if ref not in self.transacciones or ref.isdigit():
+            return 200, {"status": False, "message": "Error de datos o conexión."}
         return 200, {"success": True, "data": self.confirmacion(ref)}
+
+    def restpagos(self, q):
+        ref = q.get("ref_payco", "")
+        if q.get("public_key") != LLAVE_PUBLICA or ref not in self.transacciones:
+            return 200, {"success": False, "title_response": "Error", "data": {}}
+        return 200, {"success": True, "title_response": "Correcto", "data": self.confirmacion(ref)}
 
     def pagina_checkout(self, q):
         d = self.sesiones.get(q.get("session", ""))
@@ -240,6 +249,8 @@ def manejador(sim: Simulador):
                 return self.enviar(200, js_token(self.base()).encode(), "application/javascript")
             if p == "/checkout":
                 return self.enviar(200, sim.pagina_checkout(q).encode(), "text/html; charset=utf-8")
+            if p == "/restpagos/transaction/response.json":
+                return self.enviar(*sim.restpagos(q))
             if p.startswith("/validation/v1/reference/"):
                 return self.enviar(*sim.validacion(p.rsplit("/", 1)[1]))
             if p.startswith("/payment/v1/customer/"):

@@ -107,7 +107,14 @@ Con los dominios ya permitidos se revisó la documentación vigente y se ajustó
 - **Tokenización**: `https://checkout.epayco.co/epayco.min.js` (antes apuntaba a una copia vieja en S3), con jQuery y campos `data-epayco="card[…]"`. Probado en Chromium con la librería real: lee el formulario, cifra y llama a `api.secure.payco.co/token/tokenize`; con llaves falsas ePayco responde 400 y la página muestra el error.
 - **Tarjetas de prueba** (vencen 12/2027, CVV 123): 4575 6231 8229 0326 aceptada, 4151 6115 2758 3283 fondos insuficientes, 5170 3944 9037 9427 fallida, 3731 1885 6457 642 pendiente.
 
-Falta comprobar con llaves reales (`python -m pase.probar_sandbox`): cliente con token, cobro con token y borrar token, que la documentación pública remite al SDK y a la colección de Postman de Apify. Nequi y Daviplata siguen por Checkout con renovación manual.
+**Probado con las llaves reales en modo prueba (28-oct-2026, `python -m pase.probar_sandbox`)**: login, token de tarjeta, cliente, cobro con token (4575… aceptada, 4151… rechazada, 5170… fallida), consulta, marca de prueba, `x_signature` con P_KEY, borrar token y sesión del Smart Checkout v2: todo OK. Hallazgos:
+
+- Los cobros con token dan `ref_payco` **numérico** que `/validation/v1/reference` no encuentra; se consultan en `secure.payco.co/restpagos/transaction/response.json?ref_payco=…&public_key=…`. El conector usa uno u otro según el formato.
+- ePayco reutiliza el mismo cliente para el mismo correo; el token nuevo se le agrega.
+- La sesión del Smart Checkout rechaza URLs de respuesta o confirmación con `localhost`: hay que probarlo desde pase.edunest.co.
+- Las variables pueden llamarse `EPAYCO_*` o como en el panel (`P_CUST_ID_CLIENTE`, `P_KEY`, `PUBLIC_KEY`, `PRIVATE_KEY`).
+
+Falta el pago por PSE de punta a punta en el Smart Checkout, que necesita el conector publicado en pase.edunest.co. Nequi y Daviplata siguen por Checkout con renovación manual.
 
 ## Por hacer después
 

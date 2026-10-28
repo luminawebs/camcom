@@ -52,7 +52,7 @@ class Escenario(unittest.TestCase):
         srv.server_close()
         self.sim, self.srv_sim = sime.arrancar(0, 0.1)
         self.api = f"http://127.0.0.1:{self.srv_sim.server_address[1]}"
-        self.c = Config(api_epayco=self.api, validacion_epayco=self.api, apify_epayco=self.api,
+        self.c = Config(api_epayco=self.api, validacion_epayco=self.api, restpagos_epayco=self.api, apify_epayco=self.api,
                         checkout_js=f"{self.api}/checkout-v2.js", token_js=f"{self.api}/epayco.js",
                         cliente_id=sime.CLIENTE_ID, p_key=sime.P_KEY,
                         llave_publica=sime.LLAVE_PUBLICA, llave_privada=sime.LLAVE_PRIVADA,

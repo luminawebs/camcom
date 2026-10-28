@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 ENTORNOS = ("sandbox", "produccion")
 API_EPAYCO = "https://api.secure.payco.co"
 VALIDACION_EPAYCO = "https://secure.epayco.co"
+RESTPAGOS_EPAYCO = "https://secure.payco.co"  # consulta de cobros con token (ref_payco numérico)
 APIFY_EPAYCO = "https://apify.epayco.co"  # sesiones del Smart Checkout
 CHECKOUT_JS = "https://checkout.epayco.co/checkout-v2.js"
 TOKEN_JS = "https://checkout.epayco.co/epayco.min.js"
@@ -21,6 +22,7 @@ class Config:
     entorno: str = "sandbox"
     api_epayco: str = API_EPAYCO
     validacion_epayco: str = VALIDACION_EPAYCO
+    restpagos_epayco: str = RESTPAGOS_EPAYCO
     apify_epayco: str = APIFY_EPAYCO
     checkout_js: str = CHECKOUT_JS
     token_js: str = TOKEN_JS
@@ -48,18 +50,21 @@ class Config:
 
     @classmethod
     def desde_entorno(cls) -> "Config":
+        """Acepta los nombres EPAYCO_* o los del panel de ePayco (P_CUST_ID_CLIENTE, P_KEY,
+        PUBLIC_KEY, PRIVATE_KEY)."""
         e = os.environ.get
         c = cls(
             entorno=e("EPAYCO_ENTORNO", "sandbox"),
             api_epayco=e("EPAYCO_API_URL", API_EPAYCO).rstrip("/"),
             validacion_epayco=e("EPAYCO_VALIDACION_URL", VALIDACION_EPAYCO).rstrip("/"),
+            restpagos_epayco=e("EPAYCO_RESTPAGOS_URL", RESTPAGOS_EPAYCO).rstrip("/"),
             apify_epayco=e("EPAYCO_APIFY_URL", APIFY_EPAYCO).rstrip("/"),
             checkout_js=e("EPAYCO_CHECKOUT_JS", CHECKOUT_JS),
             token_js=e("EPAYCO_TOKEN_JS", TOKEN_JS),
-            cliente_id=e("EPAYCO_CLIENTE", ""),
-            p_key=e("EPAYCO_P_KEY", ""),
-            llave_publica=e("EPAYCO_LLAVE_PUBLICA", ""),
-            llave_privada=e("EPAYCO_LLAVE_PRIVADA", ""),
+            cliente_id=e("EPAYCO_CLIENTE") or e("P_CUST_ID_CLIENTE", ""),
+            p_key=e("EPAYCO_P_KEY") or e("P_KEY", ""),
+            llave_publica=e("EPAYCO_LLAVE_PUBLICA") or e("PUBLIC_KEY", ""),
+            llave_privada=e("EPAYCO_LLAVE_PRIVADA") or e("PRIVATE_KEY", ""),
             secreto_sesion=e("PASE_SECRETO_SESION", ""),
             precio_centavos=int(e("PASE_PRECIO_CENTAVOS", "2900000")),
             url_publica=e("PASE_URL_PUBLICA", "http://localhost:8080").rstrip("/"),

@@ -157,12 +157,21 @@ class Epayco:
 
     # --- Lecturas ---
     def transaccion(self, ref_payco):
-        """Doble verificación: estado real de la transacción en ePayco por su x_ref_payco."""
-        r = self._http("GET", f"{self.c.validacion_epayco}/validation/v1/reference/"
-                              f"{urllib.parse.quote(str(ref_payco))}")
-        if not r.get("success") or not r.get("data"):
-            raise ErrorEpayco(404, f"ref_payco {ref_payco} no encontrada")
-        return normalizar(r["data"])
+        """Doble verificación: estado real de la transacción en ePayco por su x_ref_payco.
+
+        Probado en modo prueba (28-oct-2026): los cobros con token tienen ref_payco numérico
+        y solo los encuentra /restpagos/transaction/response.json; el Smart Checkout v2 da
+        ref_payco alfanuméricos, que se consultan en /validation/v1/reference. Se prueba
+        primero el que corresponde al formato y luego el otro."""
+        ref = urllib.parse.quote(str(ref_payco))
+        restpagos = (f"{self.c.restpagos_epayco}/restpagos/transaction/response.json?"
+                     f"ref_payco={ref}&public_key={urllib.parse.quote(self.c.llave_publica)}")
+        validacion = f"{self.c.validacion_epayco}/validation/v1/reference/{ref}"
+        for url in ((restpagos, validacion) if str(ref_payco).isdigit() else (validacion, restpagos)):
+            r = self._http("GET", url)
+            if r.get("success") and isinstance(r.get("data"), dict) and r["data"].get("x_ref_payco"):
+                return normalizar(r["data"])
+        raise ErrorEpayco(404, f"ref_payco {ref_payco} no encontrada")
 
     # --- Tarjeta guardada (cobro mensual) ---
     def crear_cliente(self, token_tarjeta, persona):

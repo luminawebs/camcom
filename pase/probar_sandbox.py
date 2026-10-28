@@ -67,7 +67,8 @@ def main():
         paso(f"validación por x_ref_payco ({esperado})", tx["status"] == esperado and tx["reference"] == ref,
              f"{tx['status']} · {tx['amount_in_cents']} {tx['currency']} · ref {tx['reference']}")
         paso("marcada como prueba", tx["prueba"] is True)
-        datos = api._http("GET", f"{c.validacion_epayco}/validation/v1/reference/{tx['id']}")["data"]
+        datos = api._http("GET", f"{c.restpagos_epayco}/restpagos/transaction/response.json?"
+                                 f"ref_payco={tx['id']}&public_key={c.llave_publica}")["data"]
         if "x_signature" in datos:
             paso("x_signature con P_KEY", ep.confirmacion_valida(datos, c.cliente_id, c.p_key))
         r = api.quitar_tarjeta(fuente)
