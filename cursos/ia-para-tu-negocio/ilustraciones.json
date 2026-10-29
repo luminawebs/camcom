@@ -1,0 +1,78 @@
+{
+  "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto. Las pantallas del asistente NO se dibujan con IA: salen de pantallas/armar_pantallas.py. Ningún teléfono debe mostrar logos ni marcas de apps.",
+  "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people.",
+  "personajes": {
+    "nelson": "ONE single man only, alone, no other people, no background scene. Nelson, a 47-year-old Colombian hardware store owner, stocky build, medium-brown skin, short greying black hair, thick moustache, reading glasses hanging from his shirt collar. Wears a navy-blue work vest over a light-grey polo shirt, a pencil behind his ear, dark work trousers and brown boots.",
+    "leidy": "ONE single woman only, alone, no other people, no background scene. Leidy, a 31-year-old Colombian who sells baby clothes online from home, slim, light-brown skin, shoulder-length wavy black hair with a red hair clip, round face, friendly eyes. Wears a mustard-yellow cardigan over a white t-shirt, blue jeans and grey slippers.",
+    "yaneth": "ONE single woman only, alone, no other people, no background scene. Yaneth, a 45-year-old Colombian hairdresser and nail salon owner, medium build, dark-brown skin, short curly hair dyed burgundy, gold stud earrings, neat eyebrows. Wears a black salon smock with a small red trim, black trousers and comfortable black shoes, a measuring tape around her neck."
+  },
+  "imagenes": [
+    {
+      "id": "u1-entrada",
+      "personajes": [
+        "nelson"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Nelson appearing only ONCE (do not copy the reference sheet pose). Evening inside Nelson's small neighborhood hardware store in Quintanares, Soacha: shelves with paint cans, coiled hoses, PVC pipes, boxes of screws, hanging tools, a glass counter. Nelson stands behind the counter holding his smartphone at arm's length, frowning with distrust, one eyebrow raised. The phone screen shows only abstract grey lines (no readable text, no logos). Medium shot.",
+      "destinos": [
+        "medios-moodle/u1-entrada.jpg",
+        "piezas/u1-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u1-conversa",
+      "personajes": [
+        "nelson"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Nelson appearing only ONCE (do not copy the reference sheet pose). Morning in the same hardware store, sunlight through the open roll-up door. Nelson, relaxed and smiling, holds his smartphone near his mouth speaking to it (voice message) while with the other hand he arranges paint cans on a shelf. A small sheet of paper with abstract lines (no readable text) is taped to the glass counter. Medium shot.",
+      "destinos": [
+        "piezas/u1-aprende/medios/ilustracion-4.jpg"
+      ]
+    },
+    {
+      "id": "u2-entrada",
+      "personajes": [
+        "leidy"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Leidy appearing only ONCE (do not copy the reference sheet pose). Late night in Leidy's small home living room in Terreros, Soacha, lit by a warm lamp: a table covered with neatly folded tiny baby clothes (onesies, little hats, socks) and a plastic storage box. Leidy sits at the table, tired, typing on her smartphone, a cup of coffee beside her, a dark window with a few distant city lights. The phone screen shows only abstract lines (no readable text, no logos). Medium shot.",
+      "destinos": [
+        "medios-moodle/u2-entrada.jpg",
+        "piezas/u2-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u2-foto",
+      "personajes": [
+        "leidy"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Leidy appearing only ONCE (do not copy the reference sheet pose). Daytime, next to a bright window at home: a small yellow baby onesie lies flat on a clean white sheet on a table. Leidy, smiling and focused, leans over and takes a photo of it with her smartphone held horizontally. Soft natural light. Medium shot.",
+      "destinos": [
+        "piezas/u2-aprende/medios/ilustracion-2.jpg"
+      ]
+    },
+    {
+      "id": "u3-entrada",
+      "personajes": [
+        "yaneth"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Yaneth appearing only ONCE (do not copy the reference sheet pose). Inside Yaneth's small beauty salon in Rincón de Santa Fe, Soacha: a styling chair, a mirror, shelves with nail polish bottles and hair products, a manicure table. Yaneth stands hesitating, holding an open handwritten client notebook in one hand (only abstract lines, no readable text) and her smartphone in the other, looking from one to the other with doubt. No other people. Medium shot.",
+      "destinos": [
+        "medios-moodle/u3-entrada.jpg",
+        "piezas/u3-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u3-semaforo",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "A flat infographic, no text, no letters and no numbers, arranged in THREE clearly separated horizontal rows, one per light of a vertical traffic light on the left. TOP row, aligned with the RED light: an ID card, a key and a bank card, inside a pale red band. MIDDLE row, aligned with the YELLOW light: only an open address book showing a contact card, inside a pale yellow band. BOTTOM row, aligned with the GREEN light: a small shop storefront and a price tag, inside a pale green band. Each row has the same height as its light. Off-white background, clean and calm. No people at all, no human figures.",
+      "destinos": [
+        "piezas/u3-aprende/medios/ilustracion-3.jpg"
+      ]
+    }
+  ]
+}

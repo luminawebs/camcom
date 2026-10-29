@@ -1,0 +1,29 @@
+Marcas de pendiente quitadas al publicar (van al registro del contador):
+
+00-cabecera-curso.html: «VideoBienvenida de 60 s, vertical, con subtítulos. H5P o MP4 liviano.» (quitado)
+00-datos-y-perfil-del-negocio.html: «[VERIFICAR texto con la Cámara]» (quitado)
+00-inicio.html: «Foro Comunidad o WhatsApp de la Cámara» → «Foro Comunidad»
+00-inicio.html: «[VERIFICAR número]» (quitado)
+99-cierre.html: «ImagenPortada del siguiente curso (16:9).» (quitado)
+99-cierre.html: «Ver el curso [descuento por definir] ›» (quitado)
+99-constancia-de-participacion.html: «[VERIFICAR logo definitivo]» (quitado)
+u1-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u1-profundiza.html: «[VERIFICAR enlace]» (quitado)
+u1-resumen.html: «Resumen generado con inteligencia artificial y revisado por un asesor de transformación digital y un abogado de protección de datos de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u2-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u2-profundiza.html: «[VERIFICAR enlace]» (quitado)
+u2-profundiza.html: «[VERIFICAR redacción con el abogado]» (quitado)
+u2-profundiza.html: «[VERIFICAR enlace directo]» (quitado)
+u2-resumen.html: «Resumen generado con inteligencia artificial y revisado por un asesor de transformación digital y un abogado de protección de datos de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u3-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u3-llevatelo.html: «[nombre]» (quitado)
+u3-profundiza.html: «[VERIFICAR alcance para negocios pequeños con el abogado]» (quitado)
+u3-profundiza.html: «[VERIFICAR enlace]» (quitado)
+u3-resumen.html: «Resumen generado con inteligencia artificial y revisado por un asesor de transformación digital y un abogado de protección de datos de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+ia-para-tu-negocio-u1-aprende.zip/contenido.js: «[VERIFICAR versiones gratis disponibles en Colombia]» (quitado)
+ia-para-tu-negocio-u2-aprende.zip/contenido.js: «[VERIFICAR redacción sobre Ley 1480 con el abogado]» (quitado)
+ia-para-tu-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR]» (quitado)
+ia-para-tu-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR políticas de las apps más usadas]» (quitado)
+ia-para-tu-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR con el abogado: Ley 1581 de 2012, art. 5]» (quitado)
+ia-para-tu-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR rutas en cada app]» (quitado)
+ia-para-tu-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR con el abogado: Ley 1581 de 2012 y Circular Externa 002 de 2024 de la SIC]» (quitado)

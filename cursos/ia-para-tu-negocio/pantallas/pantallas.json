@@ -1,0 +1,138 @@
+{
+ "simuladores": {
+  "1": {
+   "titulo": "Pídele a la IA el aviso de Nelson",
+   "final": "Ahora hazlo en tu celular con algo que necesites escribir esta semana: eso es el paso Aplica.",
+   "pasos": [
+    {
+     "html": "practica/u1-1.html",
+     "imagen": "pantalla-1.jpg",
+     "instruccion": "Nelson abrió el asistente. Empieza una conversación nueva.",
+     "pista": "Busca el lápiz arriba, a la derecha."
+    },
+    {
+     "html": "practica/u1-2.html",
+     "imagen": "pantalla-2.jpg",
+     "instruccion": "Nelson guardó tres pedidos en sus notas. Pega el que tiene las 4 partes: quién es, qué necesita, para quién y cómo lo quiere.",
+     "pista": "Es el que dice que es una ferretería en Quintanares."
+    },
+    {
+     "html": "practica/u1-3.html",
+     "imagen": "pantalla-3.jpg",
+     "instruccion": "El pedido quedó escrito. Envíalo.",
+     "pista": "El botón de enviar es la flecha negra."
+    },
+    {
+     "html": "practica/u1-4.html",
+     "imagen": "pantalla-4.jpg",
+     "instruccion": "El aviso está bien, pero es largo para el grupo del barrio. Pídele un ajuste: toca la sugerencia que lo deja corto.",
+     "pista": "Busca la sugerencia que habla de 4 líneas."
+    },
+    {
+     "html": "practica/u1-5.html",
+     "imagen": "pantalla-5.jpg",
+     "instruccion": "Quedó listo. Copia el aviso para pegarlo en el grupo del barrio.",
+     "pista": "El botón de copiar está debajo de la respuesta, a la izquierda."
+    }
+   ]
+  },
+  "2": {
+   "titulo": "Pide la descripción de un producto y revísala",
+   "final": "Ahora pide la descripción de 2 de tus productos y revísalas antes de publicar: eso es el paso Aplica.",
+   "pasos": [
+    {
+     "html": "practica/u2-1.html",
+     "imagen": "pantalla-1.jpg",
+     "instruccion": "Leidy quiere la descripción del enterizo amarillo. Adjunta la foto.",
+     "pista": "El botón para adjuntar es el «+» de la caja de texto."
+    },
+    {
+     "html": "practica/u2-2.html",
+     "imagen": "pantalla-2.jpg",
+     "instruccion": "Elige la foto del enterizo.",
+     "pista": "Es la foto amarilla con el bebé."
+    },
+    {
+     "html": "practica/u2-3.html",
+     "imagen": "pantalla-3.jpg",
+     "instruccion": "Ya escribiste el pedido con tus datos reales: material, tallas, precio, para quién y cómo. Envíalo.",
+     "pista": "El botón de enviar es la flecha negra."
+    },
+    {
+     "html": "practica/u2-4.html",
+     "imagen": "pantalla-4.jpg",
+     "instruccion": "Revisa la respuesta antes de usarla: toca el dato que la IA se inventó.",
+     "pista": "Leidy nunca dijo que el enterizo fuera orgánico ni antialérgico."
+    },
+    {
+     "html": "practica/u2-5.html",
+     "imagen": "pantalla-5.jpg",
+     "instruccion": "Le pediste que quitara ese dato y lo corrigió. Copia la descripción para tu catálogo.",
+     "pista": "El botón de copiar está debajo de la respuesta, a la izquierda."
+    }
+   ]
+  },
+  "3": {
+   "titulo": "Cuida tus datos y pide sin datos personales",
+   "final": "Ahora revisa los ajustes de tu asistente y reescribe un pedido sin datos de clientes: eso es el paso Aplica.",
+   "pasos": [
+    {
+     "html": "practica/u3-1.html",
+     "imagen": "pantalla-1.jpg",
+     "instruccion": "Antes de pedir, Yaneth revisa la privacidad. Abre el menú del asistente.",
+     "pista": "El menú son las tres rayas, arriba a la izquierda."
+    },
+    {
+     "html": "practica/u3-2.html",
+     "imagen": "pantalla-2.jpg",
+     "instruccion": "Entra a «Ajustes».",
+     "pista": "Está al final del menú."
+    },
+    {
+     "html": "practica/u3-3.html",
+     "imagen": "pantalla-3.jpg",
+     "instruccion": "Entra a «Controles de datos».",
+     "pista": "Es la opción del escudo."
+    },
+    {
+     "html": "practica/u3-4.html",
+     "imagen": "pantalla-4.jpg",
+     "instruccion": "Apaga la opción que deja usar tus chats para entrenar el asistente.",
+     "pista": "Es el primer interruptor: «Mejorar el modelo para todos»."
+    },
+    {
+     "html": "practica/u3-5.html",
+     "imagen": "pantalla-5.jpg",
+     "instruccion": "Ahora sí: pega el pedido seguro para los mensajes de cumpleaños.",
+     "pista": "El seguro no tiene nombres, cédulas, celulares ni datos de salud."
+    }
+   ]
+  }
+ },
+ "vistas": {
+  "u1-flojo": {
+   "html": "vistas/u1-flojo.html",
+   "destino": "piezas/u1-aprende/medios/ilustracion-2.jpg"
+  },
+  "u1-bueno": {
+   "html": "vistas/u1-bueno.html",
+   "destino": "piezas/u1-aprende/medios/ilustracion-3.jpg"
+  },
+  "u2-inventa": {
+   "html": "vistas/u2-inventa.html",
+   "destino": "piezas/u2-aprende/medios/ilustracion-3.jpg"
+  },
+  "u2-reclamo": {
+   "html": "vistas/u2-reclamo.html",
+   "destino": "piezas/u2-aprende/medios/ilustracion-4.jpg"
+  },
+  "u3-seguro": {
+   "html": "vistas/u3-seguro.html",
+   "destino": "piezas/u3-aprende/medios/ilustracion-4.jpg"
+  },
+  "u3-ajustes": {
+   "html": "vistas/u3-ajustes.html",
+   "destino": "piezas/u3-aprende/medios/ilustracion-5.jpg"
+  }
+ }
+}

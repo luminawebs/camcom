@@ -1,0 +1,29 @@
+IA para tu negocio desde el celular
+Nombre corto: AVS-G06 · Número de ID: AVS-G06-ia-para-tu-negocio
+
+INICIO · page · Bienvenida
+INICIO · page · [Configurar] Datos y perfil del negocio (Retroalimentación) (oculta)
+INICIO · page · [Configurar] Diagnóstico rápido (Cuestionario) (oculta)
+Unidad 1 · Pídele bien a la IA · page · Resumen: Resumen en video
+Unidad 1 · Pídele bien a la IA · page · Entrada: «Eso no sirve para mi negocio»
+Unidad 1 · Pídele bien a la IA · scorm · Aprende: Pídele bien a la IA
+Unidad 1 · Pídele bien a la IA · scorm · Practica: Simulador de pantalla
+Unidad 1 · Pídele bien a la IA · forum · Aplica: Tu primer pedido con las 4 partes
+Unidad 1 · Pídele bien a la IA · page · Llévatelo: Tu pedido en una mirada
+Unidad 1 · Pídele bien a la IA · page · Profundiza: Ayuda oficial de la herramienta
+Unidad 2 · Mensajes y descripciones que venden · page · Resumen: Resumen en video
+Unidad 2 · Mensajes y descripciones que venden · page · Entrada: Las noches de Leidy
+Unidad 2 · Mensajes y descripciones que venden · scorm · Aprende: Mensajes y descripciones que venden
+Unidad 2 · Mensajes y descripciones que venden · scorm · Practica: Simulador de pantalla
+Unidad 2 · Mensajes y descripciones que venden · forum · Aplica: Tus textos con IA, revisados por ti
+Unidad 2 · Mensajes y descripciones que venden · page · Llévatelo: Tus textos en una mirada
+Unidad 2 · Mensajes y descripciones que venden · page · Profundiza: Ayuda oficial de la herramienta
+Unidad 3 · Lo que no le cuentas a la IA · page · Resumen: Resumen en video
+Unidad 3 · Lo que no le cuentas a la IA · page · Entrada: La lista de clientas de Yaneth
+Unidad 3 · Lo que no le cuentas a la IA · scorm · Aprende: Lo que no le cuentas a la IA
+Unidad 3 · Lo que no le cuentas a la IA · scorm · Practica: Simulador de pantalla
+Unidad 3 · Lo que no le cuentas a la IA · forum · Aplica: Tu IA sin datos de clientes
+Unidad 3 · Lo que no le cuentas a la IA · page · Llévatelo: Tus datos en una mirada
+Unidad 3 · Lo que no le cuentas a la IA · page · Profundiza: Ayuda oficial de la herramienta
+CIERRE · page · [Configurar] Reto final entre pares (Taller) (oculta)
+CIERRE · page · [Configurar] Constancia de participación (Certificado personalizado) (oculta)

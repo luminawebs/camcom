@@ -1,0 +1,66 @@
+{
+ "titulo": "Pídele bien a la IA",
+ "etiqueta": "Unidad 1 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Pídele bien a la IA",
+   "texto": "Nelson · ferretería en Quintanares",
+   "voz": "Nelson le escribió a la inteligencia artificial «haz un aviso», y le salió un texto que no servía para su ferretería."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Las 4 partes del pedido",
+   "items": [
+    [
+     "Quién eres",
+     "Tu negocio y dónde."
+    ],
+    [
+     "Qué necesitas",
+     "Aviso, mensaje, idea."
+    ],
+    [
+     "Para quién",
+     "Tu cliente."
+    ],
+    [
+     "Cómo lo quieres",
+     "Largo, tono y datos."
+    ]
+   ],
+   "voz": "La inteligencia artificial solo sabe lo que tú le cuentas. Por eso un buen pedido tiene cuatro partes: quién eres, qué necesitas, para quién y cómo lo quieres."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Conversa",
+   "items": [
+    [
+     "«Más corto»",
+     "en 4 líneas"
+    ],
+    [
+     "«Más cercano»",
+     "como hablamos aquí"
+    ],
+    [
+     "«Dame 3 opciones»",
+     "y eliges"
+    ]
+   ],
+   "voz": "Y si la respuesta no te gusta, no empieces de cero: pídele cambios. Más corto, más cercano, dame tres opciones."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Una respuesta que sirve",
+   "texto": "Quién soy + qué necesito + para quién + cómo lo quiero",
+   "voz": "Con las cuatro partes y un par de ajustes, tienes en un minuto lo que antes te tomaba media hora."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Tu primer pedido",
+   "texto": "Escríbelo con las 4 partes",
+   "voz": "En esta unidad vas a escribir tu primer pedido con las cuatro partes y a usarlo en tu negocio."
+  }
+ ]
+}

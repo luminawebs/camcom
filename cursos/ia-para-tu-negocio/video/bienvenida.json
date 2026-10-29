@@ -1,0 +1,40 @@
+{
+ "titulo": "IA para tu negocio desde el celular",
+ "etiqueta": "Bienvenida",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "IA para tu negocio desde el celular",
+   "texto": "La meta: que la IA te ahorre una hora al día",
+   "imagen": "ilustraciones/originales/u1-entrada.png",
+   "voz": "Hola, te damos la bienvenida a I A para tu negocio desde el celular. Él es Nelson, tiene una ferretería en Quintanares. Probó la inteligencia artificial, le salió un aviso que no servía y siguió escribiendo todo a mano hasta las once de la noche."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Unidad 1 · Pídele bien a la IA",
+   "texto": "Las 4 partes de un buen pedido",
+   "imagen": "ilustraciones/originales/u1-conversa.png",
+   "voz": "Primero, con Nelson, vas a aprender a pedirle bien a la inteligencia artificial, con las cuatro partes de un buen pedido."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Unidad 2 · Mensajes y descripciones",
+   "texto": "Leidy · ropa para bebé en Terreros",
+   "imagen": "ilustraciones/originales/u2-entrada.png",
+   "voz": "Luego, con Leidy, vas a escribir tus descripciones de productos y tus mensajes en minutos, y a revisarlos antes de publicar."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Unidad 3 · Lo que no le cuentas",
+   "texto": "Yaneth · peluquería en Rincón de Santa Fe",
+   "imagen": "ilustraciones/originales/u3-entrada.png",
+   "voz": "Y con Yaneth vas a saber qué datos de tus clientes nunca van en la inteligencia artificial, y cómo pedir sin ellos."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Una hora al día",
+   "texto": "Tres unidades cortas, desde tu celular",
+   "voz": "Son tres unidades cortas, desde tu celular. La meta: que la inteligencia artificial te ahorre una hora al día. ¡Empecemos!"
+  }
+ ]
+}

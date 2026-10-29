@@ -91,7 +91,7 @@ def main():
         htmls.append(tmp / f"{k}.html")
     js = ("import { createRequire } from 'module'; import { execSync } from 'child_process';"
           "const { chromium } = createRequire(import.meta.url)(execSync('npm root -g').toString().trim() + '/playwright');"
-          "const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });"
+          "const b = await chromium.launch();"
           "const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });"
           "for (const f of process.argv.slice(2)) { await p.goto('file://' + f); await p.screenshot({ path: f.replace('.html', '.png') }); }"
           "await b.close();")
