@@ -28,7 +28,7 @@ padding:12px 18px;font:inherit;font-weight:600;cursor:pointer;text-decoration:no
 .verde{background:var(--verde)}.sec{background:#fff;color:var(--azul);border:1px solid var(--azul)}
 .fila{display:flex;gap:10px}.fila>div{flex:1}.nota{font-size:.875rem;color:#56606b}
 .aviso{background:#fff7e0;border:1px solid #e9c46a;border-radius:8px;padding:10px 12px;font-size:.9rem}
-.tabs button{margin-right:6px}.oculto{display:none}#msg{margin-top:12px;font-weight:600}
+.tabs button{margin-right:6px}input.mal{border-color:#c0392b;background:#fff4f2}.oculto{display:none}#msg{margin-top:12px;font-weight:600}
 """
 
 
@@ -77,9 +77,9 @@ def pantalla_pago(c, persona, firma):
 <input type="hidden" data-epayco="card[name]" value="{nombre}">
 <input type="hidden" data-epayco="card[email]" value="{correo}">
 <label>Número de tarjeta</label><input id="num" data-epayco="card[number]" inputmode="numeric" autocomplete="cc-number" required>
-<div class="fila"><div><label>Mes</label><input data-epayco="card[exp_month]" placeholder="08" inputmode="numeric" required></div>
-<div><label>Año</label><input data-epayco="card[exp_year]" placeholder="2028" inputmode="numeric" required></div>
-<div><label>CVC</label><input data-epayco="card[cvc]" inputmode="numeric" required></div></div>
+<div class="fila"><div><label>Mes</label><input id="mes" data-epayco="card[exp_month]" placeholder="08" inputmode="numeric" required></div>
+<div><label>Año</label><input id="anio" data-epayco="card[exp_year]" placeholder="2028" inputmode="numeric" required></div>
+<div><label>CVC</label><input id="cvc" data-epayco="card[cvc]" inputmode="numeric" required></div></div>
 <label class="check"><input type="checkbox" id="acepto" required><span>Autorizo a EduNest a cobrar {precio}
 cada mes a esta tarjeta por medio de ePayco hasta que cancele el Pase.</span></label>
 <button class="verde">Pagar {precio}</button></form>
@@ -93,10 +93,26 @@ cada mes a esta tarjeta por medio de ePayco hasta que cancele el Pase.</span></l
 const C={cfg};
 const $id=id=>document.getElementById(id), msg=t=>$id('msg').textContent=t;
 ePayco.setPublicKey(C.pub);
-function tarjeta(ev){{ev.preventDefault();msg('Procesando…');
+// Mensajes en español y el campo marcado (ePayco responde en inglés, p. ej. «…field is empty: number»)
+const CAMPO={{number:['num','El número de tarjeta no es válido. Revísalo.'],cvc:['cvc','El CVC no es válido (3 o 4 dígitos).'],
+ date_exp:['mes','La fecha de vencimiento no es válida (mes 01 a 12 y año de 4 dígitos, sin vencer).'],
+ name:['num','Falta el nombre del titular.'],email:['num','Falta un correo válido.']}};
+function marcar(clave){{document.querySelectorAll('input.mal').forEach(e=>e.classList.remove('mal'));
+ const c=CAMPO[clave]; if(!c) return false; const e=$id(c[0]); e.classList.add('mal');
+ if(clave==='date_exp') $id('anio').classList.add('mal'); e.focus(); msg(c[1]); return true}}
+function luhn(n){{let s=0;for(let i=0;i<n.length;i++){{let d=+n[n.length-1-i];if(i%2){{d*=2;if(d>9)d-=9}}s+=d}}return n.length>=13&&s%10===0}}
+function revisar(num){{const m=+$id('mes').value, a=+$id('anio').value, hoy=new Date(), cvc=$id('cvc').value.trim();
+ if(!luhn(num)) return 'number';
+ if(!(m>=1&&m<=12)||String($id('anio').value).trim().length!==4||a<hoy.getFullYear()||(a===hoy.getFullYear()&&m<hoy.getMonth()+1)) return 'date_exp';
+ if(!/^\\d{{3,4}}$/.test(cvc)) return 'cvc'; return ''}}
+function tarjeta(ev){{ev.preventDefault();
  const num=$id('num').value.replace(/\\D/g,'');$id('num').value=num;
+ const malo=revisar(num); if(malo) return marcar(malo)&&false;
+ marcar('');msg('Procesando…');
  ePayco.token.create(window.jQuery?jQuery('#tarjeta'):$id('tarjeta'),async function(error,token){{
-  if(error) return msg('No se pudo: '+(error.description||error.message||error));
+  if(error){{const t=String(error.description||error.message||error);
+   const clave=Object.keys(CAMPO).find(k=>t.endsWith(': '+k)); if(clave&&marcar(clave)) return;
+   return msg('ePayco no aceptó la tarjeta: '+t)}}
   try{{const r=await fetch('/pagar/token',{{method:'POST',headers:{{'Content-Type':'application/json'}},
    body:JSON.stringify({{p:C.p,token:String(token&&token.id||token),enmascarado:'**** '+num.slice(-4)}})}});
    const j=await r.json(); if(!r.ok) throw new Error(j.error||r.status);
