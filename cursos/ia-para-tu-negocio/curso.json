@@ -1,0 +1,245 @@
+{
+  "id": "ia-para-tu-negocio",
+  "titulo": "IA para tu negocio desde el celular",
+  "titulo_corto": "IA para tu negocio",
+  "nivel": "g",
+  "perfil": "P",
+  "area": "Transformación digital",
+  "duracion": "≈ 1,5 horas",
+  "meta": "La IA me ahorra una hora al día",
+  "promesa": "Al terminar sabrás pedirle bien a un asistente de inteligencia artificial desde tu celular, tendrás tus mensajes y descripciones de productos escritos en minutos y revisados por ti, y sabrás qué datos de tu negocio y de tus clientes nunca debes poner en la IA.",
+  "certificado": "Constancia de participación",
+  "resumen_formato": "video",
+  "experto": "Asesor de transformación digital de la Cámara de Comercio [por definir]",
+  "revisor": "un asesor de transformación digital y un abogado de protección de datos de la Cámara de Comercio",
+  "receta": {
+    "aprende": [
+      "Lección interactiva con pantallas",
+      "SCORM 1.2 · HTML5",
+      7,
+      5,
+      "leccion-interactiva"
+    ]
+  },
+  "receta_nota": "Perfil P: Aprende va como lección narrada con pantallas simplificadas de un asistente de IA genérico (sin marcas). Practica usa el simulador de pantalla con pantallas armadas en pantallas/armar_pantallas.py, igual que el curso de WhatsApp Business.",
+  "narracion": {
+    "voz": "a253156d",
+    "secciones": [
+      "entrada",
+      "aprende"
+    ],
+    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad son videos automáticos (plantillas/video_resumen.py).",
+    "reemplazos": {
+      "7 a. m.": "7 de la mañana",
+      "6 p. m.": "6 de la tarde",
+      "11 p. m.": "11 de la noche",
+      "0-3 y 3-6 meses": "cero a tres y tres a seis meses",
+      "Ley 1581 de 2012": "Ley mil quinientos ochenta y uno de dos mil doce",
+      "Ley 1581": "Ley mil quinientos ochenta y uno",
+      "IA": "i a",
+      "[nombre]": "la palabra nombre"
+    }
+  },
+  "caso": "Nelson, 47 años, tiene una ferretería en Quintanares. Un sobrino le instaló un asistente de inteligencia artificial en el celular; Nelson le escribió «haz un aviso» y le salió un texto largo, con palabras que nadie usa en el barrio y ofertas que él no tiene. Concluyó que «eso no sirve para un negocio como el mío» y siguió escribiendo todo a mano hasta las once de la noche.",
+  "personas": [
+    {
+      "nombre": "Nelson",
+      "negocio": "Ferretería de barrio",
+      "barrio": "Quintanares",
+      "problema": "Probó la IA con un pedido de dos palabras, le salió un aviso genérico y concluyó que no le sirve."
+    },
+    {
+      "nombre": "Leidy",
+      "negocio": "Ropa para bebé por WhatsApp e Instagram",
+      "barrio": "Terreros",
+      "problema": "Pasa las noches escribiendo descripciones de productos y respuestas a clientes, y la primera vez que usó la IA publicó un dato que no era cierto."
+    },
+    {
+      "nombre": "Yaneth",
+      "negocio": "Peluquería y uñas",
+      "barrio": "Rincón de Santa Fe",
+      "problema": "Iba a pegar en la IA la lista de sus clientas con cédula, celular y alergias para que le escribiera los mensajes de cumpleaños."
+    }
+  ],
+  "objetivos": [
+    "Usar un asistente de inteligencia artificial gratis desde el celular y pedirle bien, con las 4 partes de un buen pedido.",
+    "Escribir con IA descripciones de productos y mensajes para tus clientes, y revisarlos antes de usarlos.",
+    "Reconocer qué datos de tu negocio y de tus clientes no debes poner en la IA, y pedir sin ellos.",
+    "Ahorrar tiempo en lo que escribes todos los días: la meta es una hora al día."
+  ],
+  "evidencia": "Tu kit de pedidos para la IA: 3 pedidos que ya usaste en tu negocio (un aviso, una descripción de producto y un mensaje para clientes), cada uno con el texto final revisado por ti y sin datos personales de clientes.",
+  "mapa_curso_nota": "Mapa del curso con las 3 unidades: pídele bien a la IA, mensajes y descripciones que venden, y lo que no le cuentas a la IA",
+  "inicio": {
+    "bienvenida": "Hola, te damos la bienvenida a IA para tu negocio desde el celular",
+    "texto": "Nelson tiene una ferretería en Quintanares. Probó la inteligencia artificial, le salió un aviso que no servía y siguió escribiendo todo a mano hasta tarde. En tres unidades cortas vas a aprender a pedirle bien a la IA, a escribir con ella tus mensajes y descripciones de productos, y a cuidar los datos de tus clientes. La meta: que la IA te ahorre una hora al día.",
+    "aprobar": "Completar las 3 unidades",
+    "dudas": "Foro Comunidad o WhatsApp de la Cámara [VERIFICAR número]",
+    "video_nota": "Bienvenida de 45 s: Nelson, Leidy y Yaneth cuentan qué les pasó con la IA y qué vas a lograr. Con subtítulos.",
+    "diagnostico": [
+      "¿Has usado un asistente de IA como ChatGPT, Gemini, Copilot o Meta AI? (Sí, seguido / Lo he probado / Nunca)",
+      "¿En qué se te va más tiempo escribiendo? (Mensajes a clientes / Descripciones y publicaciones / Avisos y cotizaciones / Correos y cartas)",
+      "¿Sabes qué datos de tus clientes no debes compartir? (Sí / Más o menos / No)"
+    ]
+  },
+  "unidades": [
+    {
+      "tema": "Pídele bien a la IA",
+      "objetivo": "usar un asistente de IA gratis desde el celular y pedirle bien, con las 4 partes de un buen pedido: quién eres, qué necesitas, para quién y cómo lo quieres",
+      "entrada": {
+        "titulo": "«Eso no sirve para mi negocio»",
+        "texto": "Nelson tiene una ferretería en Quintanares. Un sobrino le instaló un asistente de inteligencia artificial en el celular y le dijo que con eso iba a escribir los avisos en un minuto. Nelson escribió «haz un aviso» y le salió un texto larguísimo, con palabras que nadie usa en el barrio y una oferta del cincuenta por ciento que él no tiene. Cerró la app y siguió escribiendo a mano hasta las once de la noche.",
+        "pregunta": "¿Qué le tienes que decir a la IA para que te responda algo que de verdad sirva para tu negocio?",
+        "reflexion": "Piensa en algo que escribiste esta semana para tu negocio: un aviso, un mensaje, una cotización. ¿Cuánto tiempo te tomó?",
+        "imagen": "Ilustración de Nelson detrás del mostrador de su ferretería, mirando el celular con cara de desconfianza (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu primer pedido con las 4 partes",
+        "texto": "Elige algo que necesites escribir esta semana (un aviso, un letrero, un mensaje para tus clientes). Escribe el pedido con las 4 partes, úsalo en tu asistente de IA y pídele al menos un ajuste.",
+        "entrega": "Publica en el foro tu pedido y el texto final que usaste. Comenta el pedido de un compañero: ¿cuál de las 4 partes le falta o le agregarías?"
+      },
+      "llevatelo": {
+        "titulo": "Tu pedido en una mirada",
+        "resumen": [
+          "Un asistente de IA escribe por ti, pero solo sabe de tu negocio lo que tú le cuentas.",
+          "Un buen pedido tiene 4 partes: quién eres, qué necesitas, para quién y cómo lo quieres.",
+          "Si no te gusta la respuesta, pídele que la cambie: más corta, más amable, otras opciones."
+        ],
+        "etiqueta_formula": "La fórmula",
+        "formula": "Quién soy + qué necesito + para quién + cómo lo quiero = una respuesta que sirve",
+        "descargas": [
+          {
+            "texto": "Tu fórmula para pedirle a la IA · PDF",
+            "archivo": "u1-formula-pedido.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "OpenAI. (s. f.). Prompt engineering best practices for ChatGPT. OpenAI Help Center.",
+          "url": "https://help.openai.com/en/articles/10032626-prompt-engineering-best-practices-for-chatgpt",
+          "para": "Consejos oficiales para escribir buenos pedidos (en inglés; el navegador lo traduce). [VERIFICAR enlace]"
+        },
+        {
+          "apa": "Google. (s. f.). Prompting guide 101: A quick-start handbook for effective prompts. Google Workspace.",
+          "url": "https://workspace.google.com/learning/content/gemini-prompt-guide",
+          "para": "Guía de Google con ejemplos de pedidos por tipo de trabajo. [VERIFICAR enlace]"
+        },
+        {
+          "apa": "Departamento Nacional de Planeación. (2025). Documento CONPES 4144: Política Nacional de Inteligencia Artificial. DNP.",
+          "url": "https://www.dnp.gov.co/publicaciones/Planeacion/Paginas/conpes-4144-hoja-de-ruta-colombia-inteligencia-artificial-retos-actuales-transformacion-futura.aspx",
+          "para": "La hoja de ruta de Colombia para que más empresas usen la IA de forma ética."
+        }
+      ]
+    },
+    {
+      "tema": "Mensajes y descripciones que venden",
+      "objetivo": "escribir con IA las descripciones de tus productos y tus mensajes para clientes a partir de tus datos reales, y revisarlos antes de publicar",
+      "entrada": {
+        "titulo": "Las noches de Leidy",
+        "texto": "Leidy vende ropa para bebé por WhatsApp e Instagram desde su casa en Terreros. Cada semana le llegan prendas nuevas y se queda hasta las once de la noche escribiendo descripciones y contestando clientas. La primera vez que usó la IA copió la descripción sin leerla: decía que el enterizo era «cien por ciento orgánico y antialérgico». Una clienta le preguntó por el certificado y Leidy no supo qué responder.",
+        "pregunta": "¿Cómo usas la IA para escribir tus textos en minutos sin publicar algo que no es cierto?",
+        "reflexion": "Cuenta cuántas descripciones o mensajes escribiste la semana pasada. Si cada uno te tomó diez minutos, ¿cuánto tiempo fue en total?",
+        "imagen": "Ilustración de Leidy de noche en la mesa de su casa, rodeada de ropa de bebé doblada, escribiendo cansada en el celular (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tus textos con IA, revisados por ti",
+        "texto": "Pídele a la IA la descripción de 2 de tus productos (con tus datos reales y, si quieres, la foto) y un mensaje para tus clientes. Lee cada respuesta, corrige lo que no sea cierto y ajústala a tu forma de hablar.",
+        "entrega": "Publica en el foro una de tus descripciones antes y después de tu revisión, y di qué corregiste. Comenta la de un compañero: ¿le comprarías con ese texto? ¿Qué le falta?"
+      },
+      "llevatelo": {
+        "titulo": "Tus textos en una mirada",
+        "resumen": [
+          "Dale a la IA tus datos reales: precio, tallas, materiales, condiciones y para quién es.",
+          "La IA se puede inventar cosas: lee y corrige todo antes de publicar.",
+          "Pídele que hable como tú y guarda en tus notas los pedidos que te funcionan."
+        ],
+        "etiqueta_formula": "La regla",
+        "formula": "Tus datos reales + un pedido claro + tu revisión = un texto listo para vender",
+        "descargas": [
+          {
+            "texto": "10 pedidos listos para tu negocio · PDF",
+            "archivo": "u2-pedidos-listos.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Google. (s. f.). Prompting guide 101: A quick-start handbook for effective prompts. Google Workspace.",
+          "url": "https://workspace.google.com/learning/content/gemini-prompt-guide",
+          "para": "Ejemplos de pedidos para mercadeo y atención al cliente. [VERIFICAR enlace]"
+        },
+        {
+          "apa": "Congreso de Colombia. (2011). Ley 1480 de 2011, por medio de la cual se expide el Estatuto del Consumidor. Diario Oficial 48.220.",
+          "url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=44306",
+          "para": "Por qué lo que dices de tus productos tiene que ser cierto, aunque lo haya escrito la IA. [VERIFICAR redacción con el abogado]"
+        },
+        {
+          "apa": "WhatsApp. (s. f.). Acerca de Meta AI en WhatsApp. Servicio de ayuda de WhatsApp.",
+          "url": "https://faq.whatsapp.com/",
+          "para": "Si usas el asistente que viene dentro de WhatsApp: busca «Meta AI» en el servicio de ayuda. [VERIFICAR enlace directo]"
+        }
+      ]
+    },
+    {
+      "tema": "Lo que no le cuentas a la IA",
+      "objetivo": "reconocer qué datos de tu negocio y de tus clientes no debes poner en la IA, revisar sus ajustes de privacidad y pedir sin datos personales",
+      "entrada": {
+        "titulo": "La lista de clientas de Yaneth",
+        "texto": "Yaneth tiene una peluquería y salón de uñas en Rincón de Santa Fe. Quiere mandarles un mensaje de cumpleaños a sus clientas y pensó en pedírselo a la IA. Ya tenía copiada la lista completa: nombre, cédula, celular, fecha de cumpleaños y a quién le da alergia el tinte. Antes de pegarla, su hija le preguntó: «¿Mamá, y tú sabes dónde queda guardado eso?».",
+        "pregunta": "¿Qué datos nunca debes poner en la IA y cómo le pides lo mismo sin ellos?",
+        "reflexion": "Revisa lo último que le escribiste a una IA o a un desconocido por chat. ¿Había nombres, cédulas o números de tus clientes?",
+        "imagen": "Ilustración de Yaneth en su salón de belleza, con un cuaderno de clientas en una mano y el celular en la otra, dudando (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu IA sin datos de clientes",
+        "texto": "Revisa los ajustes de privacidad de tu asistente de IA y apaga lo que no quieras compartir. Borra los chats que tengan datos de clientes. Luego reescribe un pedido que tenía datos personales para que no los tenga, y úsalo.",
+        "entrega": "Publica en el foro tu pedido reescrito (sin datos reales) y cuéntanos qué ajuste de privacidad encontraste en tu asistente. Comenta la publicación de un compañero: ¿todavía se puede saber de quién habla?"
+      },
+      "llevatelo": {
+        "titulo": "Tus datos en una mirada",
+        "resumen": [
+          "Lo que escribes en la IA puede quedar guardado: no pongas nada que no publicarías.",
+          "Nunca pongas cédulas, claves, números de cuenta ni datos de salud de tus clientes.",
+          "Cambia nombres y números por «Clienta 1» o [nombre]: la IA te ayuda igual."
+        ],
+        "etiqueta_formula": "El semáforo",
+        "formula": "Rojo: nunca · Amarillo: quita nombres y números · Verde: datos públicos de tu negocio",
+        "descargas": [
+          {
+            "texto": "Semáforo de datos para usar la IA · PDF",
+            "archivo": "u3-semaforo-datos.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Congreso de Colombia. (2012). Ley Estatutaria 1581 de 2012, por la cual se dictan disposiciones generales para la protección de datos personales. Diario Oficial 48.587.",
+          "url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=49981",
+          "para": "La ley de datos personales: qué son datos sensibles (art. 5) y cuándo hace falta autorización (art. 6 y 9)."
+        },
+        {
+          "apa": "Superintendencia de Industria y Comercio. (2024). Circular Externa 002 de 2024: Lineamientos sobre el tratamiento de datos personales en sistemas de inteligencia artificial. SIC.",
+          "url": "https://sedeelectronica.sic.gov.co/sites/default/files/normativa/Circular%20Externa%20No.%20002%20del%2021%20de%20agosto%20de%202024.pdf",
+          "para": "Lo que pide la SIC cuando se usan datos personales con IA. [VERIFICAR alcance para negocios pequeños con el abogado]"
+        },
+        {
+          "apa": "OpenAI. (s. f.). Data controls FAQ. OpenAI Help Center.",
+          "url": "https://help.openai.com/en/articles/7730893-data-controls-faq",
+          "para": "Ejemplo de dónde se apaga el uso de tus chats para mejorar el modelo. Cada asistente tiene su propia opción. [VERIFICAR enlace]"
+        }
+      ]
+    }
+  ],
+  "cierre": {
+    "titulo": "Último paso: tu kit de pedidos para la IA",
+    "texto": "Ya sabes pedirle bien a la IA, revisar lo que escribe y cuidar los datos de tus clientes. Ahora muestra tus pedidos.",
+    "reto": "Tu kit de 3 pedidos para la IA, revisado por dos compañeros",
+    "rubrica": [
+      "¿Sus pedidos tienen las 4 partes: quién es, qué necesita, para quién y cómo lo quiere?",
+      "¿Muestra el texto final revisado y corregido, no el primero que dio la IA?",
+      "¿Sus pedidos están sin datos personales de clientes (nombres, cédulas, celulares, salud)?"
+    ],
+    "siguiente": "IA para tu negocio desde el celular · Unidades 4 a 7",
+    "siguiente_texto": "Con el Pase Empresario: instrucciones fijas para tus tareas de siempre, analizar tus ventas en Excel con IA, imágenes para tus redes y cómo medir la hora que te ahorras."
+  }
+}

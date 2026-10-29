@@ -1,0 +1,95 @@
+{
+ "hechas": {
+  "personaje-nelson": "45a8760f2605",
+  "personaje-leidy": "279da82cc321",
+  "personaje-yaneth": "4a2f48e04bd8",
+  "u1-entrada": "04aa41c412b9",
+  "u1-conversa": "57acce96dea3",
+  "u2-entrada": "9bbcaf264ef9",
+  "u2-foto": "3adcf025dc67",
+  "u3-entrada": "653982154a9e",
+  "u3-semaforo": "4183f4cc2f1b"
+ },
+ "llamadas": [
+  {
+   "id": "personaje-nelson",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:53:24",
+   "tokens_entrada": 245,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-leidy",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:53:30",
+   "tokens_entrada": 240,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-yaneth",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:53:36",
+   "tokens_entrada": 241,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:53:45",
+   "tokens_entrada": 513,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u1-conversa",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:53:57",
+   "tokens_entrada": 505,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:54:06",
+   "tokens_entrada": 533,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u2-foto",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:54:14",
+   "tokens_entrada": 491,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:54:22",
+   "tokens_entrada": 521,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u3-semaforo",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:54:29",
+   "tokens_entrada": 243,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-semaforo",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-29T19:54:50",
+   "tokens_entrada": 268,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  }
+ ]
+}
