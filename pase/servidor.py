@@ -69,6 +69,9 @@ def pantalla_pago(c, persona, firma):
     precio = f"${c.precio_centavos // 100:,}".replace(",", ".")
     cfg = json.dumps({"pub": c.llave_publica, "p": firma})
     nombre, correo = html.escape(persona["nombre"]), html.escape(persona["correo"])
+    ayuda = ('<p class="nota">Modo prueba: usa la tarjeta 4575 6231 8229 0326 (aprueba) o 4151 6115 2758 3283 '
+             '(rechaza), vence 12/2027, CVC 123. Una tarjeta inventada no la acepta ePayco.</p>'
+             if c.pruebas else "")
     return f"""
 <h1>Pase Empresario · {precio} al mes</h1>
 <p>Hola, {html.escape(persona['nombre'].split()[0])}. Con tarjeta el cobro se repite cada mes y puedes cancelar cuando quieras.</p>
@@ -83,7 +86,7 @@ def pantalla_pago(c, persona, firma):
 <label class="check"><input type="checkbox" id="acepto" required><span>Autorizo a EduNest a cobrar {precio}
 cada mes a esta tarjeta por medio de ePayco hasta que cancele el Pase.</span></label>
 <button class="verde">Pagar {precio}</button></form>
-<p id="msg"></p>
+<p id="msg"></p>{ayuda}
 <p class="nota">Los datos de tu tarjeta van directo a ePayco; EduNest no los ve ni los guarda.</p>
 <p><a class="boton sec" href="/pagar/checkout?p={firma}">Pagar con PSE, Nequi o Daviplata (renuevas cada mes)</a></p>
 </div>
@@ -94,19 +97,24 @@ const C={cfg};
 const $id=id=>document.getElementById(id), msg=t=>$id('msg').textContent=t;
 ePayco.setPublicKey(C.pub);
 // Mensajes en español y el campo marcado (ePayco responde en inglés, p. ej. «…field is empty: number»)
-const CAMPO={{number:['num','El número de tarjeta no es válido. Revísalo.'],cvc:['cvc','El CVC no es válido (3 o 4 dígitos).'],
+const CAMPO={{number:['num','El número de tarjeta no es válido. Revísalo.'],cvc:['cvc','El CVC son los 3 o 4 dígitos del respaldo de la tarjeta.'],
+ exp_month:['mes','El mes debe ser de 01 a 12.'],exp_year:['anio','La tarjeta está vencida o el año no es válido.'],
  date_exp:['mes','La fecha de vencimiento no es válida (mes 01 a 12 y año de 4 dígitos, sin vencer).'],
  name:['num','Falta el nombre del titular.'],email:['num','Falta un correo válido.']}};
 function marcar(clave){{document.querySelectorAll('input.mal').forEach(e=>e.classList.remove('mal'));
  const c=CAMPO[clave]; if(!c) return false; const e=$id(c[0]); e.classList.add('mal');
  if(clave==='date_exp') $id('anio').classList.add('mal'); e.focus(); msg(c[1]); return true}}
-function luhn(n){{let s=0;for(let i=0;i<n.length;i++){{let d=+n[n.length-1-i];if(i%2){{d*=2;if(d>9)d-=9}}s+=d}}return n.length>=13&&s%10===0}}
-function revisar(num){{const m=+$id('mes').value, a=+$id('anio').value, hoy=new Date(), cvc=$id('cvc').value.trim();
+function luhn(n){{let s=0;for(let i=0;i<n.length;i++){{let d=+n[n.length-1-i];if(i%2){{d*=2;if(d>9)d-=9}}s+=d}}return n.length>=13&&n.length<=19&&s%10===0}}
+function revisar(num){{const m=+$id('mes').value, hoy=new Date(), cvc=$id('cvc').value;
  if(!luhn(num)) return 'number';
- if(!(m>=1&&m<=12)||String($id('anio').value).trim().length!==4||a<hoy.getFullYear()||(a===hoy.getFullYear()&&m<hoy.getMonth()+1)) return 'date_exp';
+ if(!(m>=1&&m<=12)) return 'exp_month';
+ if($id('anio').value.length===2) $id('anio').value='20'+$id('anio').value;  // ePayco espera el año con 4 dígitos
+ const a=+$id('anio').value;
+ if($id('anio').value.length!==4||a<hoy.getFullYear()||(a===hoy.getFullYear()&&m<hoy.getMonth()+1)) return 'exp_year';
  if(!/^\\d{{3,4}}$/.test(cvc)) return 'cvc'; return ''}}
 function tarjeta(ev){{ev.preventDefault();
- const num=$id('num').value.replace(/\\D/g,'');$id('num').value=num;
+ for(const id of ['num','mes','anio','cvc']) $id(id).value=$id(id).value.replace(/\\D/g,'');
+ const num=$id('num').value;
  const malo=revisar(num); if(malo) return marcar(malo)&&false;
  marcar('');msg('Procesando…');
  ePayco.token.create(window.jQuery?jQuery('#tarjeta'):$id('tarjeta'),async function(error,token){{

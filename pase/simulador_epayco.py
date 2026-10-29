@@ -4,8 +4,9 @@ Imita lo que usa el conector y manda las confirmaciones firmadas (campos x_…) 
 de confirmación, como ePayco:
   - POST /v1/auth/login, /payment/v1/customer/create, /payment/v1/charge/create,
     GET /payment/v1/customer/{llave}/{id}, POST /v1/remove/token
-  - GET /validation/v1/reference/{ref_payco} (Smart Checkout) y
-    /restpagos/transaction/response.json (cobros con token)
+  - GET /validation/v1/reference/{ref_payco} (Smart Checkout; falla con los numéricos y con
+    las de prueba, como ePayco real), /restpagos/transaction/response.json (cobros con token)
+    y POST /transaction/detail (Apify, respaldo que sí trae las de prueba)
   - POST /login y /payment/session/create (Apify, sesiones del Smart Checkout v2)
   - /epayco.js (tokenización en el navegador) y /checkout-v2.js (Smart Checkout con botones
     Aprobar / Rechazar, que reemplaza a PSE, Nequi o Daviplata)
@@ -171,13 +172,26 @@ class Simulador:
         alfanuméricos del Smart Checkout v2; los numéricos (cobros con token) dan error."""
         if ref not in self.transacciones or ref.isdigit():
             return 200, {"status": False, "message": "Error de datos o conexión."}
+        if ep.es_prueba(self.transacciones[ref].get("x_test_request")):
+            # Así responde ePayco real a las transacciones de prueba (29-oct-2026)
+            return 200, {"status": False, "message": "Error de datos o conexión.",
+                         "data": {"status": "error", "description": "Error de datos o conexión verifique de nuevo."}}
         return 200, {"success": True, "data": self.confirmacion(ref)}
 
     def restpagos(self, q):
         ref = q.get("ref_payco", "")
-        if q.get("public_key") != LLAVE_PUBLICA or ref not in self.transacciones:
+        if q.get("public_key") != LLAVE_PUBLICA or ref not in self.transacciones or not ref.isdigit():
             return 200, {"success": False, "title_response": "Error", "data": {}}
         return 200, {"success": True, "title_response": "Correcto", "data": self.confirmacion(ref)}
+
+    def detalle_apify(self, d):
+        ref = str((d.get("filter") or {}).get("referencePayco", ""))
+        if ref not in self.transacciones:
+            return 200, {"success": False, "textResponse": "not found", "data": {}}
+        log = self.confirmacion(ref)
+        return 200, {"success": True, "data": {
+            "referencePayco": log["x_ref_payco"], "amount": log["x_amount"], "currency": log["x_currency_code"],
+            "status": log.get("x_transaction_state"), "bill": log.get("x_id_invoice"), "log": log}}
 
     def pagina_checkout(self, q):
         d = self.sesiones.get(q.get("session", ""))
@@ -280,6 +294,8 @@ def manejador(sim: Simulador):
                 return self.enviar(401, {"status": False, "message": "Token inválido"})
             if p == "/payment/session/create":
                 return self.enviar(*sim.crear_sesion(d))
+            if p == "/transaction/detail":
+                return self.enviar(*sim.detalle_apify(d))
             if p == "/payment/v1/customer/create":
                 return self.enviar(*sim.crear_cliente(d))
             if p == "/payment/v1/charge/create":

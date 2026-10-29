@@ -31,7 +31,9 @@ nombre de usuario `conector-pase`, método de autenticación **Servicios web**, 
 **Sistema**. Permitir solo:
 
 - `webservice/rest:use`
-- `moodle/user:create`, `moodle/user:update`, `moodle/user:viewdetails`, `moodle/user:viewhiddendetails`
+- `moodle/user:create`, `moodle/user:update`, `moodle/user:viewdetails`, `moodle/user:viewhiddendetails`,
+  `moodle/user:viewalldetails` (sin esta, `core_user_get_users_by_field` devuelve vacío aunque el
+  usuario exista, y el segundo pago de la misma persona falla con «Duplicate entry»)
 - `moodle/cohort:view`, `moodle/cohort:assign`
 
 Luego *Usuarios › Permisos › Asignar roles de sistema › Conector Pase* → agregar a `conector-pase`.

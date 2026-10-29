@@ -34,6 +34,10 @@ ESTADOS = {
     "11": "DECLINED",  # Cancelada
     "12": "DECLINED",  # Antifraude
 }
+# Estado en texto (Apify) → código anterior
+ESTADOS_TEXTO = {"aceptada": "1", "rechazada": "2", "pendiente": "3", "fallida": "4", "reversada": "6",
+                 "retenida": "7", "iniciada": "8", "expirada": "9", "abandonada": "10",
+                 "cancelada": "11", "antifraude": "12"}
 
 
 def sha256(texto: str) -> str:
@@ -171,7 +175,30 @@ class Epayco:
             r = self._http("GET", url)
             if r.get("success") and isinstance(r.get("data"), dict) and r["data"].get("x_ref_payco"):
                 return normalizar(r["data"])
-        raise ErrorEpayco(404, f"ref_payco {ref_payco} no encontrada")
+        # En modo prueba /validation responde «Error de datos o conexión» (visto el 29-oct-2026);
+        # Apify /transaction/detail sí trae la transacción, con los campos x_… en «log».
+        d = self._apify_post("/transaction/detail", {"filter": {"referencePayco": str(ref_payco)}})
+        d = d.get("data") if d.get("success") else None
+        if not d:
+            raise ErrorEpayco(404, f"ref_payco {ref_payco} no encontrada")
+        log = d.get("log") if isinstance(d.get("log"), dict) else {}
+        if log.get("x_ref_payco") and log.get("x_amount") is not None:
+            return normalizar(log)
+        return normalizar({
+            "x_ref_payco": d.get("referencePayco"), "x_id_invoice": d.get("bill"),
+            "x_amount": d.get("amount"), "x_currency_code": d.get("currency"),
+            "x_cod_transaction_state": ESTADOS_TEXTO.get(str(d.get("status", "")).strip().lower(), ""),
+            "x_franchise": d.get("franchise"), "x_test_request": d.get("test"),
+        })
+
+    def _apify_post(self, ruta, cuerpo):
+        for renovar in (False, True):
+            try:
+                return self._http("POST", f"{self.c.apify_epayco}{ruta}", cuerpo,
+                                  {"Authorization": f"Bearer {self._token_apify(renovar)}"})
+            except ErrorEpayco as e:
+                if e.estado != 401 or renovar:
+                    raise
 
     # --- Tarjeta guardada (cobro mensual) ---
     def crear_cliente(self, token_tarjeta, persona):
@@ -245,14 +272,7 @@ class Epayco:
                         "typeDoc": persona.get("tipo_doc") or "CC", "numberDoc": persona["documento"],
                         "callingCode": "+57", "mobilePhone": persona.get("whatsapp") or ""},
         }
-        for renovar in (False, True):
-            try:
-                r = self._http("POST", f"{self.c.apify_epayco}/payment/session/create", cuerpo,
-                               {"Authorization": f"Bearer {self._token_apify(renovar)}"})
-                break
-            except ErrorEpayco as e:
-                if e.estado != 401 or renovar:
-                    raise
+        r = self._apify_post("/payment/session/create", cuerpo)
         sesion = (r.get("data") or {}).get("sessionId")
         if not r.get("success") or not sesion:
             raise ErrorEpayco(422, f"ePayco no creó la sesión: {json.dumps(r, ensure_ascii=False)[:300]}")

@@ -71,6 +71,7 @@ class Pase:
         self.bd = sqlite3.connect(config.base_datos, check_same_thread=False, isolation_level=None)
         self.bd.row_factory = sqlite3.Row
         if self.bd.execute("SELECT 1 FROM sqlite_master WHERE name='eventos_wompi'").fetchone():
+            self.bd.close()
             raise RuntimeError(f"{config.base_datos} es de la versión con Wompi: archívala y arranca "
                                "con una base nueva (solo tenía pagos de sandbox).")
         self.bd.executescript(ESQUEMA)

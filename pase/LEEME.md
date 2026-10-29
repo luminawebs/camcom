@@ -114,6 +114,13 @@ Con los dominios ya permitidos se revisó la documentación vigente y se ajustó
 - La sesión del Smart Checkout rechaza URLs de respuesta o confirmación con `localhost`: hay que probarlo desde pase.edunest.co.
 - Las variables pueden llamarse `EPAYCO_*` o como en el panel (`P_CUST_ID_CLIENTE`, `P_KEY`, `PUBLIC_KEY`, `PRIVATE_KEY`).
 
+**Prueba en el servidor (29-oct-2026)**, ya con el conector en pase.edunest.co:
+
+- En modo prueba `/validation/v1/reference` responde «Error de datos o conexión» también para los `ref_payco` del Smart Checkout. Si las dos consultas anteriores no la encuentran, el conector la busca en Apify `/transaction/detail` (filtro `referencePayco`), que sí trae las de prueba con los campos `x_…` en `log`.
+- Moodle crea el usuario y manda el correo con la contraseña en la misma llamada, que puede tardar: `core_user_create_users` espera hasta 90 s y, si falla o se agota la espera, se vuelve a buscar el usuario antes de dar error.
+- Sin `moodle/user:viewalldetails` en el rol del usuario de servicio, la búsqueda por correo devuelve vacío y el segundo pago de la misma persona falla con «Duplicate entry» (ver `despliegue/MOODLE.md`).
+- En modo prueba la pantalla de pago muestra las tarjetas de prueba; los errores de la tarjeta salen en español y con el campo marcado.
+
 Falta el pago por PSE de punta a punta en el Smart Checkout, que necesita el conector publicado en pase.edunest.co. Nequi y Daviplata siguen por Checkout con renovación manual.
 
 ## Por hacer después

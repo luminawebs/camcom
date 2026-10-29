@@ -423,7 +423,9 @@ class PruebasFlujo(Escenario):
     def test_base_de_wompi_no_arranca(self):
         import sqlite3
         ruta = os.path.join(self.tmp.name, "vieja.db")
-        sqlite3.connect(ruta).execute("CREATE TABLE eventos_wompi (id INTEGER)")
+        con = sqlite3.connect(ruta)
+        con.execute("CREATE TABLE eventos_wompi (id INTEGER)")
+        con.close()  # en Windows un archivo abierto no deja borrar la carpeta temporal
         with self.assertRaises(RuntimeError):
             Pase(Config(base_datos=ruta), self.moodle)
 
