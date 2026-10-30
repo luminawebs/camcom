@@ -47,7 +47,7 @@ def primer_nombre(nombre):
 def _contenido(tipo, c, d):
     """Devuelve el contenido del aviso como datos; _html y _texto lo visten."""
     nombre = primer_nombre(d.get("nombre"))
-    aula = c.moodle_url or "https://portal.edunest.co"
+    aula = (c.moodle_url or "https://portal.edunest.co").rstrip("/") + "/my/courses.php"
     valor = pesos(c.precio_centavos)
     if tipo == "registro":
         return dict(
