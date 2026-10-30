@@ -116,9 +116,25 @@ Con los dominios ya permitidos se revisó la documentación vigente y se ajustó
 
 Falta el pago por PSE de punta a punta en el Smart Checkout, que necesita el conector publicado en pase.edunest.co. Nequi y Daviplata siguen por Checkout con renovación manual.
 
+## Correos de los avisos
+
+Los avisos (bienvenida, pago aprobado o rechazado, cobro fallido, renovación, fin del Pase y
+los de las organizaciones) se guardan en la tabla `avisos` y la tarea `pase-correos.timer` los
+envía cada 5 minutos por SMTP con Brevo, el mismo servicio del correo de Moodle
+(`smtp-relay.brevo.com:2525`, el único puerto de correo que DigitalOcean deja salir).
+
+1. En Brevo › Seguridad › IP autorizadas, la IP del droplet del Pase (142.93.10.108 ya está).
+2. En `/etc/pase/pase.env`: `PASE_SMTP_HOST=smtp-relay.brevo.com`, `PASE_SMTP_USUARIO` y
+   `PASE_SMTP_CLAVE` (login y clave SMTP de Brevo; la clave empieza por `xsmtpsib-`).
+3. Probar: `cd /opt/pase && sudo -u pase bash -c 'set -a; . /etc/pase/pase.env; python3 -m pase.tareas probar-correo tu@correo'`
+   (si el remitente tiene espacios, va entre comillas en `pase.env`).
+
+Sin `PASE_SMTP_HOST` los avisos quedan guardados y no se envía nada. Un aviso que falla se
+reintenta hasta 5 veces y el error queda en la columna `error`.
+
 ## Por hacer después
 
-- Envío real de correos (hoy quedan en la tabla `avisos`) y WhatsApp (fase C).
+- WhatsApp (fase C).
 - Tablero compartido Cámara/EduNest y liquidación del 25 %. ePayco tiene **pagos divididos (split payment)**, que podrían girar ese 25 % en cada pago: preguntarlo al abrir la cuenta.
 - Pase para organizaciones (varios usuarios por pago).
 - Confirmar con ePayco: tarifa vigente, retiros a Caja Social, cobro con token habilitado.

@@ -64,7 +64,7 @@ curl https://pase.edunest.co/salud
 | Actualizar | copiar el nuevo `pase/` y volver a correr `instalar.sh` (guarda la versión anterior en `/opt/pase/pase.anterior`) |
 | Volver atrás | `sudo mv /opt/pase/pase /opt/pase/pase.malo && sudo mv /opt/pase/pase.anterior /opt/pase/pase && sudo systemctl restart pase` |
 | Respaldo | `sqlite3 /var/lib/pase/pase.db ".backup /var/lib/pase/respaldo-$(date +%F).db"` |
-| Quitar todo | `systemctl disable --now pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer; rm -f /etc/nginx/sites-enabled/pase /etc/nginx/conf.d/pase.conf; systemctl reload nginx` |
+| Quitar todo | `systemctl disable --now pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer pase-correos.timer; rm -f /etc/nginx/sites-enabled/pase /etc/nginx/conf.d/pase.conf; systemctl reload nginx` |
 
 Mientras `PASE_MOODLE_SIMULADO=1`, las cohortes se simulan en memoria y no se toca
 portal.edunest.co. Producción de ePayco sigue bloqueada sin `PASE_PERMITIR_PRODUCCION=1`.
@@ -75,7 +75,7 @@ El servidor de pase.edunest.co quedó instalado con la versión de Wompi (solo p
 Para actualizarlo, con el visto bueno de David:
 
 ```
-sudo systemctl stop pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer
+sudo systemctl stop pase pase-cobro.timer pase-conciliar.timer pase-pendientes.timer pase-correos.timer
 sudo mv /var/lib/pase/pase.db /var/lib/pase/pase-wompi-sandbox-$(date +%F).db   # se archiva, no se borra
 sudo nano /etc/pase/pase.env      # quitar WOMPI_* y poner EPAYCO_* (ver pase.env.ejemplo)
 scp -r pase <droplet>:/tmp/pase

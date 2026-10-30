@@ -82,7 +82,7 @@ echo "› Pruebas del código en el servidor"
 
 if grep -qE '^EPAYCO_LLAVE_PRIVADA=.+' "$ENVF" && grep -qE '^EPAYCO_P_KEY=.+' "$ENVF"; then
   echo "› Arranque"
-  systemctl enable --now pase.service pase-cobro.timer pase-conciliar.timer pase-pendientes.timer
+  systemctl enable --now pase.service pase-cobro.timer pase-conciliar.timer pase-pendientes.timer pase-correos.timer
   systemctl restart pase.service
   sleep 2; curl -fsS "http://127.0.0.1:$PUERTO/salud" && echo
 else
