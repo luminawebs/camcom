@@ -43,8 +43,10 @@ CREATE TABLE IF NOT EXISTS eventos_pasarela (
 CREATE TABLE IF NOT EXISTS eventos_rechazados (recibido_en TEXT, ip TEXT, payload_crudo TEXT);
 CREATE TABLE IF NOT EXISTS historial (persona_id INTEGER, evento TEXT, detalle TEXT, origen TEXT, fecha TEXT);
 CREATE TABLE IF NOT EXISTS avisos (
-  id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, creado TEXT, enviado_en TEXT);
+  id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, creado TEXT, enviado_en TEXT,
+  intentos INTEGER DEFAULT 0, error TEXT);
 """
+MAX_INTENTOS_AVISO = 5
 
 TEXTO_AUTORIZACION_V1 = (
     "Autorizo a Lúmina Interactiva S.A.S. (EduNest) y a la Cámara de Comercio de Soacha, "
@@ -75,6 +77,10 @@ class Pase:
             raise RuntimeError(f"{config.base_datos} es de la versión con Wompi: archívala y arranca "
                                "con una base nueva (solo tenía pagos de sandbox).")
         self.bd.executescript(ESQUEMA)
+        columnas = {r[1] for r in self.bd.execute("PRAGMA table_info(avisos)")}
+        for col, tipo in (("intentos", "INTEGER DEFAULT 0"), ("error", "TEXT")):
+            if col not in columnas:  # bases creadas antes del envío real
+                self.bd.execute(f"ALTER TABLE avisos ADD COLUMN {col} {tipo}")
         self.candado = threading.RLock()
         clave = config.secreto_sesion or config.p_key or "solo-desarrollo"
         self._clave = hashlib.sha256(("sesion:" + clave).encode()).digest()
@@ -107,6 +113,32 @@ class Pase:
         for destino in ([para] if isinstance(para, str) else para):
             self.q("INSERT INTO avisos (para, asunto, cuerpo, creado) VALUES (?,?,?,?)",
                    destino, asunto, cuerpo, ahora())
+
+    def enviar_avisos(self, smtp=None):
+        """Envía los avisos pendientes. Un fallo de un destinatario no frena a los demás; tras
+        MAX_INTENTOS_AVISO fallos el aviso se deja (queda el error en la tabla)."""
+        from .correo import Smtp
+        pendientes = self.q("SELECT * FROM avisos WHERE enviado_en IS NULL AND intentos < ? ORDER BY id",
+                            MAX_INTENTOS_AVISO).fetchall()
+        if not pendientes:
+            return {"enviados": 0, "fallidos": 0}
+        if smtp is None:
+            if not self.c.smtp_host:
+                return {"enviados": 0, "fallidos": 0, "sin_smtp": len(pendientes)}
+            smtp = Smtp(self.c)
+        enviados = fallidos = 0
+        with smtp as s:
+            for a in pendientes:
+                try:
+                    s.enviar(a["para"], a["asunto"], a["cuerpo"])
+                except Exception as exc:
+                    fallidos += 1
+                    self.q("UPDATE avisos SET intentos=intentos+1, error=? WHERE id=?", str(exc)[:500], a["id"])
+                else:
+                    enviados += 1
+                    self.q("UPDATE avisos SET enviado_en=?, intentos=intentos+1, error=NULL WHERE id=?",
+                           ahora(), a["id"])
+        return {"enviados": enviados, "fallidos": fallidos}
 
     def avisar_organizaciones(self, asunto, cuerpo):
         if self.c.avisos_correo:

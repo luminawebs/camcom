@@ -3,6 +3,8 @@
     python -m pase.tareas cobro       cobro mensual, reintentos y cancelaciones (diario)
     python -m pase.tareas conciliar   recupera confirmaciones perdidas consultando ePayco (diario)
     python -m pase.tareas pendientes  reprocesa confirmaciones guardadas sin procesar (cada hora)
+    python -m pase.tareas correos     envía los avisos pendientes por SMTP (cada 5 minutos)
+    python -m pase.tareas probar-correo DESTINO   encola un aviso de prueba y lo envía ya
     python -m pase.tareas resumen     cifras rápidas en JSON
 """
 import json
@@ -14,7 +16,12 @@ from .nucleo import Pase
 
 
 def main(argv):
-    if len(argv) != 1 or argv[0] not in ("cobro", "conciliar", "pendientes", "resumen"):
+    if argv[:1] == ["probar-correo"] and len(argv) == 2:
+        pase = Pase(Config.desde_entorno(), moodle.crear(Config.desde_entorno()))
+        pase.avisar(argv[1], "Prueba del Pase Empresario", "Si lees esto, los avisos del Pase ya salen por correo.")
+        print(json.dumps(pase.enviar_avisos(), ensure_ascii=False))
+        return 0
+    if len(argv) != 1 or argv[0] not in ("cobro", "conciliar", "pendientes", "correos", "resumen"):
         print(__doc__)
         return 2
     c = Config.desde_entorno()
@@ -25,6 +32,8 @@ def main(argv):
         r = pase.conciliar()
     elif argv[0] == "pendientes":
         r = pase.procesar_pendientes()
+    elif argv[0] == "correos":
+        r = pase.enviar_avisos()
     else:
         r = pase.resumen()
     print(json.dumps(r, ensure_ascii=False, indent=2))

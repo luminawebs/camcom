@@ -430,5 +430,81 @@ class PruebasFlujo(Escenario):
             Pase(Config(base_datos=ruta), self.moodle)
 
 
+class SmtpFalso:
+    """Hace de conexión SMTP: guarda lo enviado y falla con las direcciones de `rechazar`."""
+
+    def __init__(self, rechazar=()):
+        self.enviados, self.rechazar, self.abierto = [], set(rechazar), False
+
+    def __enter__(self):
+        self.abierto = True
+        return self
+
+    def __exit__(self, *_):
+        self.abierto = False
+
+    def enviar(self, para, asunto, cuerpo):
+        assert self.abierto
+        if para in self.rechazar:
+            raise RuntimeError("550 buzón no existe")
+        self.enviados.append((para, asunto))
+
+
+class Correos(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.c = Config(base_datos=os.path.join(self.tmp.name, "pase.db"))
+        self.pase = Pase(self.c, MoodleSimulado())
+
+    def tearDown(self):
+        self.pase.bd.close()
+        self.tmp.cleanup()
+
+    def test_envia_pendientes_y_reintenta_fallidos(self):
+        self.pase.avisar(["ana@ejemplo.co", "malo@ejemplo.co"], "Hola", "Cuerpo")
+        smtp = SmtpFalso(rechazar={"malo@ejemplo.co"})
+        self.assertEqual(self.pase.enviar_avisos(smtp), {"enviados": 1, "fallidos": 1})
+        self.assertEqual(smtp.enviados, [("ana@ejemplo.co", "Hola")])
+        malo = self.pase.uno("SELECT * FROM avisos WHERE para='malo@ejemplo.co'")
+        self.assertIsNone(malo["enviado_en"])
+        self.assertIn("550", malo["error"])
+        for _ in range(10):
+            self.pase.enviar_avisos(smtp)
+        self.assertEqual(self.pase.uno("SELECT intentos FROM avisos WHERE id=?", malo["id"])["intentos"], 5)
+        self.assertEqual(len(smtp.enviados), 1)  # el bueno no se repite
+
+    def test_sin_smtp_quedan_guardados(self):
+        self.pase.avisar("ana@ejemplo.co", "Hola", "Cuerpo")
+        self.assertEqual(self.pase.enviar_avisos()["sin_smtp"], 1)
+        self.assertIsNone(self.pase.uno("SELECT enviado_en FROM avisos")["enviado_en"])
+
+    def test_mensaje_por_brevo(self):
+        from unittest import mock
+        from . import correo
+        c = Config(smtp_host="smtp-relay.brevo.com", smtp_usuario="u@smtp-brevo.com", smtp_clave="x")
+        with mock.patch.object(correo.smtplib, "SMTP") as SMTP:
+            with correo.Smtp(c) as s:
+                s.enviar("ana@ejemplo.co", "¡Ya tienes tu Pase!", "Bienvenida")
+        SMTP.assert_called_once_with("smtp-relay.brevo.com", 2525, timeout=30)
+        conexion = SMTP.return_value
+        conexion.starttls.assert_called_once()
+        conexion.login.assert_called_once_with("u@smtp-brevo.com", "x")
+        m = conexion.send_message.call_args[0][0]
+        self.assertEqual(m["From"], "Aula Virtual Empresarial <no-responder@edunest.co>")
+        self.assertEqual(m["Subject"], "¡Ya tienes tu Pase!")
+        self.assertTrue(m["Message-ID"].endswith("@edunest.co>"))
+
+    def test_base_vieja_gana_columnas(self):
+        import sqlite3
+        ruta = os.path.join(self.tmp.name, "vieja.db")
+        b = sqlite3.connect(ruta)
+        b.execute("CREATE TABLE avisos (id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, "
+                  "creado TEXT, enviado_en TEXT)")
+        b.commit(); b.close()
+        p = Pase(Config(base_datos=ruta), MoodleSimulado())
+        self.assertIn("intentos", {r[1] for r in p.bd.execute("PRAGMA table_info(avisos)")})
+        p.bd.close()
+
+
 if __name__ == "__main__":
     unittest.main()

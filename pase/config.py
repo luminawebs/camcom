@@ -42,6 +42,11 @@ class Config:
     cohorte_pase: str = "pase-empresario"
     reintentos_dias: list = field(default_factory=lambda: [0, 3, 7])
     avisos_correo: list = field(default_factory=list)
+    smtp_host: str = ""         # vacío: los avisos quedan en la tabla sin enviarse
+    smtp_puerto: int = 2525
+    smtp_usuario: str = ""
+    smtp_clave: str = ""
+    correo_remitente: str = "Aula Virtual Empresarial <no-responder@edunest.co>"
     puerto: int = 8080
 
     @property
@@ -74,6 +79,11 @@ class Config:
             moodle_simulado=e("PASE_MOODLE_SIMULADO", "1") == "1",
             reintentos_dias=[int(x) for x in e("PASE_REINTENTOS_DIAS", "0,3,7").split(",")],
             avisos_correo=[x for x in e("PASE_AVISOS_CORREO", "").split(",") if x],
+            smtp_host=e("PASE_SMTP_HOST", ""),
+            smtp_puerto=int(e("PASE_SMTP_PUERTO", "2525")),
+            smtp_usuario=e("PASE_SMTP_USUARIO", ""),
+            smtp_clave=e("PASE_SMTP_CLAVE", ""),
+            correo_remitente=e("PASE_CORREO_REMITENTE", cls.correo_remitente),
             puerto=int(e("PASE_PUERTO", "8080")),
         )
         c.validar()
@@ -92,5 +102,7 @@ class Config:
                 raise ValueError("Producción necesita EPAYCO_CLIENTE, EPAYCO_P_KEY y las dos llaves")
             if not self.url_publica.startswith("https://"):
                 raise ValueError("Producción necesita PASE_URL_PUBLICA con https://")
+        if self.smtp_host and self.smtp_usuario and not self.smtp_clave:
+            raise ValueError("PASE_SMTP_USUARIO necesita PASE_SMTP_CLAVE")
         if not self.moodle_simulado and not (self.moodle_url and self.moodle_token):
             raise ValueError("Moodle real necesita PASE_MOODLE_URL y PASE_MOODLE_TOKEN")
