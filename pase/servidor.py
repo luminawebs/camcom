@@ -18,7 +18,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 from . import moodle as moodle_mod
 from .config import Config
-from .nucleo import TEXTO_AUTORIZACION_V1, Pase
+from .nucleo import ENLACE_CODIGO_HORAS, TEXTO_AUTORIZACION_V1, Pase
 
 CSS = """
 :root{--acento:#00806b;--acento-2:#006655;--suave:#e3f6f1;--tinta:#14181f;--tinta-2:#4a5260;--fondo:#f6f7f9;
@@ -108,6 +108,24 @@ flex-shrink:0;border-radius:50%;border:2px solid var(--borde);box-sizing:border-
 .razones{width:100%;padding:14px;background:var(--fondo);border-radius:12px;text-align:left;font-size:13px;color:var(--tinta-2)}
 .salir{align-self:flex-end}.salir button{width:auto;min-height:40px}
 .razones ul{margin:6px 0 0;padding-left:18px}.oculto{display:none!important}
+.insignia{display:inline-flex;align-items:center;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;
+background:#2affcd;color:var(--tinta)}.insignia.alerta{background:#fedf89}.insignia.apagada{background:#c5cad3}
+.filas{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:4px 16px;box-shadow:var(--sombra)}
+.filas div{display:flex;justify-content:space-between;gap:12px;padding:12px 0;font-size:14px}
+.filas div+div{border-top:1px solid #eceef1}.filas span{color:var(--tinta-2)}.filas b{text-align:right}
+.aparte{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--borde);padding-top:18px}
+.aparte p{margin:0}.aparte form{margin:4px 0 0}
+.dos-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.dos-col div{background:#fff;
+border:1px solid var(--borde);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px;font-size:12px;
+color:var(--tinta-2)}.dos-col b{font-size:13px;color:var(--acento)}.dos-col div+div b{color:var(--error)}
+fieldset{margin:0;border:1px solid var(--borde);border-radius:14px;padding:14px 16px;background:#fff;display:flex;
+flex-direction:column;gap:10px}legend{font-size:13px;font-weight:600;padding:0 4px}
+.opcion{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:400}.opcion input{width:20px;height:20px;
+margin:0;flex-shrink:0;accent-color:var(--acento);padding:0}
+.peligro,.peligro:hover{background:var(--error)}
+input.codigo{height:56px;font-size:24px;font-weight:600;letter-spacing:.3em;text-align:center}
+.ok-suave{display:flex;gap:8px;align-items:center;background:var(--suave);color:var(--acento-2);border-radius:10px;
+padding:10px 12px;font-size:13px}
 """
 
 FUENTE = ("<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' "
@@ -181,6 +199,9 @@ th{background:#eef2f7;font-weight:600}tr:last-child td{border-bottom:0}td.n{text
 .modo.prueba{background:#fff7e0;color:#8a5a00;border:1px solid #e9c46a}.modo.real{background:#e6f5ec;color:var(--verde);
 border:1px solid var(--verde)}.salir{float:right}.salir button{margin-top:0;padding:8px 14px}
 .dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.vacio{padding:12px;color:#56606b}
+.buscar{display:flex;gap:8px;flex-wrap:wrap}.buscar input{flex:1 1 240px;max-width:420px}.buscar button{width:auto}
+.acciones{display:flex;gap:6px}.acciones button{width:auto;min-height:36px;padding:0 12px;font-size:13px}
+.rojo,.rojo:hover{color:var(--error);border-color:#f1b8b2}
 """
 
 
@@ -197,7 +218,7 @@ def tabla(columnas, filas):
     return f'<div class="tabla"><table><thead><tr>{cab}</tr></thead><tbody>{cuerpo}</tbody></table></div>'
 
 
-def tablero_html(d, precio_cop, sandbox):
+def tablero_html(d, precio_cop, sandbox, soporte=""):
     e = lambda v: html.escape(str(v if v is not None else ""))
     col = dt.timezone(dt.timedelta(hours=-5))
     fecha = lambda v: e(dt.datetime.fromisoformat(v).astimezone(col).strftime("%Y-%m-%d %H:%M") if v else "")
@@ -225,6 +246,7 @@ def tablero_html(d, precio_cop, sandbox):
               '<a href="/tablero/pagos.csv">Descargar pagos (CSV)</a></p>']
     if alertas:
         cuerpo.append(f'<p class="aviso">{e(" · ".join(alertas))}</p>')
+    cuerpo.append(soporte)
     cuerpo.append('<div class="cifras">' + "".join(
         f'<div class="cifra"><b>{e(v)}</b><span>{e(t)}</span></div>' for v, t in cifras) + "</div>")
     cuerpo.append('<div class="dos"><div><h2>Personas por estado</h2>' + tabla(
@@ -487,6 +509,186 @@ mirar();
 </script>"""
 
 
+# ---------------------------------------------------------------- Mi Pase (cuenta de la persona)
+ICONO_CALENDARIO = ('<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00806b" stroke-width="2" '
+                    'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" '
+                    'height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>')
+MOTIVOS = ("Ya terminé lo que necesitaba", "Está caro para mí ahora", "No tengo tiempo", "Otro")
+
+
+def _fecha(valor):
+    from .plantillas_correo import fecha_larga
+    return fecha_larga(valor) if valor else ""
+
+
+def _medio(sus):
+    from .plantillas_correo import medio_legible
+    if sus["renovacion_manual"]:
+        return "PSE, Nequi o Daviplata"
+    return medio_legible(sus["medio_enmascarado"]) or "Tarjeta"
+
+
+def pantalla_codigo(correo="", enviado=False, error="", vencido=False):
+    """Entrada a Mi Pase sin enlace: correo → código de 6 dígitos (sin contraseñas)."""
+    correo = html.escape(correo, quote=True)
+    aviso = ('<p class="aviso">Tu enlace venció. Pide un código para entrar.</p>' if vencido else "")
+    if error:
+        aviso = f'<p class="aviso">{html.escape(error)}</p>'
+    if not enviado:
+        return f"""
+<div><p class="antetitulo">Mi Pase</p><h1>Entra a tu cuenta del Pase</h1>
+<p class="nota" style="font-size:14px;margin-top:6px">Te enviamos un código al correo con el que te inscribiste.
+Sin contraseñas.</p></div>{aviso}
+<form class="caja" method="post" action="/mi-pase/codigo">
+<div class="campo"><label for="correo">Correo</label><input id="correo" name="correo" type="email" required
+autocomplete="email" value="{correo}"></div>
+<button>Enviarme un código</button></form>"""
+    return f"""
+<div><p class="antetitulo">Mi Pase</p><h1>Escribe tu código</h1>
+<p class="nota" style="font-size:14px;margin-top:6px">Si {correo} tiene el Pase, le llegó un código de 6 dígitos.
+Revisa también spam o promociones.</p></div>{aviso}
+<form class="caja" method="post" action="/mi-pase/entrar">
+<input type="hidden" name="correo" value="{correo}">
+<div class="campo"><label for="codigo">Código de 6 dígitos</label><input id="codigo" name="codigo" class="codigo"
+inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{{6,7}}" maxlength="7" required autofocus></div>
+<button>Entrar</button></form>
+<form method="post" action="/mi-pase/codigo"><input type="hidden" name="correo" value="{correo}">
+<button class="enlace">Enviar otro código</button></form>
+<p class="nota centro">El código vence en 15 minutos y sirve una sola vez.</p>"""
+
+
+def pantalla_mi_pase(c, persona, sus, firma, firma_pago):
+    nombre = html.escape(persona["nombre"].split()[0].capitalize())
+    aula = html.escape(c.moodle_url or "", quote=True)
+    corte = _fecha(sus["proximo_corte"])
+    estado = sus["estado"]
+    if estado == "activa" and sus["cancelar_al_corte"]:
+        insignia = '<span class="insignia alerta">Se cancela</span>'
+        filas = [("Acceso completo hasta", corte), ("Próximo cobro", "Ninguno")]
+    elif estado == "activa":
+        insignia = '<span class="insignia">Activo</span>'
+        filas = [("Próxima renovación", corte), ("Medio de pago", _medio(sus))]
+    elif estado == "en_mora":
+        insignia = '<span class="insignia alerta">Pago pendiente</span>'
+        filas = [("Venció el", corte), ("Medio de pago", _medio(sus))]
+    else:
+        insignia = '<span class="insignia apagada">Cerrado</span>' if estado == "cancelada" else \
+            '<span class="insignia apagada">Sin activar</span>'
+        filas = [("Cerrado el", _fecha(sus["cancelada_en"]))] if sus["cancelada_en"] else []
+    if sus["inicio"] and estado != "cancelada":
+        filas.append(("Miembro desde", _fecha(sus["inicio"])))
+    tabla_ = ('<section class="filas">' + "".join(f"<div><span>{html.escape(a)}</span><b>{html.escape(b)}</b></div>"
+                                                 for a, b in filas) + "</section>") if filas else ""
+    cursos = f'<a class="boton" href="{aula}">Ir a mis cursos {ICONO_FLECHA}</a>' if aula else ""
+    if estado == "activa" and sus["cancelar_al_corte"]:
+        abajo = f"""<div class="aparte"><p><b>¿Cambiaste de opinión?</b></p>
+<p class="nota" style="font-size:13px">Hasta el {corte} puedes seguir con el Pase sin volver a pagar ni poner la
+tarjeta.</p><form method="post" action="/mi-pase/seguir"><input type="hidden" name="p" value="{firma}">
+<button class="sec">Seguir con mi Pase</button></form></div>"""
+    elif estado in ("activa", "en_mora"):
+        texto = (f"Puedes cancelar cuando quieras. Sigues con acceso hasta el {corte} y no te volvemos a cobrar."
+                 if estado == "activa" else "Si cancelas ahora, el Pase se cierra hoy y no intentamos cobrarte "
+                                            "de nuevo.")
+        abajo = f"""<div class="aparte"><p><b>¿Ya no lo necesitas?</b></p>
+<p class="nota" style="font-size:13px">{texto}</p>
+<a class="boton sec" href="/mi-pase/cancelar?p={firma}">Cancelar mi Pase</a></div>"""
+    else:
+        abajo = (f'<a class="boton sec" href="/pagar?p={firma_pago}">Volver al Pase</a>'
+                 '<p class="nota centro">Conservas tu avance y las tres primeras unidades gratis de cada curso.</p>')
+    return f"""
+<div><p class="antetitulo">Mi cuenta</p><h1>Hola, {nombre}</h1></div>
+<section class="plan" aria-label="Pase Empresario">
+<div class="fila-precio"><b>Pase Empresario</b>{insignia}</div>
+<p style="margin:0"><strong>{pesos_cop(c)}</strong><small> /mes · IVA incluido</small></p>
+<p style="margin:0;font-size:13px;color:#e6e8ec">Todos los cursos completos y tus certificados.</p></section>
+{tabla_}{cursos}{abajo}"""
+
+
+def pantalla_confirmar_cancelacion(c, sus, firma):
+    corte = _fecha(sus["proximo_corte"])
+    if sus["estado"] == "en_mora":
+        dato = "Tu último pago no pasó, así que <strong>el Pase se cierra hoy</strong> y no intentamos cobrarte de nuevo."
+    else:
+        dato = (f"Sigues con <strong>todos los cursos hasta el {corte}</strong>. Desde ese día no te cobramos "
+                "más.")
+    opciones = "".join(f'<label class="opcion"><input type="radio" name="motivo" value="{html.escape(m, quote=True)}">'
+                       f'{html.escape(m)}</label>' for m in MOTIVOS)
+    return f"""
+<h1>¿Cancelar tu Pase Empresario?</h1>
+<div class="dato">{ICONO_CALENDARIO}<span>{dato}</span></div>
+<section class="dos-col"><div><b>Conservas</b><span>Tu avance y tus certificados</span>
+<span>Las unidades 1 a 3 gratis</span></div><div><b>Pierdes</b><span>Las unidades 4 a 7</span>
+<span>Certificados nuevos</span></div></section>
+<form method="post" action="/mi-pase/cancelar" style="display:flex;flex-direction:column;gap:16px">
+<input type="hidden" name="p" value="{firma}">
+<fieldset><legend>¿Por qué cancelas? <span class="opc">(opcional)</span></legend>{opciones}</fieldset>
+<button class="peligro">Sí, cancelar mi Pase</button>
+<a class="boton sec" href="/mi-pase?p={firma}">Mejor no, seguir con el Pase</a></form>"""
+
+
+def pantalla_cancelacion_lista(c, persona, sus, firma):
+    aula = html.escape(c.moodle_url or "", quote=True)
+    cursos = f'<a class="boton" href="{aula}">Ir a mis cursos {ICONO_FLECHA}</a>' if aula else ""
+    correo = html.escape(persona["correo"])
+    if sus["estado"] == "cancelada":
+        texto, seguir = ("Tu Pase quedó cerrado y no te volvemos a cobrar. Conservas tu avance y las tres "
+                         "primeras unidades gratis de cada curso.", "")
+    else:
+        corte = _fecha(sus["proximo_corte"])
+        texto = f"Tienes todos los cursos <strong>hasta el {corte}</strong>. No te volvemos a cobrar."
+        seguir = f"""<div class="aparte"><p><b>¿Cambiaste de opinión?</b></p>
+<p class="nota" style="font-size:13px">Hasta el {corte} puedes seguir con el Pase sin volver a pagar ni poner la
+tarjeta.</p><form method="post" action="/mi-pase/seguir"><input type="hidden" name="p" value="{firma}">
+<button class="sec">Seguir con mi Pase</button></form></div>"""
+    return f"""
+<section class="estado"><span class="icono"><span class="lleno"><svg width="28" height="28" viewBox="0 0 24 24"
+fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M5 12l5 5L20 7"/></svg></span></span>
+<h1>Listo, cancelaste tu Pase</h1><p class="chico">{texto}</p>
+<p class="chico" style="font-size:12px">Te enviamos la confirmación a {correo}.</p></section>
+{cursos}{seguir}"""
+
+
+def tablero_soporte(buscar, resultados, mensaje=""):
+    """Buscador del tablero para cancelar o deshacer a pedido de la persona (WhatsApp, teléfono)."""
+    e = lambda v: html.escape(str(v if v is not None else ""), quote=True)
+    partes = ['<h2>Buscar persona</h2>']
+    if mensaje:
+        partes.append(f'<p class="aviso">{e(mensaje)}</p>')
+    partes.append(f'<form method="get" action="/tablero" class="buscar"><input name="buscar" value="{e(buscar)}" '
+                  'aria-label="Nombre, correo o documento" placeholder="Nombre, correo o documento">'
+                  '<button class="sec">Buscar</button></form>')
+    if buscar is None:
+        return "".join(partes)
+
+    def accion(pid, nombre, valor, texto, pregunta, clase="sec"):
+        return (f'<form method="post" action="/tablero/accion" onsubmit="return confirm({e(json.dumps(pregunta))})">'
+                f'<input type="hidden" name="persona" value="{pid}"><input type="hidden" name="buscar" '
+                f'value="{e(buscar)}"><button name="accion" value="{valor}" class="{clase}">{texto}</button></form>')
+    filas = []
+    for r in resultados:
+        n = r["nombre"]
+        if r["estado"] == "activa" and r["cancelar_al_corte"]:
+            estado = f"Cancela el {r['proximo_corte']}"
+            botones = accion(r["id"], n, "deshacer", "Deshacer cancelación", f"¿{n} sigue con el Pase?")
+        elif r["estado"] in ("activa", "en_mora"):
+            estado = {"activa": "Activa", "en_mora": "En mora"}[r["estado"]]
+            botones = (accion(r["id"], n, "cancelar_corte", "Cancelar al corte",
+                              f"¿Cancelar el Pase de {n} en su fecha de corte?") +
+                       accion(r["id"], n, "cancelar_ya", "Cancelar ya",
+                              f"¿Cerrar YA el Pase de {n}? Pierde las unidades 4 a 7 hoy y no se devuelve dinero.",
+                              "sec rojo"))
+        else:
+            estado, botones = {"cancelada": "Cancelada", "pendiente": "Sin pagar"}.get(r["estado"], r["estado"]), ""
+        filas.append([f'{e(n)}<br><span class="nota">{e(r["correo"])} · {e(r["documento"])}</span>', e(estado),
+                      e(r["proximo_corte"]), e(r["medio_enmascarado"] or r["medio"]),
+                      f'<td><div class="acciones">{botones}</div></td>'])
+    partes.append(tabla(["Persona", "Estado", "Corte", "Medio", "Acciones"], filas))
+    partes.append('<p class="nota">Cada acción queda en el historial. «Cancelar ya» quita las unidades 4 a 7 de '
+                  'inmediato y no devuelve dinero: úsalo solo para fraudes o pedidos expresos.</p>')
+    return "".join(partes)
+
+
 class App:
     def __init__(self, config: Config, pase: Pase = None):
         self.c = config
@@ -592,6 +794,21 @@ class App:
             def leer(self):
                 return self.rfile.read(int(self.headers.get("Content-Length") or 0))
 
+            def formulario(self):
+                return dict(urllib.parse.parse_qsl(self.leer().decode(errors="replace")))
+
+            # Mi Pase: el enlace firmado va en la URL; que no se guarde ni viaje a otros sitios.
+            PRIVADO = {"Cache-Control": "no-store", "Referrer-Policy": "no-referrer"}
+
+            def mi_pase(self, titulo, cuerpo, codigo=200):
+                return self.responder(codigo, pagina(titulo, cuerpo, app.c.entorno == "sandbox"), extra=self.PRIVADO)
+
+            def cuenta(self, firma):
+                """(pid, suscripción) del enlace de Mi Pase, o None si venció o no tiene Pase."""
+                pid = app.pase.verificar_mi_pase(firma)
+                sus = app.pase.suscripcion(pid) if pid else None
+                return (pid, sus) if sus else None
+
             def confirmacion(self, datos):
                 codigo, eid = app.pase.recibir_evento(datos, self.ip())
                 if eid:
@@ -647,6 +864,19 @@ class App:
                     with open(ESTATICOS[u.path[11:]], "rb") as f:
                         return self.responder(200, f.read(), "image/svg+xml",
                                               {"Cache-Control": "public, max-age=86400"})
+                if u.path in ("/mi-pase", "/mi-pase/cancelar", "/mi-pase/listo"):
+                    cuenta = self.cuenta(q.get("p"))
+                    if not cuenta:
+                        return self.mi_pase("Mi Pase", pantalla_codigo(vencido=bool(q.get("p"))))
+                    pid, sus = cuenta
+                    if u.path == "/mi-pase/listo":
+                        return self.mi_pase("Pase cancelado", pantalla_cancelacion_lista(
+                            app.c, app.pase.persona(pid), sus, q["p"]))
+                    if u.path == "/mi-pase/cancelar" and sus["estado"] in ("activa", "en_mora") \
+                            and not sus["cancelar_al_corte"]:
+                        return self.mi_pase("Cancelar mi Pase", pantalla_confirmar_cancelacion(app.c, sus, q["p"]))
+                    return self.mi_pase("Mi Pase", pantalla_mi_pase(app.c, app.pase.persona(pid), sus, q["p"],
+                                                                    app.firmar(pid)))
                 if u.path == "/salud":
                     return self.json(200, {"ok": True, "entorno": app.c.entorno})
                 if u.path in ("/tablero", "/tablero/pagos.csv"):
@@ -657,8 +887,11 @@ class App:
                         return self.responder(200, pagina("Tablero", login_html(app.admin_configurado()), sb),
                                               extra=sin_cache)
                     if u.path == "/tablero":
-                        return self.responder(200, tablero_html(app.pase.tablero(),
-                                                                app.c.precio_centavos // 100, sb), extra=sin_cache)
+                        buscar = q.get("buscar")
+                        soporte = tablero_soporte(buscar, app.pase.buscar_personas(buscar) if buscar else [],
+                                                  q.get("hecho", ""))
+                        return self.responder(200, tablero_html(app.pase.tablero(), app.c.precio_centavos // 100,
+                                                                sb, soporte), extra=sin_cache)
                     return self.responder(200, ("\ufeff" + app.pase.pagos_csv()).encode(), "text/csv; charset=utf-8",
                                           extra={**sin_cache, "Content-Disposition":
                                                  'attachment; filename="pagos-pase.csv"'})
@@ -679,6 +912,52 @@ class App:
                         return self.responder(401, pagina("Tablero", login_html(
                             app.admin_configurado(), "Usuario o contraseña incorrectos."), sb))
                     return self.redirigir("/tablero", self.galleta_admin(sesion, 12 * 3600))
+                if u.path == "/tablero/accion":
+                    if not self.admin_valido():
+                        return self.redirigir("/tablero")
+                    datos = self.formulario()
+                    pid = int(datos["persona"]) if datos.get("persona", "").isdigit() else 0
+                    p = app.pase.persona(pid)
+                    accion = datos.get("accion")
+                    hecho = "No se pudo: la persona no está en un estado que lo permita."
+                    if p and accion == "cancelar_corte" and app.pase.pedir_cancelacion(pid, "", "soporte"):
+                        hecho = f"{p['nombre']}: cancelación programada al corte."
+                    elif p and accion == "cancelar_ya" and app.pase.suscripcion(pid) and \
+                            app.pase.suscripcion(pid)["estado"] in ("activa", "en_mora"):
+                        app.pase.cancelar(pid, "cancelación por soporte", "soporte")
+                        hecho = f"{p['nombre']}: Pase cerrado."
+                    elif p and accion == "deshacer" and app.pase.deshacer_cancelacion(pid, "soporte"):
+                        hecho = f"{p['nombre']}: sigue con el Pase."
+                    q = urllib.parse.urlencode({"buscar": datos.get("buscar", ""), "hecho": hecho})
+                    return self.redirigir(f"/tablero?{q}")
+                if u.path == "/mi-pase/codigo":
+                    correo = self.formulario().get("correo", "")[:200]
+                    if app.pase.pedir_codigo(correo) and app.c.smtp_host:
+                        # el código no espera al timer de correos (cada 5 minutos)
+                        threading.Thread(target=app.pase.enviar_avisos, daemon=True).start()
+                    return self.mi_pase("Mi Pase", pantalla_codigo(correo, enviado=True))
+                if u.path == "/mi-pase/entrar":
+                    datos = self.formulario()
+                    pid = app.pase.validar_codigo(datos.get("correo"), datos.get("codigo"))
+                    if not pid:
+                        return self.mi_pase("Mi Pase", pantalla_codigo(
+                            datos.get("correo", ""), enviado=True,
+                            error="El código no es correcto o ya venció. Revísalo o pide otro."), 401)
+                    firma = app.pase.firma_mi_pase(pid, ENLACE_CODIGO_HORAS * 3600)
+                    return self.redirigir(f"/mi-pase?p={firma}", self.PRIVADO)
+                if u.path in ("/mi-pase/cancelar", "/mi-pase/seguir"):
+                    datos = self.formulario()
+                    cuenta = self.cuenta(datos.get("p"))
+                    if not cuenta:
+                        return self.mi_pase("Mi Pase", pantalla_codigo(vencido=True), 401)
+                    pid, firma = cuenta[0], urllib.parse.quote(datos["p"])
+                    if u.path == "/mi-pase/seguir":
+                        app.pase.deshacer_cancelacion(pid)
+                        return self.redirigir(f"/mi-pase?p={firma}", self.PRIVADO)
+                    motivo = datos.get("motivo", "")
+                    if not app.pase.pedir_cancelacion(pid, motivo if motivo in MOTIVOS else ""):
+                        return self.redirigir(f"/mi-pase?p={firma}", self.PRIVADO)
+                    return self.redirigir(f"/mi-pase/listo?p={firma}", self.PRIVADO)
                 if u.path == "/tablero/salir":
                     return self.redirigir("/tablero", self.galleta_admin("", 0))
                 if u.path == "/webhooks/epayco":

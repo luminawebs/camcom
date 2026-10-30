@@ -77,7 +77,8 @@ def _contenido(tipo, c, d):
                       "puedes obtener tus certificados."],
             resumen=filas, boton=("Ir a mis cursos", aula),
             nota="Puedes cancelar cuando quieras: conservas el acceso hasta tu fecha de renovación y no "
-                 "volvemos a cobrarte.")
+                 "volvemos a cobrarte.",
+            enlace=("Ver o cancelar mi Pase", d["enlace_cuenta"]) if d.get("enlace_cuenta") else None)
     if tipo == "pago_rechazado":
         return dict(
             asunto="Tu pago no se aprobó",
@@ -125,6 +126,29 @@ def _contenido(tipo, c, d):
                       "<b>Conservas todo tu avance</b> y sigues teniendo gratis las tres primeras unidades "
                       "de cada curso. Si vuelves al Pase, retomas donde ibas."],
             boton=("Volver al Pase", c.url_publica), boton_secundario=True)
+    if tipo == "cancelacion":
+        return dict(
+            asunto="Cancelaste tu Pase Empresario",
+            previo=f"Sigues con todos los cursos hasta el {fecha_larga(d['corte'])}. No volveremos a cobrarte.",
+            etiqueta="Cancelación recibida", titulo=f"{nombre}, cancelaste tu Pase",
+            parrafos=["Recibimos tu solicitud. <b>No volveremos a cobrarte</b> y conservas todos los cursos "
+                      "hasta tu fecha de corte.",
+                      "Después de esa fecha sigues con tu avance y con las tres primeras unidades gratis de "
+                      "cada curso."],
+            resumen=[("Acceso completo hasta", fecha_larga(d["corte"])), ("Próximo cobro", "Ninguno")],
+            boton=("Seguir con mi Pase", d["enlace_cuenta"]), boton_secundario=True,
+            nota="¿No fuiste tú o cambiaste de opinión? Entra con el botón de arriba y elige «Seguir con mi "
+                 "Pase» antes de esa fecha.")
+    if tipo == "codigo":
+        return dict(
+            asunto=f"Tu código para entrar a Mi Pase: {d['codigo']}",
+            previo=f"Vence en {d['minutos']} minutos. Si no lo pediste, ignora este correo.",
+            etiqueta="Código de acceso", titulo=f"{nombre}, este es tu código",
+            parrafos=[f'<span style="display:inline-block;padding:10px 18px;border-radius:12px;background:{SUAVE};'
+                      f'color:{TINTA};font-size:30px;font-weight:700;letter-spacing:8px">'
+                      f'{html.escape(d["codigo"])}</span>',
+                      f"Escríbelo en la página de Mi Pase. Vence en {d['minutos']} minutos y sirve una sola vez.",
+                      "Si no lo pediste, ignora este correo: nadie puede entrar sin el código."])
     if tipo == "interno":
         return dict(asunto=d["asunto"], previo=d["texto"], etiqueta="Aviso del Pase", titulo=d["asunto"],
                     parrafos=[html.escape(d["texto"])])
@@ -185,6 +209,10 @@ def _html(k, c):
     if k.get("nota"):
         partes.append(f'<div style="padding:14px 16px;border-radius:12px;background:{SUAVE};font-family:{LETRA};'
                       f'font-size:14px;line-height:1.55;color:{TINTA}">{k["nota"]}</div>')
+    if k.get("enlace"):
+        partes.append(f'<p style="margin:18px 0 0;font-family:{LETRA};font-size:14px"><a href="'
+                      f'{html.escape(k["enlace"][1], quote=True)}" target="_blank" style="color:{ACENTO};'
+                      f'font-weight:600;text-decoration:underline">{html.escape(k["enlace"][0])}</a></p>')
     cuerpo = "".join(partes)
     previo = html.escape(k["previo"])
     return f"""<!doctype html>
@@ -232,6 +260,8 @@ def _texto(k, c):
         lineas += [f"{k['boton'][0]}: {k['boton'][1]}", ""]
     if k.get("nota"):
         lineas += [limpio(k["nota"]), ""]
+    if k.get("enlace"):
+        lineas += [f"{k['enlace'][0]}: {k['enlace'][1]}", ""]
     lineas += ["--", "Aula Virtual Empresarial · edunest.co",
                "Este correo sale de una dirección que no recibe respuestas."]
     if getattr(c, "correo_soporte", ""):
@@ -248,7 +278,11 @@ def armar(tipo, config, **datos):
 # ---------------------------------------------------------------- vistas previas
 EJEMPLOS = {
     "registro": dict(nombre="ana maría rojas", usuario="ana@ejemplo.co"),
-    "pase_activo": dict(nombre="Ana María Rojas", medio="457562******4242", proximo_corte="2026-11-30"),
+    "pase_activo": dict(nombre="Ana María Rojas", medio="457562******4242", proximo_corte="2026-11-30",
+                        enlace_cuenta="https://pase.edunest.co/mi-pase?p=1.1798000000.abc"),
+    "cancelacion": dict(nombre="Ana María Rojas", corte="2026-11-30",
+                        enlace_cuenta="https://pase.edunest.co/mi-pase?p=1.1798000000.abc"),
+    "codigo": dict(nombre="Ana María Rojas", codigo="482915", minutos=15),
     "pago_rechazado": dict(nombre="Ana María Rojas"),
     "cobro_fallido": dict(nombre="Ana María Rojas", reintento="2026-12-03", medio="457562******4242"),
     "renovar": dict(nombre="Ana María Rojas", corte="2026-11-30",

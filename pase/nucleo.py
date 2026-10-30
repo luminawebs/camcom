@@ -13,6 +13,7 @@ import secrets
 import sqlite3
 import sys
 import threading
+import time
 import urllib.parse
 
 from . import epayco as ep
@@ -45,8 +46,13 @@ CREATE TABLE IF NOT EXISTS historial (persona_id INTEGER, evento TEXT, detalle T
 CREATE TABLE IF NOT EXISTS avisos (
   id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, creado TEXT, enviado_en TEXT,
   intentos INTEGER DEFAULT 0, error TEXT, html TEXT);
+CREATE TABLE IF NOT EXISTS codigos_acceso (
+  id INTEGER PRIMARY KEY, correo TEXT, huella TEXT, creado REAL, intentos INTEGER DEFAULT 0,
+  usado INTEGER DEFAULT 0);
 """
 MAX_INTENTOS_AVISO = 5
+CODIGO_MINUTOS, CODIGO_INTENTOS, CODIGOS_POR_CUARTO_HORA = 15, 5, 3
+ENLACE_CORREO_DIAS, ENLACE_CODIGO_HORAS = 30, 12
 
 TEXTO_AUTORIZACION_V1 = (
     "Autorizo a Lúmina Interactiva S.A.S. (EduNest) y a la Cámara de Comercio de Soacha, "
@@ -400,7 +406,8 @@ class Pase:
         if anterior not in ("suscrito", "activo", "en_mora"):
             sus = self.suscripcion(pid)
             self.avisar_con_diseno(p["correo"], "pase_activo", nombre=p["nombre"],
-                                   medio=sus["medio_enmascarado"], proximo_corte=sus["proximo_corte"])
+                                   medio=sus["medio_enmascarado"], proximo_corte=sus["proximo_corte"],
+                                   enlace_cuenta=self.enlace_mi_pase(pid))
 
     def _pago_rechazado(self, pago, origen):
         pid = pago["persona_id"]
@@ -439,9 +446,10 @@ class Pase:
         filas = self.q("SELECT * FROM suscripciones WHERE estado IN ('activa','en_mora')").fetchall()
         for s in filas:
             pid, corte = s["persona_id"], dt.date.fromisoformat(s["proximo_corte"])
-            if s["cancelar_al_corte"] and hoy >= corte:
-                self.cancelar(pid, "cancelación voluntaria", "tarea programada")
-                hechos.append((pid, "cancelada"))
+            if s["cancelar_al_corte"]:
+                if hoy >= corte:  # antes del corte no se cobra ni se manda enlace de renovación
+                    self.cancelar(pid, "cancelación voluntaria", "tarea programada")
+                    hechos.append((pid, "cancelada"))
                 continue
             if s["renovacion_manual"]:
                 hechos += self._renovacion_manual(s, hoy, corte)
@@ -511,10 +519,92 @@ class Pase:
         self.avisar_organizaciones("Cancelación del Pase", f"{p['nombre']}: {motivo}")
         self.avisar_con_diseno(p["correo"], "pase_termino", nombre=p["nombre"], motivo=motivo)
 
-    def pedir_cancelacion(self, persona_id):
-        """RF-26: el acceso sigue hasta el corte; no se vuelve a cobrar."""
+    def pedir_cancelacion(self, persona_id, motivo="", origen="persona"):
+        """RF-26: el acceso sigue hasta el corte y no se vuelve a cobrar. Con el Pase en mora el
+        periodo no está pagado, así que se cierra ya. Devuelve la suscripción o None si no aplica."""
+        sus = self.suscripcion(persona_id)
+        if not sus or sus["estado"] not in ("activa", "en_mora"):
+            return None
+        motivo = (motivo or "").strip()[:200]
+        if sus["estado"] == "en_mora":
+            self.historial(persona_id, "pidio_cancelar", motivo, origen)
+            self.cancelar(persona_id, "cancelación voluntaria", origen)
+            return self.suscripcion(persona_id)
+        if sus["cancelar_al_corte"]:
+            return sus
         self.q("UPDATE suscripciones SET cancelar_al_corte=1 WHERE persona_id=?", persona_id)
-        self.historial(persona_id, "pidio_cancelar", "", "persona")
+        self.historial(persona_id, "pidio_cancelar", motivo, origen)
+        p = self.persona(persona_id)
+        self.avisar_organizaciones("Cancelación programada del Pase",
+                                   f"{p['nombre']} cancela el {sus['proximo_corte']}"
+                                   + (f" · motivo: {motivo}" if motivo else "") + f" · {origen}")
+        self.avisar_con_diseno(p["correo"], "cancelacion", nombre=p["nombre"], corte=sus["proximo_corte"],
+                               enlace_cuenta=self.enlace_mi_pase(persona_id))
+        return self.suscripcion(persona_id)
+
+    def deshacer_cancelacion(self, persona_id, origen="persona"):
+        """Antes del corte la persona sigue con el Pase sin volver a pagar ni poner la tarjeta."""
+        sus = self.suscripcion(persona_id)
+        if not sus or sus["estado"] != "activa" or not sus["cancelar_al_corte"]:
+            return False
+        self.q("UPDATE suscripciones SET cancelar_al_corte=0 WHERE persona_id=?", persona_id)
+        self.historial(persona_id, "deshizo_cancelar", "", origen)
+        p = self.persona(persona_id)
+        self.avisar_organizaciones("El Pase sigue", f"{p['nombre']} deshizo la cancelación · {origen}")
+        return True
+
+    # ------------------------------------------------------------------ Mi Pase: acceso de la persona
+    # Enlace firmado con vencimiento: pid.vence.firma. Llega en los correos del Pase o tras un código.
+    def firma_mi_pase(self, persona_id, segundos):
+        vence = int(time.time()) + int(segundos)
+        return f"{persona_id}.{vence}.{self.firma(f'mi:{persona_id}:{vence}')}"
+
+    def enlace_mi_pase(self, persona_id, dias=ENLACE_CORREO_DIAS):
+        return f"{self.c.url_publica}/mi-pase?p={self.firma_mi_pase(persona_id, dias * 86400)}"
+
+    def verificar_mi_pase(self, valor):
+        partes = (valor or "").split(".")
+        if len(partes) != 3 or not partes[0].isdigit() or not partes[1].isdigit():
+            return None
+        pid, vence, f = partes
+        if int(vence) < time.time() or not self.firma_valida(f"mi:{pid}:{vence}", f):
+            return None
+        return int(pid)
+
+    def pedir_codigo(self, correo):
+        """Manda un código de 6 dígitos si el correo tiene o tuvo el Pase. Quien llama responde
+        igual en todos los casos, para no revelar quién tiene el Pase."""
+        correo = (correo or "").strip().lower()
+        p = self.uno("SELECT p.* FROM personas p JOIN suscripciones s ON s.persona_id=p.id "
+                     "WHERE p.correo=?", correo)
+        if not p:
+            return False
+        if self.uno("SELECT COUNT(*) n FROM codigos_acceso WHERE correo=? AND creado>?",
+                    correo, time.time() - 15 * 60)["n"] >= CODIGOS_POR_CUARTO_HORA:
+            return False
+        codigo = f"{secrets.randbelow(10 ** 6):06d}"
+        self.q("UPDATE codigos_acceso SET usado=1 WHERE correo=?", correo)  # solo vale el último
+        self.q("INSERT INTO codigos_acceso (correo, huella, creado) VALUES (?,?,?)",
+               correo, self.firma(f"codigo:{correo}:{codigo}"), time.time())
+        self.avisar_con_diseno(correo, "codigo", nombre=p["nombre"], codigo=codigo, minutos=CODIGO_MINUTOS)
+        return True
+
+    def validar_codigo(self, correo, codigo):
+        """persona_id si el código es el último enviado, no venció ni se usó; si no, None."""
+        correo = (correo or "").strip().lower()
+        codigo = "".join(ch for ch in (codigo or "") if ch.isdigit())
+        with self.candado:
+            fila = self.uno("SELECT * FROM codigos_acceso WHERE correo=? AND usado=0 AND creado>? "
+                            "ORDER BY id DESC LIMIT 1", correo, time.time() - CODIGO_MINUTOS * 60)
+            if not fila or fila["intentos"] >= CODIGO_INTENTOS:
+                return None
+            if not self.firma_valida(f"codigo:{correo}:{codigo}", fila["huella"]):
+                self.q("UPDATE codigos_acceso SET intentos=intentos+1 WHERE id=?", fila["id"])
+                return None
+            self.q("UPDATE codigos_acceso SET usado=1 WHERE id=?", fila["id"])
+        p = self.uno("SELECT id FROM personas WHERE correo=?", correo)
+        self.historial(p["id"], "entro_mi_pase", "código por correo", "persona")
+        return p["id"]
 
     # ------------------------------------------------------------------ conciliación
     def conciliar(self):
@@ -572,6 +662,17 @@ class Pase:
                                            "WHERE procesado_en IS NULL")["n"],
             "eventos_rechazados": self.uno("SELECT COUNT(*) n FROM eventos_rechazados")["n"],
         }
+
+    def buscar_personas(self, texto, limite=20):
+        """Tablero, soporte: personas con Pase por nombre, correo o documento."""
+        t = "%" + (texto or "").strip().lower().replace("%", "").replace("_", "") + "%"
+        if len(t) < 5:  # al menos 3 letras
+            return []
+        return [dict(r) for r in self.q("""SELECT p.id, p.nombre, p.correo, p.documento, s.estado,
+                  s.proximo_corte, s.medio, s.medio_enmascarado, s.renovacion_manual, s.cancelar_al_corte
+                FROM personas p JOIN suscripciones s ON s.persona_id=p.id
+                WHERE lower(p.nombre) LIKE ? OR p.correo LIKE ? OR p.documento LIKE ?
+                ORDER BY p.nombre LIMIT ?""", t, t, t, limite).fetchall()]
 
     def pagos_csv(self):
         import csv

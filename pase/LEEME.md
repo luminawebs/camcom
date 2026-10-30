@@ -125,9 +125,25 @@ Con los dominios ya permitidos se revisó la documentación vigente y se ajustó
 
 Falta el pago por PSE de punta a punta en el Smart Checkout, que necesita el conector publicado en pase.edunest.co. Nequi y Daviplata siguen por Checkout con renovación manual.
 
+## Mi Pase: ver y cancelar el Pase
+
+`/mi-pase` es la cuenta de la persona: estado, próxima renovación, medio de pago y el botón
+«Cancelar mi Pase». Se entra con el enlace firmado que traen los correos de pago aprobado y de
+cancelación (vale 30 días) o pidiendo un código de 6 dígitos al correo (vence en 15 minutos,
+5 intentos, máximo 3 códigos cada 15 minutos; la respuesta es igual si el correo no tiene Pase).
+Desde Moodle se llega con el elemento «Mi Pase» del menú de usuario (ver `despliegue/MOODLE.md`, paso 8).
+
+- **Cancelar** (dos pasos, motivo opcional): el acceso sigue hasta el corte y no se vuelve a cobrar
+  ni se manda enlace de renovación. Llega un correo de confirmación. En el corte la tarea diaria
+  cierra el Pase, quita la cohorte y borra la tarjeta en ePayco. Con el Pase en mora se cierra ya.
+- **Seguir con mi Pase**: hasta el corte deshace la cancelación sin volver a pagar.
+- **Tablero › Buscar persona** (soporte): «Cancelar al corte», «Cancelar ya» (cierra hoy, sin
+  devolución) y «Deshacer cancelación». Todo queda en el historial con su origen.
+
 ## Correos de los avisos
 
-Los avisos (bienvenida, pago aprobado o rechazado, cobro fallido, renovación, fin del Pase y
+Los avisos (bienvenida, pago aprobado o rechazado, cobro fallido, renovación, código de Mi Pase,
+cancelación, fin del Pase y
 los de las organizaciones) se guardan en la tabla `avisos` y la tarea `pase-correos.timer` los
 envía cada 5 minutos por SMTP con Brevo, el mismo servicio del correo de Moodle
 (`smtp-relay.brevo.com:2525`, el único puerto de correo que DigitalOcean deja salir).

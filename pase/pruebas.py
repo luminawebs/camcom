@@ -370,6 +370,150 @@ class PruebasFlujo(Escenario):
         self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM pagos")["n"], 1)
         self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
 
+    # ----------------------------------------------------------------- Mi Pase
+    def enlace_mi_pase_del_correo(self, asunto):
+        cuerpo = self.pase.uno("SELECT cuerpo FROM avisos WHERE asunto LIKE ? ORDER BY id DESC", asunto)["cuerpo"]
+        return cuerpo.split("mi Pase: ")[1].split("\n")[0]
+
+    def post_form(self, ruta, datos, cabeceras=None):
+        return self.http("POST", f"{self.c.url_publica}{ruta}", urllib.parse.urlencode(datos),
+                         {"Content-Type": "application/x-www-form-urlencoded", **(cabeceras or {})})
+
+    def test_4e_mi_pase_cancelar_y_deshacer(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        enlace = self.enlace_mi_pase_del_correo("¡Ya tienes%")
+        status, cab, pagina = self.http("GET", enlace)
+        self.assertEqual((status, cab["Referrer-Policy"]), (200, "no-referrer"))
+        texto = pagina.decode()
+        for esperado in ("Hola, Dora", "Activo", "3 de diciembre de 2026", "Cancelar mi Pase"):
+            self.assertIn(esperado, texto)
+        firma = urllib.parse.parse_qs(urllib.parse.urlparse(enlace).query)["p"][0]
+        self.assertIn("¿Por qué cancelas?", self.http("GET", f"{self.c.url_publica}/mi-pase/cancelar?p={firma}")[2]
+                      .decode())
+        status, cab, _ = self.post_form("/mi-pase/cancelar", {"p": firma, "motivo": "No tengo tiempo"})
+        self.assertEqual((status, cab["Location"]), (303, f"/mi-pase/listo?p={firma}"))
+        self.assertEqual(self.pase.suscripcion(pid)["cancelar_al_corte"], 1)
+        self.assertIn("hasta el 3 de diciembre de 2026", self.http("GET", self.c.url_publica + cab["Location"])[2]
+                      .decode())
+        self.assertTrue(self.en_cohorte(pid, "pase-empresario"))  # el acceso sigue hasta el corte
+        self.assertEqual(self.pase.uno("SELECT detalle FROM historial WHERE evento='pidio_cancelar'")["detalle"],
+                         "No tengo tiempo")
+        # el correo de confirmación trae el enlace para echarse atrás
+        enlace2 = self.enlace_mi_pase_del_correo("Cancelaste%").replace("Seguir con ", "")
+        self.assertIn("Seguir con mi Pase: ", self.pase.uno(
+            "SELECT cuerpo FROM avisos WHERE asunto LIKE 'Cancelaste%'")["cuerpo"])
+        self.assertTrue(enlace2.startswith(f"{self.c.url_publica}/mi-pase?p="))
+        # pedirla dos veces no manda dos correos
+        self.post_form("/mi-pase/cancelar", {"p": firma})
+        self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM avisos WHERE asunto LIKE 'Cancelaste%'")["n"], 1)
+        # se echa atrás: vuelve el cobro automático
+        status, _, _ = self.post_form("/mi-pase/seguir", {"p": firma})
+        self.assertEqual((status, self.pase.suscripcion(pid)["cancelar_al_corte"]), (303, 0))
+        self.post_form("/mi-pase/cancelar", {"p": firma, "motivo": "inventado <b>"})
+        self.assertEqual(self.pase.uno("SELECT detalle FROM historial WHERE evento='pidio_cancelar' "
+                                       "ORDER BY rowid DESC")["detalle"], "")  # solo motivos de la lista
+        # en el corte se cierra sin cobrar y se borra la tarjeta en ePayco
+        fuente = self.fuente(pid)
+        self.reloj.fecha = dt.date(2026, 12, 3)
+        self.assertEqual(self.pase.cobro_mensual(), [(pid, "cancelada")])
+        self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM pagos")["n"], 1)
+        self.assertEqual(self.sim.clientes[fuente["cliente"]]["cards"], [])
+        self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
+        self.assertIn("Volver al Pase", self.http("GET", enlace)[2].decode())
+
+    def test_4f_mi_pase_enlace_alterado_o_vencido(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        firma = self.pase.firma_mi_pase(pid, 3600)
+        otra = f"{pid + 1}.{firma.split('.', 1)[1]}"
+        vencida = self.pase.firma_mi_pase(pid, -10)
+        for f in (otra, vencida, "1.2.3", ""):
+            status, _, pagina = self.http("GET", f"{self.c.url_publica}/mi-pase?p={f}")
+            self.assertIn("Enviarme un código", pagina.decode(), f)
+            self.assertEqual(self.post_form("/mi-pase/cancelar", {"p": f})[0], 401)
+        self.assertEqual(self.pase.suscripcion(pid)["cancelar_al_corte"], 0)
+
+    def test_4g_mi_pase_con_codigo(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        n_avisos = lambda: self.pase.uno("SELECT COUNT(*) n FROM avisos WHERE asunto LIKE 'Tu código%'")["n"]
+        # un correo sin Pase ve la misma respuesta y no recibe nada
+        _, _, p1 = self.post_form("/mi-pase/codigo", {"correo": "nadie@ejemplo.co"})
+        self.assertIn("Escribe tu código", p1.decode())
+        self.assertEqual(n_avisos(), 0)
+        self.post_form("/mi-pase/codigo", {"correo": "Dora@Tienda.co "})
+        self.assertEqual(n_avisos(), 1)
+        codigo = self.pase.uno("SELECT asunto FROM avisos WHERE asunto LIKE 'Tu código%'")["asunto"][-6:]
+        malo = f"{(int(codigo) + 1) % 10 ** 6:06d}"
+        self.assertEqual(self.post_form("/mi-pase/entrar", {"correo": "dora@tienda.co", "codigo": malo})[0], 401)
+        status, cab, _ = self.post_form("/mi-pase/entrar", {"correo": "dora@tienda.co", "codigo": codigo[:3] + " " +
+                                                            codigo[3:]})
+        self.assertEqual(status, 303)
+        self.assertIn("Hola, Dora", self.http("GET", self.c.url_publica + cab["Location"])[2].decode())
+        # sirve una sola vez
+        self.assertEqual(self.post_form("/mi-pase/entrar", {"correo": "dora@tienda.co", "codigo": codigo})[0], 401)
+        # 5 intentos fallidos queman el código
+        self.post_form("/mi-pase/codigo", {"correo": "dora@tienda.co"})
+        codigo = self.pase.uno("SELECT asunto FROM avisos WHERE asunto LIKE 'Tu código%' ORDER BY id DESC")["asunto"][-6:]
+        malo = f"{(int(codigo) + 1) % 10 ** 6:06d}"
+        for _ in range(5):
+            self.post_form("/mi-pase/entrar", {"correo": "dora@tienda.co", "codigo": malo})
+        self.assertEqual(self.post_form("/mi-pase/entrar", {"correo": "dora@tienda.co", "codigo": codigo})[0], 401)
+        # máximo 3 códigos cada 15 minutos
+        self.post_form("/mi-pase/codigo", {"correo": "dora@tienda.co"})
+        self.post_form("/mi-pase/codigo", {"correo": "dora@tienda.co"})
+        self.assertEqual(n_avisos(), 3)
+
+    def test_4h_cancelar_en_mora_cierra_ya(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        self.reloj.fecha = dt.date(2026, 12, 3)
+        self.sim.forzado[self.fuente(pid)["token"]] = "DECLINED"
+        self.pase.cobro_mensual()
+        self.esperar_estado(pid, "en_mora")
+        self.assertTrue(self.pase.pedir_cancelacion(pid, "Otro"))
+        self.assertEqual((self.estado_persona(pid), self.pase.suscripcion(pid)["estado"]), ("cancelado", "cancelada"))
+        self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
+        self.assertIsNone(self.pase.pedir_cancelacion(pid))
+
+    def test_4i_renovacion_manual_cancelada_no_pide_pago(self):
+        firma = self.firma_inscripcion()
+        pid = int(firma.split(".")[0])
+        self.pagar_checkout(firma)
+        self.esperar_estado(pid, "suscrito")
+        self.pase.pedir_cancelacion(pid)
+        self.reloj.fecha = dt.date(2026, 11, 28)
+        self.assertEqual(self.pase.cobro_mensual(), [])
+        self.assertIsNone(self.pase.uno("SELECT 1 FROM avisos WHERE asunto LIKE 'Renueva%'"))
+        self.reloj.fecha = dt.date(2026, 12, 3)
+        self.assertEqual(self.pase.cobro_mensual(), [(pid, "cancelada")])
+
+    def test_4j_tablero_soporte(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        url = f"{self.c.url_publica}/tablero"
+        with mock.patch.dict(os.environ, {"PASE_ADMIN_USUARIO": "david", "PASE_ADMIN_CLAVE": "clave-larga-1"}):
+            # sin sesión no hace nada
+            self.assertEqual(self.post_form("/tablero/accion", {"persona": pid, "accion": "cancelar_ya"})[0], 303)
+            self.assertEqual(self.pase.suscripcion(pid)["estado"], "activa")
+            _, cab, _ = self.post_form("/tablero/entrar", {"usuario": "david", "clave": "clave-larga-1"})
+            galleta = {"Cookie": cab["Set-Cookie"].split(";")[0]}
+            texto = self.http("GET", url + "?buscar=dora", cabeceras=galleta)[2].decode()
+            self.assertIn("Cancelar al corte", texto)
+            self.assertIn("dora@tienda.co", texto)
+            self.post_form("/tablero/accion", {"persona": pid, "accion": "cancelar_corte", "buscar": "dora"}, galleta)
+            self.assertEqual(self.pase.suscripcion(pid)["cancelar_al_corte"], 1)
+            _, cab, _ = self.post_form("/tablero/accion", {"persona": pid, "accion": "deshacer"}, galleta)
+            self.assertIn("sigue+con+el+Pase", cab["Location"])
+            self.assertEqual(self.pase.suscripcion(pid)["cancelar_al_corte"], 0)
+            self.post_form("/tablero/accion", {"persona": pid, "accion": "cancelar_ya"}, galleta)
+            self.assertEqual(self.pase.suscripcion(pid)["estado"], "cancelada")
+            self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
+        origenes = {r["origen"] for r in self.pase.q("SELECT origen FROM historial WHERE evento IN "
+                                                       "('pidio_cancelar','deshizo_cancelar','cancelo')")}
+        self.assertEqual(origenes, {"soporte"})
+
     def test_4d_reversion_vuelve_a_mora(self):
         pid, _ = self.pagar_tarjeta()
         self.esperar_estado(pid, "suscrito")

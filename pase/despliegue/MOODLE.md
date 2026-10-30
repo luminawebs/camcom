@@ -99,6 +99,21 @@ Luego, un pago de prueba nuevo en `https://pase.edunest.co/?c=prueba` y verifica
    (ajuste de todo el sitio, no del curso: *Extensiones › Matriculaciones › Sincronización
    de cohortes*) a *Dar de baja al usuario del curso*.
 
+## 8. Enlace «Mi Pase» en el menú de usuario
+
+Para que cada persona vea o cancele su Pase desde el aula: *Administración del sitio › Apariencia ›
+Temas › Configuración del tema › Elementos del menú de usuario* (`customusermenuitems`), agregar
+una línea al final y guardar:
+
+```
+Mi Pase|https://pase.edunest.co/mi-pase
+```
+
+El enlace abre la página «Mi Pase» del conector, que pide el correo y manda un código de 6 dígitos
+(Moodle no puede firmar el enlace sin un plugin). Quien llega desde los correos del Pase entra
+directo con su enlace firmado. La cancelación siempre la hace el conector: es quien guarda la
+tarjeta y quita la cohorte en la fecha de corte.
+
 ## Menús en inglés (Moodle 4.3)
 
 | Paso | Ruta |
@@ -111,3 +126,4 @@ Luego, un pago de prueba nuevo en `https://pase.edunest.co/?c=prueba` y verifica
 | 6 | Site administration › Server › Web services › Manage tokens › Create token |
 | 7 | Curso › Participants › Enrolment methods › Add method › Cohort sync (Add to group: Create new group); Restrict access › Group |
 | Baja | Site administration › Plugins › Enrolments › Cohort sync › External unenrol action |
+| 8 | Site administration › Appearance › Themes › Theme settings › User menu items |
