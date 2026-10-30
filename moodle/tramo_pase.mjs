@@ -11,7 +11,7 @@
 // - Quita la restricción que tuviera la Unidad 3 (tramo gratis).
 // - En la portada (resumen de la sección 0) agrega las tarjetas U4-U7 con enlace a la compra y
 //   corre la de Cierre a su nueva sección.
-// Títulos: curso.json › pase.unidades (4 textos u objetos {titulo, meta}); canal de compra curso-<corto>.
+// Títulos y canal de compra: curso.json › pase.unidades (4 textos u objetos {titulo, meta}) y pase.canal.
 // Si las unidades 4 a 7 ya existen no hace nada. --probar muestra lo que haría sin guardar.
 // Antes, el curso necesita el método «Sincronizar cohorte (pase-empresario)» con «Crear nuevo grupo».
 import { createRequire } from 'module';
@@ -26,8 +26,7 @@ const URL = process.env.MOODLE_URL.replace(/\/$/, '');
 const datos = JSON.parse(fs.readFileSync(rutaJson, 'utf8'));
 const unidades = (datos.pase?.unidades || []).map((u) => (typeof u === 'string' ? { titulo: u } : u));
 if (unidades.length !== 4) { console.error('curso.json necesita pase.unidades con 4 títulos'); process.exit(2); }
-const corto = (datos.corto || process.env.CORTO || '').toLowerCase();
-const compra = 'https://pase.edunest.co/?c=curso-' + (corto || `moodle-${curso}`);
+const compra = 'https://pase.edunest.co/?c=' + (datos.pase.canal || `curso-moodle-${curso}`);
 const PASOS = ['Entrada', 'Aprende', 'Practica', 'Aplica', 'Demuestra', 'Llévatelo', 'Profundiza'];
 
 function resumen(n, u) {
