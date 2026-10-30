@@ -18,7 +18,7 @@ from .nucleo import Pase
 def main(argv):
     if argv[:1] == ["probar-correo"] and len(argv) == 2:
         pase = Pase(Config.desde_entorno(), moodle.crear(Config.desde_entorno()))
-        pase.avisar(argv[1], "Prueba del Pase Empresario", "Si lees esto, los avisos del Pase ya salen por correo.")
+        pase.avisar_con_diseno(argv[1], "prueba")
         print(json.dumps(pase.enviar_avisos(), ensure_ascii=False))
         return 0
     if len(argv) != 1 or argv[0] not in ("cobro", "conciliar", "pendientes", "correos", "resumen"):

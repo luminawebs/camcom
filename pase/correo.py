@@ -2,11 +2,14 @@
 
 DigitalOcean bloquea los puertos 25, 465 y 587; Brevo atiende también en 2525 con STARTTLS.
 La IP del droplet tiene que estar autorizada en Brevo › Seguridad › IP autorizadas.
+Con HTML el mensaje va como texto + HTML, y el logo adjunto dentro (cid:logo).
 """
 import smtplib
 import ssl
 from email.message import EmailMessage
 from email.utils import formatdate, make_msgid
+
+from .plantillas_correo import LOGO
 
 
 class Smtp:
@@ -29,7 +32,7 @@ class Smtp:
         except smtplib.SMTPException:
             pass
 
-    def enviar(self, para, asunto, cuerpo):
+    def enviar(self, para, asunto, cuerpo, html=None):
         m = EmailMessage()
         m["From"] = self.c.correo_remitente
         m["To"] = para
@@ -37,4 +40,10 @@ class Smtp:
         m["Date"] = formatdate(localtime=True)
         m["Message-ID"] = make_msgid(domain=self.c.correo_remitente.rsplit("@", 1)[-1].strip("> "))
         m.set_content(cuerpo)
+        if html:
+            m.add_alternative(html, subtype="html")
+            if "cid:logo" in html:
+                with open(LOGO, "rb") as f:
+                    m.get_payload()[1].add_related(f.read(), "image", "png", cid="<logo>",
+                                                   filename="edunest.png")
         self.s.send_message(m)

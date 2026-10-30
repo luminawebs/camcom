@@ -47,6 +47,7 @@ class Config:
     smtp_usuario: str = ""
     smtp_clave: str = ""
     correo_remitente: str = "Aula Virtual Empresarial <no-responder@edunest.co>"
+    correo_soporte: str = ""    # vacío: el pie de los correos no ofrece un contacto de ayuda
     puerto: int = 8080
 
     @property
@@ -84,6 +85,7 @@ class Config:
             smtp_usuario=e("PASE_SMTP_USUARIO", ""),
             smtp_clave=e("PASE_SMTP_CLAVE", ""),
             correo_remitente=e("PASE_CORREO_REMITENTE", cls.correo_remitente),
+            correo_soporte=e("PASE_CORREO_SOPORTE", ""),
             puerto=int(e("PASE_PUERTO", "8080")),
         )
         c.validar()

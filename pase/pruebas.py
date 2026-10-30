@@ -384,7 +384,7 @@ class PruebasFlujo(Escenario):
         self.reloj.fecha = dt.date(2026, 11, 28)
         self.assertEqual(len(self.pase.cobro_mensual()), 1)
         aviso = self.pase.uno("SELECT cuerpo FROM avisos WHERE asunto LIKE 'Renueva%'")["cuerpo"]
-        enlace = aviso.split("Paga aquí: ")[1]
+        enlace = aviso.split("Renovar mi Pase: ")[1].split("\n")[0]
         status, _, pagina = self.http("GET", enlace)
         self.assertEqual(status, 200)
         self.assertIn(b"ePayco.checkout.configure(", pagina)
@@ -408,7 +408,7 @@ class PruebasFlujo(Escenario):
         self.reloj.fecha = dt.date(2026, 11, 29)
         self.pase.cobro_mensual()
         enlace = self.pase.uno("SELECT cuerpo FROM avisos WHERE asunto LIKE 'Renueva%'")["cuerpo"].split(
-            "Paga aquí: ")[1]
+            "Renovar mi Pase: ")[1].split("\n")[0]
         self.pagar_en_checkout(enlace)
         self.esperar_estado(pid, "activo")
         self.assertEqual(self.pase.suscripcion(pid)["proximo_corte"], "2027-01-03")
@@ -485,7 +485,7 @@ class SmtpFalso:
     def __exit__(self, *_):
         self.abierto = False
 
-    def enviar(self, para, asunto, cuerpo):
+    def enviar(self, para, asunto, cuerpo, html=None):
         assert self.abierto
         if para in self.rechazar:
             raise RuntimeError("550 buzón no existe")
@@ -521,9 +521,9 @@ class Correos(unittest.TestCase):
         smtp = SmtpFalso()
 
         class SmtpQueCruza(SmtpFalso):
-            def enviar(s, para, asunto, cuerpo):  # mientras esta corrida envía, arranca el timer
+            def enviar(s, para, asunto, cuerpo, html=None):  # mientras esta corrida envía, arranca el timer
                 otra.enviar_avisos(smtp)
-                super().enviar(para, asunto, cuerpo)
+                super().enviar(para, asunto, cuerpo, html)
 
         primera = SmtpQueCruza()
         self.assertEqual(self.pase.enviar_avisos(primera)["enviados"], 1)
@@ -550,6 +550,34 @@ class Correos(unittest.TestCase):
         self.assertEqual(m["From"], "Aula Virtual Empresarial <no-responder@edunest.co>")
         self.assertEqual(m["Subject"], "¡Ya tienes tu Pase!")
         self.assertTrue(m["Message-ID"].endswith("@edunest.co>"))
+
+    def test_correo_con_diseno_lleva_html_y_logo(self):
+        from unittest import mock
+        from . import correo
+        self.pase.avisar_con_diseno("ana@ejemplo.co", "pase_activo", nombre="ana rojas",
+                                    medio="457562******4242", proximo_corte="2026-11-30")
+        a = self.pase.uno("SELECT * FROM avisos")
+        self.assertEqual(a["asunto"], "¡Ya tienes tu Pase Empresario!")
+        self.assertIn("Tarjeta •••• 4242", a["cuerpo"])
+        self.assertIn("30 de noviembre de 2026", a["html"])
+        self.assertIn("#00806b", a["html"])
+        c = Config(smtp_host="smtp-relay.brevo.com")
+        with mock.patch.object(correo.smtplib, "SMTP") as SMTP:
+            self.assertEqual(self.pase.enviar_avisos(correo.Smtp(c))["enviados"], 1)
+        m = SMTP.return_value.send_message.call_args[0][0]
+        self.assertEqual(m.get_content_type(), "multipart/alternative")
+        texto, rico = m.get_payload()
+        self.assertEqual(texto.get_content_type(), "text/plain")
+        self.assertEqual(rico.get_content_type(), "multipart/related")
+        logo = rico.get_payload()[1]
+        self.assertEqual((logo.get_content_type(), logo["Content-ID"]), ("image/png", "<logo>"))
+
+    def test_todas_las_plantillas_arman(self):
+        from . import plantillas_correo as pc
+        for tipo, datos in pc.EJEMPLOS.items():
+            asunto, texto, cuerpo = pc.armar(tipo, self.c, **datos)
+            self.assertTrue(asunto and texto and cuerpo.startswith("<!doctype html>"), tipo)
+            self.assertNotIn("<b>", texto, tipo)
 
     def test_base_vieja_gana_columnas(self):
         import sqlite3

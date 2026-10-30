@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS eventos_rechazados (recibido_en TEXT, ip TEXT, payloa
 CREATE TABLE IF NOT EXISTS historial (persona_id INTEGER, evento TEXT, detalle TEXT, origen TEXT, fecha TEXT);
 CREATE TABLE IF NOT EXISTS avisos (
   id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, creado TEXT, enviado_en TEXT,
-  intentos INTEGER DEFAULT 0, error TEXT);
+  intentos INTEGER DEFAULT 0, error TEXT, html TEXT);
 """
 MAX_INTENTOS_AVISO = 5
 
@@ -78,7 +78,7 @@ class Pase:
                                "con una base nueva (solo tenía pagos de sandbox).")
         self.bd.executescript(ESQUEMA)
         columnas = {r[1] for r in self.bd.execute("PRAGMA table_info(avisos)")}
-        for col, tipo in (("intentos", "INTEGER DEFAULT 0"), ("error", "TEXT")):
+        for col, tipo in (("intentos", "INTEGER DEFAULT 0"), ("error", "TEXT"), ("html", "TEXT")):
             if col not in columnas:  # bases creadas antes del envío real
                 self.bd.execute(f"ALTER TABLE avisos ADD COLUMN {col} {tipo}")
         self.candado = threading.RLock()
@@ -109,10 +109,16 @@ class Pase:
     def historial(self, persona_id, evento, detalle="", origen="conector"):
         self.q("INSERT INTO historial VALUES (?,?,?,?,?)", persona_id, evento, detalle, origen, ahora())
 
-    def avisar(self, para, asunto, cuerpo):
+    def avisar(self, para, asunto, cuerpo, html=None):
         for destino in ([para] if isinstance(para, str) else para):
-            self.q("INSERT INTO avisos (para, asunto, cuerpo, creado) VALUES (?,?,?,?)",
-                   destino, asunto, cuerpo, ahora())
+            self.q("INSERT INTO avisos (para, asunto, cuerpo, html, creado) VALUES (?,?,?,?,?)",
+                   destino, asunto, cuerpo, html, ahora())
+
+    def avisar_con_diseno(self, para, tipo, **datos):
+        """Aviso con la plantilla de marca (texto + HTML); ver plantillas_correo.py."""
+        from .plantillas_correo import armar
+        asunto, texto, cuerpo_html = armar(tipo, self.c, **datos)
+        self.avisar(para, asunto, texto, cuerpo_html)
 
     def enviar_avisos(self, smtp=None):
         """Envía los avisos pendientes. Un fallo de un destinatario no frena a los demás; tras
@@ -138,7 +144,7 @@ class Pase:
                           "enviando:" + ahora(), a["id"], a["enviado_en"]).rowcount != 1:
                     continue
                 try:
-                    s.enviar(a["para"], a["asunto"], a["cuerpo"])
+                    s.enviar(a["para"], a["asunto"], a["cuerpo"], a["html"])
                 except Exception as exc:
                     fallidos += 1
                     self.q("UPDATE avisos SET enviado_en=NULL, intentos=intentos+1, error=? WHERE id=?",
@@ -151,7 +157,7 @@ class Pase:
 
     def avisar_organizaciones(self, asunto, cuerpo):
         if self.c.avisos_correo:
-            self.avisar(self.c.avisos_correo, asunto, cuerpo)
+            self.avisar_con_diseno(self.c.avisos_correo, "interno", asunto=asunto, texto=cuerpo)
 
     def estado(self, persona_id, nuevo, origen="conector"):
         p = self.persona(persona_id)
@@ -199,8 +205,8 @@ class Pase:
         self.moodle.agregar_a_cohorte(uid, self.c.cohorte_gratis)
         if p["estado"] == "interesado":
             self.estado(persona_id, "registro_gratis", "formulario")
-        self.avisar(p["correo"], "Bienvenido al Aula Virtual Empresarial",
-                    "Tu registro gratuito está listo. Revisa el correo de Moodle con tu contraseña.")
+        from .moodle import nombre_usuario
+        self.avisar_con_diseno(p["correo"], "registro", nombre=p["nombre"], usuario=nombre_usuario(p["correo"]))
         return uid
 
     def _usuario_moodle(self, p):
@@ -392,14 +398,15 @@ class Pase:
             self.avisar_organizaciones("Nueva suscripción al Pase",
                                        f"{p['nombre']} ({p['negocio']}) · canal {p['canal_origen']}")
         if anterior not in ("suscrito", "activo", "en_mora"):
-            self.avisar(p["correo"], "¡Ya tienes tu Pase Empresario!",
-                        "Tu pago fue aprobado. Ya puedes entrar a todos los cursos con certificado.")
+            sus = self.suscripcion(pid)
+            self.avisar_con_diseno(p["correo"], "pase_activo", nombre=p["nombre"],
+                                   medio=sus["medio_enmascarado"], proximo_corte=sus["proximo_corte"])
 
     def _pago_rechazado(self, pago, origen):
         pid = pago["persona_id"]
         p = self.persona(pid)
         if pago["tipo"] == "inicial":
-            self.avisar(p["correo"], "Tu pago no se aprobó", "Puedes intentarlo otra vez con otro medio.")
+            self.avisar_con_diseno(p["correo"], "pago_rechazado", nombre=p["nombre"])
             return
         sus = self.suscripcion(pid)
         intento = pago["intento"]
@@ -410,8 +417,8 @@ class Pase:
                    intento, siguiente.isoformat(), pid)
             self.estado(pid, "en_mora", origen)
             if intento == 1:
-                self.avisar(p["correo"], "No pudimos cobrar tu Pase",
-                            f"Intentaremos de nuevo el {siguiente}. Si quieres, actualiza tu medio de pago.")
+                self.avisar_con_diseno(p["correo"], "cobro_fallido", nombre=p["nombre"], reintento=siguiente,
+                                       medio=sus["medio_enmascarado"])
         else:
             self.cancelar(pid, "reintentos agotados", origen)
 
@@ -473,8 +480,7 @@ class Pase:
             ref = self._registrar_pago(pid, "mensual", "checkout", 1, periodo)
             p = self.persona(pid)
             enlace = self.enlace_checkout(ref)
-            self.avisar(p["correo"], "Renueva tu Pase Empresario",
-                        f"Tu Pase vence el {corte}. Paga aquí: {enlace}")
+            self.avisar_con_diseno(p["correo"], "renovar", nombre=p["nombre"], corte=corte, enlace=enlace)
             return [(pid, f"enlace {ref}")]
         ultimo = corte + dt.timedelta(days=self.c.reintentos_dias[-1])
         if hoy > ultimo and not self.uno("SELECT 1 FROM pagos WHERE persona_id=? AND periodo=? "
@@ -503,8 +509,7 @@ class Pase:
         self.estado(persona_id, "cancelado", origen)
         self.historial(persona_id, "cancelo", motivo, origen)
         self.avisar_organizaciones("Cancelación del Pase", f"{p['nombre']}: {motivo}")
-        self.avisar(p["correo"], "Tu Pase Empresario terminó",
-                    "Conservas tu avance y tus cursos gratuitos. Puedes volver cuando quieras.")
+        self.avisar_con_diseno(p["correo"], "pase_termino", nombre=p["nombre"], motivo=motivo)
 
     def pedir_cancelacion(self, persona_id):
         """RF-26: el acceso sigue hasta el corte; no se vuelve a cobrar."""
