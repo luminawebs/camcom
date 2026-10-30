@@ -262,7 +262,7 @@ def pagina_pase(c, n):
     <span class="as-eti">Un solo pago al mes</span>
     <h2>Todos los cursos y todos sus certificados</h2>
     <div class="as-fila" style="flex-wrap:wrap;gap:10px">
-      <div {dato}><b {grande}>{len(todos)}</b>cursos hoy, y nuevos cada mes</div>
+      <div {dato}><b {grande}>📚</b>todos los cursos del Aula, y los nuevos que salgan</div>
       <div {dato}><b {grande}>🎓</b>un certificado por cada curso que termines</div>
     </div>
     <ol class="as-pasos">{lista}</ol>
