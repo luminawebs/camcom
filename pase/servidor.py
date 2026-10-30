@@ -3,14 +3,16 @@
 Solo biblioteca estándar de Python 3.9+. Uso:
     python -m pase.servidor          (lee la configuración del entorno)
 """
-import base64
 import datetime as dt
+import hashlib
 import hmac
 import html
+import http.cookies
 import json
 import os
 import queue
 import threading
+import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
@@ -55,6 +57,9 @@ border:1px solid var(--borde);border-radius:12px}table{border-collapse:collapse;
 th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--borde);white-space:nowrap}
 th{background:#eef2f7;font-weight:600}tr:last-child td{border-bottom:0}td.n{text-align:right}
 .APPROVED{color:var(--verde);font-weight:600}.DECLINED,.ERROR{color:#c0392b;font-weight:600}
+.modo{display:inline-block;font-size:.8rem;padding:3px 10px;border-radius:999px;vertical-align:middle;margin-left:8px}
+.modo.prueba{background:#fff7e0;color:#8a5a00;border:1px solid #e9c46a}.modo.real{background:#e6f5ec;color:var(--verde);
+border:1px solid var(--verde)}.salir{float:right}.salir button{margin-top:0;padding:8px 14px}
 .dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.vacio{padding:12px;color:#56606b}
 """
 
@@ -92,7 +97,10 @@ def tablero_html(d, precio_cop, sandbox):
         alertas.append(f"{d['eventos_pendientes']} confirmación(es) de ePayco sin procesar")
     if d["eventos_rechazados"]:
         alertas.append(f"{d['eventos_rechazados']} confirmación(es) rechazadas por firma")
-    cuerpo = ['<h1>Tablero del Pase Empresario</h1>',
+    modo = ('<span class="modo prueba">Modo PRUEBAS</span>' if sandbox else
+            '<span class="modo real">PRODUCCIÓN: cobros reales</span>')
+    cuerpo = ['<form method="post" action="/tablero/salir" class="salir"><button class="sec">Salir</button></form>',
+              f'<h1>Tablero del Pase Empresario {modo}</h1>',
               f'<p class="nota">Recaudo total aprobado: {pesos(d["recaudo_total_cop"])}. '
               '<a href="/tablero/pagos.csv">Descargar pagos (CSV)</a></p>']
     if alertas:
@@ -129,6 +137,21 @@ def tablero_html(d, precio_cop, sandbox):
              for r in d["avisos_con_error"]]))
     return pagina("Tablero del Pase", "".join(cuerpo), sandbox).replace(
         b"</style>", CSS_TABLERO.encode() + b"</style>", 1)
+
+
+def login_html(configurado, error=""):
+    if not configurado:
+        return ("<h1>Tablero del Pase</h1><div class='caja'><p>El tablero aún no tiene usuario. En el servidor, "
+                "agrega <code>PASE_ADMIN_USUARIO</code> y <code>PASE_ADMIN_CLAVE</code> (10 caracteres o más) "
+                "en /etc/pase/pase.env y reinicia el servicio.</p></div>")
+    aviso = f'<p class="aviso">{html.escape(error)}</p>' if error else ""
+    return f"""<h1>Tablero del Pase</h1>{aviso}
+<form class="caja" method="post" action="/tablero/entrar">
+<label>Usuario</label><input name="usuario" required autocomplete="username" autofocus>
+<label>Contraseña</label><input name="clave" type="password" required autocomplete="current-password">
+<button>Entrar</button>
+<p class="nota">Tras 5 intentos fallidos el acceso se bloquea 15 minutos.</p>
+</form>"""
 
 
 def formulario(canal):
@@ -241,7 +264,7 @@ const tx=new URLSearchParams(location.search).get('ref_payco')||'';
 async function mirar(){const r=await fetch('/estado-pago?ref='+encodeURIComponent(ref)+'&ref_payco='+encodeURIComponent(tx));
  const j=await r.json();
  if(j.estado==='APPROVED'){document.getElementById('t').textContent='Pago aprobado';document.getElementById('e').innerHTML='¡Listo! Tu Pase está activo. Te enviamos un correo con el acceso al aula.';return}
- if(j.estado==='DECLINED'||j.estado==='ERROR'||j.estado==='VOIDED'){document.getElementById('e').textContent='El pago no se aprobó. Puedes intentarlo de nuevo.';return}
+ if(j.estado==='DECLINED'||j.estado==='ERROR'||j.estado==='VOIDED'){document.getElementById('t').textContent='Pago no aprobado';document.getElementById('e').textContent='El pago no se aprobó. Puedes intentarlo de nuevo.';return}
  setTimeout(mirar,2500)}
 mirar();
 </script>"""
@@ -252,7 +275,40 @@ class App:
         self.c = config
         self.pase = pase or Pase(config, moodle_mod.crear(config))
         self.cola = queue.Queue()
+        self._fallos_admin, self._candado_admin = {}, threading.Lock()
         threading.Thread(target=self._trabajador, daemon=True).start()
+
+    # ---- tablero: un usuario y contraseña en /etc/pase/pase.env, sesión firmada de 12 h
+    INTENTOS_ADMIN, BLOQUEO_ADMIN = 5, 15 * 60
+
+    def admin_configurado(self):
+        return bool(os.environ.get("PASE_ADMIN_USUARIO")) and len(os.environ.get("PASE_ADMIN_CLAVE", "")) >= 10
+
+    def _huella_admin(self):
+        # Cambiar el usuario o la contraseña cierra todas las sesiones abiertas.
+        texto = os.environ.get("PASE_ADMIN_USUARIO", "") + "\0" + os.environ.get("PASE_ADMIN_CLAVE", "")
+        return hashlib.sha256(texto.encode()).hexdigest()[:16]
+
+    def entrar_admin(self, usuario, clave, ip):
+        ahora_ = time.time()
+        with self._candado_admin:
+            fallos = [t for t in self._fallos_admin.get(ip, []) if ahora_ - t < self.BLOQUEO_ADMIN]
+            self._fallos_admin[ip] = fallos
+            if len(fallos) >= self.INTENTOS_ADMIN or not self.admin_configurado():
+                return None
+            ok = (hmac.compare_digest(usuario.encode(), os.environ["PASE_ADMIN_USUARIO"].encode()) &
+                  hmac.compare_digest(clave.encode(), os.environ["PASE_ADMIN_CLAVE"].encode()))
+            if not ok:
+                fallos.append(ahora_)
+                return None
+            self._fallos_admin.pop(ip, None)
+        vence = int(ahora_) + 12 * 3600
+        return f"{vence}.{self.pase.firma(f'admin:{vence}:{self._huella_admin()}')}"
+
+    def sesion_admin_valida(self, valor):
+        vence, _, f = (valor or "").partition(".")
+        return (self.admin_configurado() and vence.isdigit() and int(vence) > time.time() and
+                self.pase.firma_valida(f"admin:{vence}:{self._huella_admin()}", f))
 
     # La persona viaja firmada en la URL: nadie puede pagar ni consultar a nombre de otro.
     def firmar(self, pid):
@@ -281,6 +337,11 @@ class App:
                 if os.environ.get("PASE_LOG", "1") == "1":
                     super().log_message(fmt, *args)
 
+            def log_request(self, code="-", size="-"):
+                # Solo método y ruta: los parámetros traen datos personales (Ley 1581) y enlaces firmados.
+                ruta = urllib.parse.urlparse(getattr(self, "path", "")).path
+                self.log_message('"%s %s" %s', getattr(self, "command", "-"), ruta, getattr(code, "value", code))
+
             def responder(self, codigo, cuerpo=b"", tipo="text/html; charset=utf-8", extra=None):
                 self.send_response(codigo)
                 self.send_header("Content-Type", tipo)
@@ -294,16 +355,16 @@ class App:
                 self.responder(codigo, json.dumps(datos).encode(), "application/json")
 
             def admin_valido(self):
-                """Usuario cualquiera y como clave PASE_ADMIN_TOKEN (autenticación básica del navegador)."""
-                token = os.environ.get("PASE_ADMIN_TOKEN", "")
-                auth = self.headers.get("Authorization", "")
-                if len(token) < 16 or not auth.startswith("Basic "):
-                    return False
-                try:
-                    clave = base64.b64decode(auth[6:]).decode().split(":", 1)[1]
-                except (ValueError, IndexError):
-                    return False
-                return hmac.compare_digest(clave.encode(), token.encode())
+                galleta = http.cookies.SimpleCookie(self.headers.get("Cookie", ""))
+                return app.sesion_admin_valida(galleta["pase_admin"].value if "pase_admin" in galleta else "")
+
+            def galleta_admin(self, valor, segundos):
+                segura = "; Secure" if app.c.url_publica.startswith("https://") else ""
+                return {"Set-Cookie": f"pase_admin={valor}; Max-Age={segundos}; Path=/tablero; "
+                                      f"HttpOnly; SameSite=Strict{segura}"}
+
+            def redirigir(self, destino, extra=None):
+                self.responder(303, extra={"Location": destino, **(extra or {})})
 
             def ip(self):
                 reenviada = self.headers.get("X-Forwarded-For", "")
@@ -366,10 +427,12 @@ class App:
                 if u.path == "/salud":
                     return self.json(200, {"ok": True, "entorno": app.c.entorno})
                 if u.path in ("/tablero", "/tablero/pagos.csv"):
-                    if not self.admin_valido():
-                        return self.responder(401, pagina("Tablero", "<h1>Acceso restringido</h1>", sb),
-                                              extra={"WWW-Authenticate": 'Basic realm="Tablero del Pase"'})
                     sin_cache = {"Cache-Control": "no-store"}
+                    if not self.admin_valido():
+                        if u.path != "/tablero":
+                            return self.redirigir("/tablero")
+                        return self.responder(200, pagina("Tablero", login_html(app.admin_configurado()), sb),
+                                              extra=sin_cache)
                     if u.path == "/tablero":
                         return self.responder(200, tablero_html(app.pase.tablero(),
                                                                 app.c.precio_centavos // 100, sb), extra=sin_cache)
@@ -386,6 +449,15 @@ class App:
             def do_POST(self):
                 u = urllib.parse.urlparse(self.path)
                 sb = app.c.entorno == "sandbox"
+                if u.path == "/tablero/entrar":
+                    datos = dict(urllib.parse.parse_qsl(self.leer().decode(errors="replace")))
+                    sesion = app.entrar_admin(datos.get("usuario", ""), datos.get("clave", ""), self.ip())
+                    if not sesion:
+                        return self.responder(401, pagina("Tablero", login_html(
+                            app.admin_configurado(), "Usuario o contraseña incorrectos."), sb))
+                    return self.redirigir("/tablero", self.galleta_admin(sesion, 12 * 3600))
+                if u.path == "/tablero/salir":
+                    return self.redirigir("/tablero", self.galleta_admin("", 0))
                 if u.path == "/webhooks/epayco":
                     crudo = self.leer().decode(errors="replace")
                     if "json" in self.headers.get("Content-Type", ""):

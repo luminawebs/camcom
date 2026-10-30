@@ -93,7 +93,8 @@ Lo que comprueban las pruebas:
 | `PASE_MOODLE_URL`, `PASE_MOODLE_TOKEN`, `PASE_MOODLE_SIMULADO` | `https://portal.edunest.co`, token de `conector-pase`, `1` |
 | `PASE_REINTENTOS_DIAS` | `0,3,7` |
 | `PASE_AVISOS_CORREO` | correos de la Cámara y de EduNest, separados por coma |
-| `PASE_ADMIN_TOKEN` | clave del tablero `/tablero` (cualquier usuario) y de `/admin/resumen` |
+| `PASE_ADMIN_TOKEN` | protege `/admin/resumen` |
+| `PASE_ADMIN_USUARIO`, `PASE_ADMIN_CLAVE` | acceso al tablero `/tablero` (sesión de 12 h; 5 fallos bloquean 15 min la IP) |
 | `PASE_SECRETO_SESION` | firma los enlaces de pago de cada persona |
 
 ## Verificado contra docs.epayco.com (28-oct-2026)

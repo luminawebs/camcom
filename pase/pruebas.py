@@ -4,7 +4,6 @@
 
 Cubren los criterios de aceptación 1 a 5 de requerimientos-tablero-pase.md.
 """
-import base64
 import datetime as dt
 import hashlib
 import http.client
@@ -222,27 +221,44 @@ class PruebasFlujo(Escenario):
         _, _, est = self.http("GET", f"{self.c.url_publica}/estado-pago?ref={ref}")
         self.assertEqual(json.loads(est)["estado"], "APPROVED")
 
-    def test_1b_tablero_con_clave(self):
+    def test_1b_tablero_con_usuario_y_clave(self):
         pid, _ = self.pagar_tarjeta()
         self.esperar_estado(pid, "suscrito")
         url = f"{self.c.url_publica}/tablero"
-        clave = lambda c: {"Authorization": "Basic " + base64.b64encode(f"admin:{c}".encode()).decode()}
-        with mock.patch.dict(os.environ, {"PASE_ADMIN_TOKEN": "x" * 32}):
-            self.assertEqual(self.http("GET", url)[0], 401)
-            self.assertEqual(self.http("GET", url, cabeceras=clave("otra"))[0], 401)
-            status, _, cuerpo = self.http("GET", url, cabeceras=clave("x" * 32))
+        form = {"Content-Type": "application/x-www-form-urlencoded"}
+        entrar = lambda u, c, ip="1.1.1.1": self.app.entrar_admin(u, c, ip)
+        with mock.patch.dict(os.environ, {"PASE_ADMIN_USUARIO": "", "PASE_ADMIN_CLAVE": ""}):
+            self.assertIn("aún no tiene usuario", self.http("GET", url)[2].decode())
+        with mock.patch.dict(os.environ, {"PASE_ADMIN_USUARIO": "david", "PASE_ADMIN_CLAVE": "clave-larga-1"}):
+            status, _, cuerpo = self.http("GET", url)
             self.assertEqual(status, 200)
-            texto = cuerpo.decode()
-            self.assertIn("Pases activos", texto)
-            self.assertIn("$29.000", texto)
-            self.assertIn("wa-afiliados", texto)
-            self.assertIn("Dora Pérez", texto)
-            status, cab, csv_ = self.http("GET", url + "/pagos.csv", cabeceras=clave("x" * 32))
+            self.assertIn('name="clave"', cuerpo.decode())
+            self.assertNotIn("Pases activos", cuerpo.decode())
+            self.assertEqual(self.http("GET", url + "/pagos.csv")[0], 303)
+            mala = urllib.parse.urlencode({"usuario": "david", "clave": "otra"})
+            self.assertEqual(self.http("POST", url + "/entrar", mala, form)[0], 401)
+            buena = urllib.parse.urlencode({"usuario": "david", "clave": "clave-larga-1"})
+            status, cab, _ = self.http("POST", url + "/entrar", buena, form)
+            self.assertEqual(status, 303)
+            self.assertIn("HttpOnly", cab["Set-Cookie"])
+            galleta = {"Cookie": cab["Set-Cookie"].split(";")[0]}
+            texto = self.http("GET", url, cabeceras=galleta)[2].decode()
+            for esperado in ("Pases activos", "$29.000", "wa-afiliados", "Dora Pérez", "Modo PRUEBAS"):
+                self.assertIn(esperado, texto)
+            status, cab, csv_ = self.http("GET", url + "/pagos.csv", cabeceras=galleta)
             self.assertEqual((status, cab["Content-Type"]), (200, "text/csv; charset=utf-8"))
             self.assertIn("52111222", csv_.decode("utf-8-sig"))
             self.assertNotIn("0326", csv_.decode("utf-8-sig"))  # nada de la tarjeta
-        with mock.patch.dict(os.environ, {"PASE_ADMIN_TOKEN": ""}):
-            self.assertEqual(self.http("GET", url, cabeceras=clave(""))[0], 401)
+            falsa = {"Cookie": "pase_admin=9999999999.abc"}
+            self.assertNotIn("Pases activos", self.http("GET", url, cabeceras=falsa)[2].decode())
+            # 5 fallos bloquean esa IP 15 minutos, aunque luego ponga la clave buena
+            for _ in range(5):
+                self.assertIsNone(entrar("david", "x", "2.2.2.2"))
+            self.assertIsNone(entrar("david", "clave-larga-1", "2.2.2.2"))
+            self.assertTrue(entrar("david", "clave-larga-1", "3.3.3.3"))
+        # cambiar la contraseña cierra las sesiones abiertas
+        with mock.patch.dict(os.environ, {"PASE_ADMIN_USUARIO": "david", "PASE_ADMIN_CLAVE": "otra-clave-22"}):
+            self.assertNotIn("Pases activos", self.http("GET", url, cabeceras=galleta)[2].decode())
         d = self.pase.tablero()
         self.assertEqual((d["suscripciones"], d["recaudo_total_cop"]), ({"activa": 1}, 29000))
 
