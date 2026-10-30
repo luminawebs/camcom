@@ -106,6 +106,7 @@ flex-shrink:0;border-radius:50%;border:2px solid var(--borde);box-sizing:border-
 .etapas .hecho{color:var(--tinta)}.etapas .hecho::before{border:0;background:var(--acento) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/14px no-repeat}
 .etapas .ahora{color:var(--tinta);font-weight:600}.etapas .ahora::before{border-color:var(--acento);background:var(--suave)}
 .razones{width:100%;padding:14px;background:var(--fondo);border-radius:12px;text-align:left;font-size:13px;color:var(--tinta-2)}
+.salir{align-self:flex-end}.salir button{width:auto;min-height:40px}
 .razones ul{margin:6px 0 0;padding-left:18px}.oculto{display:none!important}
 """
 
