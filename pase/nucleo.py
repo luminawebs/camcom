@@ -118,8 +118,12 @@ class Pase:
         """Envía los avisos pendientes. Un fallo de un destinatario no frena a los demás; tras
         MAX_INTENTOS_AVISO fallos el aviso se deja (queda el error en la tabla)."""
         from .correo import Smtp
-        pendientes = self.q("SELECT * FROM avisos WHERE enviado_en IS NULL AND intentos < ? ORDER BY id",
-                            MAX_INTENTOS_AVISO).fetchall()
+        # Un aviso «enviando:» de hace más de 15 min es de una corrida que se cayó a mitad.
+        vencido = "enviando:" + (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=15)).isoformat(
+            timespec="seconds")
+        pendientes = self.q("SELECT * FROM avisos WHERE (enviado_en IS NULL OR "
+                            "(enviado_en LIKE 'enviando:%' AND enviado_en < ?)) AND intentos < ? ORDER BY id",
+                            vencido, MAX_INTENTOS_AVISO).fetchall()
         if not pendientes:
             return {"enviados": 0, "fallidos": 0}
         if smtp is None:
@@ -129,11 +133,16 @@ class Pase:
         enviados = fallidos = 0
         with smtp as s:
             for a in pendientes:
+                # Reserva atómica: si otra corrida (el timer y probar-correo a la vez) ya lo tomó, se salta.
+                if self.q("UPDATE avisos SET enviado_en=? WHERE id=? AND enviado_en IS ?",
+                          "enviando:" + ahora(), a["id"], a["enviado_en"]).rowcount != 1:
+                    continue
                 try:
                     s.enviar(a["para"], a["asunto"], a["cuerpo"])
                 except Exception as exc:
                     fallidos += 1
-                    self.q("UPDATE avisos SET intentos=intentos+1, error=? WHERE id=?", str(exc)[:500], a["id"])
+                    self.q("UPDATE avisos SET enviado_en=NULL, intentos=intentos+1, error=? WHERE id=?",
+                           str(exc)[:500], a["id"])
                 else:
                     enviados += 1
                     self.q("UPDATE avisos SET enviado_en=?, intentos=intentos+1, error=NULL WHERE id=?",

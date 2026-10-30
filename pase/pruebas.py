@@ -473,6 +473,21 @@ class Correos(unittest.TestCase):
         self.assertEqual(self.pase.uno("SELECT intentos FROM avisos WHERE id=?", malo["id"])["intentos"], 5)
         self.assertEqual(len(smtp.enviados), 1)  # el bueno no se repite
 
+    def test_dos_corridas_a_la_vez_no_repiten(self):
+        self.pase.avisar("ana@ejemplo.co", "Hola", "Cuerpo")
+        otra = Pase(self.c, MoodleSimulado())
+        smtp = SmtpFalso()
+
+        class SmtpQueCruza(SmtpFalso):
+            def enviar(s, para, asunto, cuerpo):  # mientras esta corrida envía, arranca el timer
+                otra.enviar_avisos(smtp)
+                super().enviar(para, asunto, cuerpo)
+
+        primera = SmtpQueCruza()
+        self.assertEqual(self.pase.enviar_avisos(primera)["enviados"], 1)
+        self.assertEqual(len(primera.enviados) + len(smtp.enviados), 1)
+        otra.bd.close()
+
     def test_sin_smtp_quedan_guardados(self):
         self.pase.avisar("ana@ejemplo.co", "Hola", "Cuerpo")
         self.assertEqual(self.pase.enviar_avisos()["sin_smtp"], 1)
