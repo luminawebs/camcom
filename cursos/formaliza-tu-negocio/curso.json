@@ -221,5 +221,14 @@
     "siguiente": "Impuestos para pequeños negocios",
     "siguiente_texto": "Curso certificado: Régimen Simple, IVA, retenciones y calendario tributario, explicado para tu negocio."
   },
-  "notebooklm": "notebooklm/LEEME.md"
+  "notebooklm": "notebooklm/LEEME.md",
+  "pase": {
+    "canal": "curso-avs-g02",
+    "unidades": [
+      "Renueva tu matrícula a tiempo",
+      "Tus obligaciones del año",
+      "Tu calendario del negocio formal",
+      "Cambios en el RUT sin hacer filas"
+    ]
+  }
 }

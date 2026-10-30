@@ -1,6 +1,6 @@
 # IA para tu negocio desde el celular
 
-Gancho gratuito · Perfil P (Procedimiento en herramienta) · ≈ 1 h 36 min de estudiante · 27 piezas
+Gancho gratuito · Perfil P (Procedimiento en herramienta) · ≈ 1 h 36 min de estudiante · 28 piezas
 
 **Promesa:** Al terminar sabrás pedirle bien a un asistente de inteligencia artificial desde tu celular, tendrás tus mensajes y descripciones de productos escritos en minutos y revisados por ti, y sabrás qué datos de tu negocio y de tus clientes nunca debes poner en la IA.
 
@@ -48,7 +48,8 @@ Gancho gratuito · Perfil P (Procedimiento en herramienta) · ≈ 1 h 36 min de 
 │   ├── U3 · Practica | Simulador de pantalla [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-practica (simulador-pantalla)
 │   ├── U3 · Aplica | Tu IA sin datos de clientes [Foro de preguntas y respuestas · 8 min] → paginas/u3-aplica.html
 │   ├── U3 · Llévatelo | Tus datos en una mirada [Página + Archivo · 2 min] → paginas/u3-llevatelo.html
-│   └── U3 · Profundiza | Ayuda oficial de la herramienta [URL + Página · opcional] → paginas/u3-profundiza.html
+│   ├── U3 · Profundiza | Ayuda oficial de la herramienta [URL + Página · opcional] → paginas/u3-profundiza.html
+│   └── U3 · Lo que sigue | Unidades 4 a 7 con el Pase Empresario [Página · opcional] → paginas/u3-pase.html
 │
 └── CIERRE  (18 min)
     ├── Reto final entre pares [Taller (revisión entre pares) · 15 min] → paginas/99-reto-final-entre-pares.html

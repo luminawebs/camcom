@@ -18,6 +18,7 @@ import html
 import json
 import re
 import shutil
+import urllib.parse
 import sys
 from pathlib import Path
 
@@ -32,6 +33,10 @@ NOMBRE_PASO = {"entrada": "Entrada", "aprende": "Aprende", "practica": "Practica
 PREGUNTA_PASO = {"entrada": "¿Por qué me importa?", "aprende": "¿Qué necesito saber?", "practica": "¿Lo entendí?",
                  "aplica": "¿Me sirve a mí?", "demuestra": "¿Lo logré?", "llevatelo": "¿Qué me llevo?",
                  "profundiza": "¿Dónde aprendo más?"}
+# Invitación al Pase al final de la última unidad gratuita (curso.json "pase": {"unidades": [4 títulos de U4-U7]}).
+# El canal ?c= le dice al conector de qué curso llegó la persona.
+PASE_URL = "https://pase.edunest.co/"
+PASE_PRECIO = "$29.000 al mes"
 
 # Receta por perfil: paso -> (formato, actividad de Moodle, min certificado, min gancho, molde HTML5 o None)
 # Profundiza es opcional (0 min). En el gancho, Aplica se reemplaza por PEER_G (foro entre pares, sin tutor).
@@ -221,6 +226,55 @@ def ficha_moodle(eti, titulo, actividad, lineas, extra=""):
             f'<ul class="as-check">{lis}</ul>{extra}</div>')
 
 
+def cursos_con_pase():
+    """[(canal, título corto)] de los cursos del repo que tienen tramo del Pase, en el orden de su canal (AVS-G01, G02...)."""
+    out = []
+    for f in sorted((RAIZ.parent / "cursos").glob("*/curso.json")):
+        x = json.loads(f.read_text(encoding="utf-8"))
+        if x.get("pase"):
+            out.append((x["pase"].get("canal", "curso-" + x["id"]), x.get("titulo_corto", x["titulo"])))
+    return sorted(out)
+
+
+def pagina_pase(c, n):
+    """Invitación a comprar el Pase al final de la unidad n (la última gratuita). Lo que más resalta es que el Pase
+    abre todos los cursos y todos sus certificados; debajo, lo que sigue en este curso (unidades 4 a 7)."""
+    pa = c["pase"]
+    canal = pa.get("canal", "curso-" + c["id"])
+    enlace = f"{PASE_URL}?c={urllib.parse.quote(canal)}"
+    todos = cursos_con_pase()
+    lista = "".join(
+        f'<li class="as-paso"{" style=\"border:2px solid var(--as-rojo)\"" if k == canal else ""}><span class="as-paso__n">📘</span>'
+        f'<span class="as-paso__t"><b>{t(x)}</b>{"<small style=\"display:block\">Este curso</small>" if k == canal else ""}</span>'
+        f'<span class="as-chip as-chip--ok">🎓 Certificado</span></li>' for k, x in todos)
+    filas = "".join(
+        f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{t(x)}</b></span>'
+        f'<span class="as-chip as-chip--rojo">🔒 Pase</span></li>' for k, x in enumerate(pa["unidades"], n + 1))
+    dato = ('style="background:var(--as-rojo-100);border-radius:10px;padding:12px 14px;text-align:center"')
+    grande = 'style="display:block;font-size:2rem;font-weight:700;line-height:1.1;color:var(--as-rojo-oscuro)"'
+    return {f"paginas/u{n}-pase.html": (f"Unidad {n}: Lo que sigue", f"Página al final de la Unidad {n}, después de Profundiza. Sin finalización.", f"""
+  <div class="as-banda as-pila">
+    <span class="as-eti">Terminaste la parte gratuita</span>
+    <h2>{t(pa.get('titulo', 'Vas muy bien. Sigue con el Pase Empresario'))}</h2>
+    <p>{t(pa.get('texto', f'Ya hiciste las {n} unidades gratis de «{c.get("titulo_corto", c["titulo"])}». Con el Pase sigues aquí mismo, en la unidad {n + 1}, sin perder tu avance.'))}</p>
+  </div>
+  <div class="as-tarjeta as-pila" style="border:3px solid var(--as-rojo)">
+    <span class="as-eti">Un solo pago al mes</span>
+    <h2>Todos los cursos y todos sus certificados</h2>
+    <div {dato}><b {grande}>📚 🎓</b>Todos los cursos del Aula y los nuevos que salgan, con un certificado por cada curso que termines</div>
+    <ol class="as-pasos">{lista}</ol>
+    <p class="as-sec">Cada certificado lleva tu nombre, el curso, las horas y un código de verificación.</p>
+    <div class="as-aviso as-aviso--marca"><b>{PASE_PRECIO}.</b> Pagas con tarjeta, PSE, Nequi o Daviplata.</div>
+    <a class="as-btn as-btn--ancho" href="{html.escape(enlace)}" target="_blank" rel="noopener">Quiero el Pase Empresario ›</a>
+  </div>
+  <div class="as-tarjeta as-pila">
+    <h3>Lo que sigue en este curso</h3>
+    <ol class="as-pasos">{filas}</ol>
+    <p class="as-sec"><small>Usa el mismo correo con el que entras al Aula: así todo se abre solo en tu usuario.
+      Si ya tienes el Pase, ya está abierto para ti.</small></p>
+  </div>""")}
+
+
 # ---------------------------------------------------------------- estructura
 def estructura(c):
     nivel, receta = c["nivel"], RECETAS[c["perfil"]]
@@ -246,6 +300,10 @@ def estructura(c):
             else:
                 it.update(nombre=u[p].get("titulo", formato) if isinstance(u.get(p), dict) else formato, pagina=f"paginas/u{i}-{p}.html")
             items.append(it)
+        if nivel == "g" and c.get("pase") and i == n_u:
+            items.append({"codigo": f"U{i} · Lo que sigue", "paso": "pase", "nombre": "Unidades 4 a 7 con el Pase Empresario",
+                          "formato": "Invitación al Pase", "actividad": "Página", "min": 0, "opcional": True,
+                          "pagina": f"paginas/u{i}-pase.html"})
         secciones.append({"titulo": f"UNIDAD {i}", "tema": u["tema"], "objetivo": u["objetivo"], "items": items,
                           "cabecera": f"paginas/u{i}-cabecera.html", "n": i, "de": n_u})
     cierre = {"titulo": "CIERRE", "tema": "Reto, constancia y siguiente paso", "items": []}
@@ -345,7 +403,7 @@ def paginas(c, secs):
 
     for s, u in zip(u_secs, c["unidades"]):
         i = s["n"]
-        pasos_u = [x for x in s["items"] if x["paso"] != "resumen"]
+        pasos_u = [x for x in s["items"] if x["paso"] not in ("resumen", "pase")]
         num = {x["paso"]: k for k, x in enumerate(pasos_u, 1)}
         mins = {x["paso"]: x["min"] for x in pasos_u}
         filas = "".join(
@@ -443,6 +501,9 @@ def paginas(c, secs):
     <h3>Descarga</h3>
     {desc}
   </div>""")
+
+    if c.get("pase") and c["nivel"] == "g":
+        P.update(pagina_pase(c, len(u_secs)))
 
     ci = c["cierre"]
     P["paginas/99-cierre.html"] = ("Cierre del curso", "Resumen de la sección CIERRE.", f"""

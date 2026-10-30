@@ -1,6 +1,6 @@
 # Vende más por WhatsApp Business
 
-Gancho gratuito · Perfil P (Procedimiento en herramienta) · ≈ 1 h 36 min de estudiante · 27 piezas
+Gancho gratuito · Perfil P (Procedimiento en herramienta) · ≈ 1 h 36 min de estudiante · 28 piezas
 
 **Promesa:** Al terminar tendrás tu WhatsApp de negocio en orden: perfil de empresa y catálogo con precios, etiquetas para que ningún pedido se pierda y mensajes automáticos para responder rápido sin vivir pegado al celular.
 
@@ -48,7 +48,8 @@ Gancho gratuito · Perfil P (Procedimiento en herramienta) · ≈ 1 h 36 min de 
 │   ├── U3 · Practica | Simulador de pantalla [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-practica (simulador-pantalla)
 │   ├── U3 · Aplica | Tus mensajes listos [Foro de preguntas y respuestas · 8 min] → paginas/u3-aplica.html
 │   ├── U3 · Llévatelo | Tus respuestas en una mirada [Página + Archivo · 2 min] → paginas/u3-llevatelo.html
-│   └── U3 · Profundiza | Ayuda oficial de la herramienta [URL + Página · opcional] → paginas/u3-profundiza.html
+│   ├── U3 · Profundiza | Ayuda oficial de la herramienta [URL + Página · opcional] → paginas/u3-profundiza.html
+│   └── U3 · Lo que sigue | Unidades 4 a 7 con el Pase Empresario [Página · opcional] → paginas/u3-pase.html
 │
 └── CIERRE  (18 min)
     ├── Reto final entre pares [Taller (revisión entre pares) · 15 min] → paginas/99-reto-final-entre-pares.html

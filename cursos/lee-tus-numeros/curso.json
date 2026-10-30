@@ -230,5 +230,14 @@
     ],
     "siguiente": "Lee tus números · Unidades 4 a 7",
     "siguiente_texto": "Con el Pase Empresario: balance general, flujo de efectivo, cómo presentar tus números al banco o al contador y 3 indicadores para vigilar cada mes."
+  },
+  "pase": {
+    "canal": "curso-avs-g05",
+    "unidades": [
+      "Tu balance general",
+      "Tu flujo de efectivo",
+      "Presenta tus números al banco o al contador",
+      "3 indicadores para vigilar cada mes"
+    ]
   }
 }

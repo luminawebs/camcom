@@ -241,5 +241,14 @@
     ],
     "siguiente": "IA para tu negocio desde el celular · Unidades 4 a 7",
     "siguiente_texto": "Con el Pase Empresario: instrucciones fijas para tus tareas de siempre, analizar tus ventas en Excel con IA, imágenes para tus redes y cómo medir la hora que te ahorras."
+  },
+  "pase": {
+    "canal": "curso-avs-g06",
+    "unidades": [
+      "Instrucciones fijas para tus tareas de siempre",
+      "Analiza tus ventas en Excel con IA",
+      "Imágenes para tus redes",
+      "Mide la hora que te ahorras"
+    ]
   }
 }

@@ -220,5 +220,14 @@
     ],
     "siguiente": "Facturación electrónica · Unidades 4 a 7",
     "siguiente_texto": "Con el Pase Empresario: Régimen Simple, IVA, retenciones y tu calendario tributario, explicado para tu negocio."
+  },
+  "pase": {
+    "canal": "curso-avs-g03",
+    "unidades": [
+      "Régimen Simple: ¿te conviene?",
+      "El IVA, explicado para tu negocio",
+      "Retenciones: qué te descuentan y qué haces",
+      "Tu calendario tributario"
+    ]
   }
 }
