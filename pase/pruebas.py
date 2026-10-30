@@ -308,6 +308,16 @@ class PruebasFlujo(Escenario):
         _, _, ajena = self.http("GET", f"{self.c.url_publica}/retorno?ref=NO-EXISTE")
         self.assertNotIn(b"/pagar?p=", ajena)
 
+    def test_pse_conserva_las_pestanas_para_volver_a_tarjeta(self):
+        firma = self.firma_inscripcion()
+        _, cab, _ = self.http("GET", f"{self.c.url_publica}/pagar/checkout?p={firma}")
+        _, _, pagina = self.http("GET", cab["Location"])
+        self.assertIn(f'href="/pagar?p={firma}"'.encode(), pagina)
+        self.assertIn(b"ePayco.checkout.configure(", pagina)
+        # Sin la firma de la persona (p. ej. enlace de renovación por correo) no hay pestañas
+        _, _, sola = self.http("GET", cab["Location"].split("&p=")[0])
+        self.assertNotIn(b'class="pestanas"', sola)
+
     def test_estaticos_solo_sirve_los_logos(self):
         status, cab, svg = self.http("GET", f"{self.c.url_publica}/estaticos/pse.svg")
         self.assertEqual((status, cab["Content-Type"]), (200, "image/svg+xml"))

@@ -174,6 +174,11 @@ def pasos(actual, falla=False):
     return '<ol class="pasos" aria-label="Pasos del pago">' + "".join(items) + "</ol>"
 
 
+def url_mis_cursos(c):
+    """Mis cursos del aula: si la persona no ha entrado, Moodle le pide el login y luego la deja ahí."""
+    return f"{c.moodle_url}/my/courses.php" if c.moodle_url else ""
+
+
 def pesos_cop(c):
     return f"${c.precio_centavos // 100:,}".replace(",", ".")
 
@@ -334,8 +339,9 @@ inputmode="tel" autocomplete="tel" pattern="(\\+?57)?3[0-9]{{9}}" placeholder="3
 
 
 def pestanas(firma, activa):
-    tarjeta = f'href="/pagar?p={firma}"' + (' aria-current="page"' if activa == "tarjeta" else "")
-    otros = f'href="/pagar/checkout?p={firma}"' + (' aria-current="page"' if activa == "otros" else "")
+    # La pestaña activa no lleva enlace: volver a abrir PSE crearía otro pago pendiente.
+    tarjeta = 'aria-current="page"' if activa == "tarjeta" else f'href="/pagar?p={firma}"'
+    otros = 'aria-current="page"' if activa == "otros" else f'href="/pagar/checkout?p={firma}"'
     return (f'<nav class="pestanas" aria-label="Medio de pago"><a {tarjeta}>{ICONO_TARJETA}Tarjeta</a>'
             f'<a {otros}>{ICONO_BANCO}PSE · Nequi</a></nav>')
 
@@ -432,7 +438,7 @@ function tarjeta(ev){{ev.preventDefault();
 </script>"""
 
 
-def pantalla_checkout(c, datos):
+def pantalla_checkout(c, datos, persona=None, firma=None):
     precio = pesos_cop(c)
     medios = (("pse", "PSE", "Débito desde tu cuenta de ahorros o corriente"),
               ("nequi", "Nequi", "Apruebas el pago en tu app"),
@@ -442,7 +448,8 @@ def pantalla_checkout(c, datos):
     return f"""
 <span class="seguro">{ICONO_CANDADO}Pago seguro</span>
 {pasos(2)}
-{resumen(c, detalle="IVA incluido", plan="Pase Empresario · 1 mes")}
+{resumen(c, persona, detalle="IVA incluido", plan="Pase Empresario · 1 mes")}
+{pestanas(firma, "otros") if firma else ""}
 <div><h1>Paga con PSE, Nequi o Daviplata</h1>
 <p class="nota">También puedes usar una tarjeta sin guardarla.</p></div>
 <ul class="medios">{lista}</ul>
@@ -460,7 +467,7 @@ function abrir(){{ePayco.checkout.configure({json.dumps(datos)}).open()}}
 
 
 def retorno(c, firma=None):
-    aula = html.escape(c.moodle_url or "", quote=True)
+    aula = html.escape(url_mis_cursos(c), quote=True)
     entrar = f'<a class="boton" href="{aula}">Entrar al aula {ICONO_FLECHA}</a>' if aula else ""
     if firma:
         otra_vez = (f'<a class="boton" href="/pagar?p={firma}">Intentar de nuevo</a>'
@@ -559,7 +566,7 @@ inputmode="numeric" autocomplete="one-time-code" pattern="[0-9 ]{{6,7}}" maxleng
 
 def pantalla_mi_pase(c, persona, sus, firma, firma_pago):
     nombre = html.escape(persona["nombre"].split()[0].capitalize())
-    aula = html.escape(c.moodle_url or "", quote=True)
+    aula = html.escape(url_mis_cursos(c), quote=True)
     corte = _fecha(sus["proximo_corte"])
     estado = sus["estado"]
     if estado == "activa" and sus["cancelar_al_corte"]:
@@ -627,7 +634,7 @@ def pantalla_confirmar_cancelacion(c, sus, firma):
 
 
 def pantalla_cancelacion_lista(c, persona, sus, firma):
-    aula = html.escape(c.moodle_url or "", quote=True)
+    aula = html.escape(url_mis_cursos(c), quote=True)
     cursos = f'<a class="boton" href="{aula}">Ir a mis cursos {ICONO_FLECHA}</a>' if aula else ""
     correo = html.escape(persona["correo"])
     if sus["estado"] == "cancelada":
@@ -832,7 +839,8 @@ class App:
                     if not pid:
                         return self.responder(404, b"")
                     _, url = app.pase.url_pago_manual(pid)
-                    return self.responder(302, b"", extra={"Location": url})
+                    # p= viaja a /checkout solo para mostrar las pestañas Tarjeta / PSE · Nequi
+                    return self.responder(302, b"", extra={"Location": f"{url}&p={q['p']}"})
                 if u.path == "/checkout":
                     ref = q.get("r", "")
                     try:
@@ -844,7 +852,9 @@ class App:
                     if not datos:
                         return self.responder(404, pagina("Enlace vencido", "<h1>Este enlace de pago ya no "
                                                           "está disponible</h1>", sb))
-                    return self.responder(200, pagina("Pagar Pase", pantalla_checkout(app.c, datos), sb))
+                    pid = app.verificar(q.get("p"))
+                    return self.responder(200, pagina("Pagar Pase", pantalla_checkout(
+                        app.c, datos, app.pase.persona(pid) if pid else None, q["p"] if pid else None), sb))
                 if u.path == "/retorno":
                     # ePayco añade ?ref_payco=; nosotros pusimos ?ref=. Solo informa: no activa nada.
                     app.pase.anotar_ref_pasarela(q.get("ref"), q.get("ref_payco"))
