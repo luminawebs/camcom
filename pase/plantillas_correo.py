@@ -54,7 +54,7 @@ def _contenido(tipo, c, d):
             asunto="Bienvenido al Aula Virtual Empresarial",
             previo="Tu registro gratuito está listo. Así entras por primera vez.",
             etiqueta="Registro gratuito", titulo=f"¡Bienvenido, {nombre}!",
-            parrafos=["Tu registro en el Aula Virtual Empresarial de la Cámara de Comercio de Soacha está "
+            parrafos=["Tu registro en el Aula Virtual Empresarial de edunest.co está "
                       "listo. Ya puedes hacer gratis las tres primeras unidades de cada curso."],
             pasos=["Busca el correo del aula con tu contraseña. Puede tardar unos minutos; si no llega, "
                    "revisa la carpeta de spam o promociones.",
@@ -204,7 +204,7 @@ def _html(k, c):
 <div style="height:4px;background:{ACENTO};border-radius:16px 16px 0 0;font-size:0;line-height:0">&nbsp;</div>
 <div class="tarjeta" style="padding:36px 40px 32px">{cuerpo}</div></td></tr>
 <tr><td style="padding:22px 8px 0;font-family:{LETRA};font-size:12px;line-height:1.6;color:{TINTA2}" align="center">
-<b style="color:{TINTA}">Aula Virtual Empresarial</b> · Cámara de Comercio de Soacha y EduNest<br>
+<b style="color:{TINTA}">Aula Virtual Empresarial</b> · edunest.co<br>
 Este correo sale de una dirección que no recibe respuestas.{_contacto(c)}
 </td></tr></table></td></tr></table></body></html>"""
 
@@ -232,7 +232,7 @@ def _texto(k, c):
         lineas += [f"{k['boton'][0]}: {k['boton'][1]}", ""]
     if k.get("nota"):
         lineas += [limpio(k["nota"]), ""]
-    lineas += ["--", "Aula Virtual Empresarial · Cámara de Comercio de Soacha y EduNest",
+    lineas += ["--", "Aula Virtual Empresarial · edunest.co",
                "Este correo sale de una dirección que no recibe respuestas."]
     if getattr(c, "correo_soporte", ""):
         lineas.append(f"¿Necesitas ayuda? Escríbenos a {c.correo_soporte}.")
