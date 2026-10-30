@@ -1,6 +1,6 @@
 # Facturación electrónica sin miedo
 
-Gancho gratuito · Perfil N (Normativa y trámites) · ≈ 1 h 36 min de estudiante · 27 piezas
+Gancho gratuito · Perfil N (Normativa y trámites) · ≈ 1 h 36 min de estudiante · 28 piezas
 
 **Promesa:** Al terminar sabrás si tu negocio tiene que facturar, tendrás tu plan para habilitarte gratis en la DIAN y sabrás llenar tu primera factura electrónica sin errores.
 
@@ -48,7 +48,8 @@ Gancho gratuito · Perfil N (Normativa y trámites) · ≈ 1 h 36 min de estudia
 │   ├── U3 · Practica | ¿Tu factura está lista? [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-practica (arbol-decision)
 │   ├── U3 · Aplica | Tu factura revisada [Foro de preguntas y respuestas · 8 min] → paginas/u3-aplica.html
 │   ├── U3 · Llévatelo | Tu factura en una mirada [Página + Archivo · 2 min] → paginas/u3-llevatelo.html
-│   └── U3 · Profundiza | Fuentes oficiales [URL + Página · opcional] → paginas/u3-profundiza.html
+│   ├── U3 · Profundiza | Fuentes oficiales [URL + Página · opcional] → paginas/u3-profundiza.html
+│   └── U3 · Lo que sigue | Unidades 4 a 7 con el Pase Empresario [Página · opcional] → paginas/u3-pase.html
 │
 └── CIERRE  (18 min)
     ├── Reto final entre pares [Taller (revisión entre pares) · 15 min] → paginas/99-reto-final-entre-pares.html

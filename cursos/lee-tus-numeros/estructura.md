@@ -1,6 +1,6 @@
 # Lee tus números
 
-Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 1 h 36 min de estudiante · 27 piezas
+Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 1 h 36 min de estudiante · 28 piezas
 
 **Promesa:** Al terminar sabrás separar ingresos, costos y gastos, juntarás las ventas y los gastos de un mes y tendrás el estado de resultados de tu negocio en una hoja, listo para mostrar.
 
@@ -48,7 +48,8 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 1 h 36 min de estudian
 │   ├── U3 · Practica | ¿Cuánto le quedó a la papelería? [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-practica (calculadora)
 │   ├── U3 · Aplica | Tu estado de resultados del mes [Foro de preguntas y respuestas · 8 min] → paginas/u3-aplica.html
 │   ├── U3 · Llévatelo | Tu estado de resultados en una mirada [Página + Archivo · 2 min] → paginas/u3-llevatelo.html
-│   └── U3 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u3-profundiza.html
+│   ├── U3 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u3-profundiza.html
+│   └── U3 · Lo que sigue | Unidades 4 a 7 con el Pase Empresario [Página · opcional] → paginas/u3-pase.html
 │
 └── CIERRE  (18 min)
     ├── Reto final entre pares [Taller (revisión entre pares) · 15 min] → paginas/99-reto-final-entre-pares.html
