@@ -4,6 +4,7 @@
 
 Cubren los criterios de aceptación 1 a 5 de requerimientos-tablero-pase.md.
 """
+import base64
 import datetime as dt
 import hashlib
 import http.client
@@ -16,6 +17,7 @@ import unittest
 import urllib.parse
 import urllib.request
 from http.server import ThreadingHTTPServer
+from unittest import mock
 
 from . import epayco as ep
 from . import simulador_epayco as sime
@@ -219,6 +221,30 @@ class PruebasFlujo(Escenario):
         self.assertEqual(set(self.fuente(pid)), {"cliente", "token"})  # solo ids, nada de la tarjeta
         _, _, est = self.http("GET", f"{self.c.url_publica}/estado-pago?ref={ref}")
         self.assertEqual(json.loads(est)["estado"], "APPROVED")
+
+    def test_1b_tablero_con_clave(self):
+        pid, _ = self.pagar_tarjeta()
+        self.esperar_estado(pid, "suscrito")
+        url = f"{self.c.url_publica}/tablero"
+        clave = lambda c: {"Authorization": "Basic " + base64.b64encode(f"admin:{c}".encode()).decode()}
+        with mock.patch.dict(os.environ, {"PASE_ADMIN_TOKEN": "x" * 32}):
+            self.assertEqual(self.http("GET", url)[0], 401)
+            self.assertEqual(self.http("GET", url, cabeceras=clave("otra"))[0], 401)
+            status, _, cuerpo = self.http("GET", url, cabeceras=clave("x" * 32))
+            self.assertEqual(status, 200)
+            texto = cuerpo.decode()
+            self.assertIn("Pases activos", texto)
+            self.assertIn("$29.000", texto)
+            self.assertIn("wa-afiliados", texto)
+            self.assertIn("Dora Pérez", texto)
+            status, cab, csv_ = self.http("GET", url + "/pagos.csv", cabeceras=clave("x" * 32))
+            self.assertEqual((status, cab["Content-Type"]), (200, "text/csv; charset=utf-8"))
+            self.assertIn("52111222", csv_.decode("utf-8-sig"))
+            self.assertNotIn("0326", csv_.decode("utf-8-sig"))  # nada de la tarjeta
+        with mock.patch.dict(os.environ, {"PASE_ADMIN_TOKEN": ""}):
+            self.assertEqual(self.http("GET", url, cabeceras=clave(""))[0], 401)
+        d = self.pase.tablero()
+        self.assertEqual((d["suscripciones"], d["recaudo_total_cop"]), ({"activa": 1}, 29000))
 
     def test_2_confirmacion_repetida_no_duplica(self):
         pid, _ = self.pagar_tarjeta()

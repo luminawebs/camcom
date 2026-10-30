@@ -60,6 +60,7 @@ curl https://pase.edunest.co/salud
 |---|---|
 | Estado | `systemctl status pase` · `systemctl list-timers 'pase*'` |
 | Registros | `journalctl -u pase -f` · `/var/log/nginx/pase.*.log` |
+| Tablero | https://pase.edunest.co/tablero (usuario cualquiera, clave = `PASE_ADMIN_TOKEN`); pagos en `/tablero/pagos.csv` |
 | Resumen | `curl -H "Authorization: Bearer $PASE_ADMIN_TOKEN" http://127.0.0.1:8091/admin/resumen` (solo desde el servidor) |
 | Actualizar | copiar el nuevo `pase/` y volver a correr `instalar.sh` (guarda la versión anterior en `/opt/pase/pase.anterior`) |
 | Volver atrás | `sudo mv /opt/pase/pase /opt/pase/pase.malo && sudo mv /opt/pase/pase.anterior /opt/pase/pase && sudo systemctl restart pase` |

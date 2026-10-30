@@ -526,6 +526,64 @@ class Pase:
                 self.historial(pago["persona_id"], "error_conciliacion", repr(e)[:300])
         return n
 
+    def tablero(self, dias_renovacion=7):
+        """Datos del tablero interno: cifras del mes (hora Colombia), estados, canales, próximas
+        renovaciones, últimos pagos y lo que está fallando."""
+        col = dt.timezone(dt.timedelta(hours=-5))
+        mes = dt.datetime.now(col).strftime("%Y-%m")
+        aprobados = self.q("SELECT monto, aprobado_en FROM pagos WHERE estado='APPROVED'").fetchall()
+        del_mes = [r["monto"] for r in aprobados if r["aprobado_en"] and
+                   dt.datetime.fromisoformat(r["aprobado_en"]).astimezone(col).strftime("%Y-%m") == mes]
+        filas = lambda sql, *a: [dict(r) for r in self.q(sql, *a).fetchall()]
+        cuenta = lambda sql: {r[0] or "—": r[1] for r in self.q(sql).fetchall()}
+        limite = (self.hoy() + dt.timedelta(days=dias_renovacion)).isoformat()
+        return {
+            "mes": mes,
+            "personas": cuenta("SELECT estado, COUNT(*) FROM personas GROUP BY estado ORDER BY 2 DESC"),
+            "suscripciones": cuenta("SELECT estado, COUNT(*) FROM suscripciones GROUP BY estado ORDER BY 2 DESC"),
+            "canales": filas("""SELECT COALESCE(p.canal_origen,'sin-canal') canal, COUNT(*) inscritos,
+                                  SUM(s.estado='activa') activos
+                                FROM personas p LEFT JOIN suscripciones s ON s.persona_id=p.id
+                                GROUP BY 1 ORDER BY 2 DESC"""),
+            "recaudo_mes_cop": sum(del_mes) // 100,
+            "pagos_mes": len(del_mes),
+            "recaudo_total_cop": sum(r["monto"] for r in aprobados) // 100,
+            "renovaciones": filas("""SELECT p.nombre, p.correo, s.proximo_corte, s.medio, s.medio_enmascarado,
+                                       s.renovacion_manual, s.cancelar_al_corte
+                                     FROM suscripciones s JOIN personas p ON p.id=s.persona_id
+                                     WHERE s.estado='activa' AND s.proximo_corte <= ?
+                                     ORDER BY s.proximo_corte""", limite),
+            "en_mora": filas("""SELECT p.nombre, p.correo, s.proximo_corte, s.intento, s.proximo_intento
+                                FROM suscripciones s JOIN personas p ON p.id=s.persona_id
+                                WHERE s.estado='en_mora' ORDER BY s.proximo_intento"""),
+            "ultimos_pagos": filas("""SELECT pg.creado, pg.aprobado_en, p.nombre, pg.tipo, pg.periodo, pg.monto,
+                                        pg.estado, pg.metodo, pg.referencia
+                                      FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id
+                                      ORDER BY pg.id DESC LIMIT 25"""),
+            "avisos_con_error": filas("SELECT para, asunto, intentos, error FROM avisos "
+                                      "WHERE enviado_en IS NULL AND error IS NOT NULL ORDER BY id DESC LIMIT 10"),
+            "avisos_en_cola": self.uno("SELECT COUNT(*) n FROM avisos WHERE enviado_en IS NULL")["n"],
+            "eventos_pendientes": self.uno("SELECT COUNT(*) n FROM eventos_pasarela "
+                                           "WHERE procesado_en IS NULL")["n"],
+            "eventos_rechazados": self.uno("SELECT COUNT(*) n FROM eventos_rechazados")["n"],
+        }
+
+    def pagos_csv(self):
+        import csv
+        import io
+        sal = io.StringIO()
+        w = csv.writer(sal)
+        w.writerow(["referencia", "ref_epayco", "creado", "aprobado_en", "documento", "nombre", "correo",
+                    "canal", "tipo", "periodo", "monto_cop", "estado", "metodo"])
+        for r in self.q("""SELECT pg.referencia, pg.ref_pasarela, pg.creado, pg.aprobado_en, p.documento,
+                             p.nombre, p.correo, p.canal_origen, pg.tipo, pg.periodo, pg.monto, pg.estado,
+                             pg.metodo
+                           FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id ORDER BY pg.id"""):
+            fila = list(r)
+            fila[10] = (fila[10] or 0) // 100
+            w.writerow(fila)
+        return sal.getvalue()
+
     def resumen(self):
         cuenta = lambda sql: {r[0]: r[1] for r in self.q(sql).fetchall()}
         return {

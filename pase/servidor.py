@@ -3,6 +3,9 @@
 Solo biblioteca estándar de Python 3.9+. Uso:
     python -m pase.servidor          (lee la configuración del entorno)
 """
+import base64
+import datetime as dt
+import hmac
 import html
 import json
 import os
@@ -39,6 +42,93 @@ def pagina(titulo, cuerpo, sandbox=True):
             f"<meta name='viewport' content='width=device-width,initial-scale=1'>"
             f"<title>{html.escape(titulo)}</title><style>{CSS}</style></head>"
             f"<body><main>{banda}{cuerpo}</main></body></html>").encode()
+
+
+ESTADOS_PAGO = {"APPROVED": "Aprobado", "DECLINED": "Rechazado", "PENDING": "Pendiente", "ERROR": "Error",
+                "VOIDED": "Anulado"}
+CSS_TABLERO = """
+main{max-width:1100px}.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.cifra{background:#fff;border:1px solid var(--borde);border-radius:12px;padding:14px}
+.cifra b{display:block;font-size:1.6rem;color:var(--azul)}.cifra span{font-size:.85rem;color:#56606b}
+h2{font-size:1.1rem;color:var(--azul);margin:28px 0 8px}.tabla{overflow-x:auto;background:#fff;
+border:1px solid var(--borde);border-radius:12px}table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--borde);white-space:nowrap}
+th{background:#eef2f7;font-weight:600}tr:last-child td{border-bottom:0}td.n{text-align:right}
+.APPROVED{color:var(--verde);font-weight:600}.DECLINED,.ERROR{color:#c0392b;font-weight:600}
+.dos{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.vacio{padding:12px;color:#56606b}
+"""
+
+
+def pesos(n):
+    return "$" + f"{int(n or 0):,}".replace(",", ".")
+
+
+def tabla(columnas, filas):
+    if not filas:
+        return '<div class="tabla"><p class="vacio">Nada por ahora.</p></div>'
+    cab = "".join(f"<th>{html.escape(c)}</th>" for c in columnas)
+    cuerpo = "".join("<tr>" + "".join(c if c.startswith("<td") else f"<td>{c}</td>" for c in f) + "</tr>"
+                     for f in filas)
+    return f'<div class="tabla"><table><thead><tr>{cab}</tr></thead><tbody>{cuerpo}</tbody></table></div>'
+
+
+def tablero_html(d, precio_cop, sandbox):
+    e = lambda v: html.escape(str(v if v is not None else ""))
+    col = dt.timezone(dt.timedelta(hours=-5))
+    fecha = lambda v: e(dt.datetime.fromisoformat(v).astimezone(col).strftime("%Y-%m-%d %H:%M") if v else "")
+    activos = d["suscripciones"].get("activa", 0)
+    cifras = [
+        (sum(d["personas"].values()), "Inscritos"),
+        (activos, "Pases activos"),
+        (pesos(d["recaudo_mes_cop"]), f"Recaudo {d['mes']} ({d['pagos_mes']} pagos)"),
+        (pesos(d["recaudo_mes_cop"] * 25 // 100), "25 % Cámara del mes (sobre el bruto)"),
+        (pesos(activos * precio_cop), "Ingreso mensual esperado"),
+        (d["suscripciones"].get("en_mora", 0), "En mora"),
+    ]
+    alertas = []
+    if d["avisos_en_cola"]:
+        alertas.append(f"{d['avisos_en_cola']} correo(s) en cola")
+    if d["eventos_pendientes"]:
+        alertas.append(f"{d['eventos_pendientes']} confirmación(es) de ePayco sin procesar")
+    if d["eventos_rechazados"]:
+        alertas.append(f"{d['eventos_rechazados']} confirmación(es) rechazadas por firma")
+    cuerpo = ['<h1>Tablero del Pase Empresario</h1>',
+              f'<p class="nota">Recaudo total aprobado: {pesos(d["recaudo_total_cop"])}. '
+              '<a href="/tablero/pagos.csv">Descargar pagos (CSV)</a></p>']
+    if alertas:
+        cuerpo.append(f'<p class="aviso">{e(" · ".join(alertas))}</p>')
+    cuerpo.append('<div class="cifras">' + "".join(
+        f'<div class="cifra"><b>{e(v)}</b><span>{e(t)}</span></div>' for v, t in cifras) + "</div>")
+    cuerpo.append('<div class="dos"><div><h2>Personas por estado</h2>' + tabla(
+        ["Estado", "Cantidad"], [[e(k), f'<td class="n">{v}</td>'] for k, v in d["personas"].items()]) +
+        '</div><div><h2>Por canal</h2>' + tabla(
+        ["Canal", "Inscritos", "Pases activos"],
+        [[e(c["canal"]), f'<td class="n">{c["inscritos"]}</td>', f'<td class="n">{c["activos"] or 0}</td>']
+         for c in d["canales"]]) + "</div></div>")
+    cuerpo.append("<h2>Renovaciones de los próximos 7 días</h2>" + tabla(
+        ["Corte", "Nombre", "Correo", "Medio", "Nota"],
+        [[e(r["proximo_corte"]), e(r["nombre"]), e(r["correo"]),
+          e(r["medio_enmascarado"] or r["medio"]),
+          "Se cancela al corte" if r["cancelar_al_corte"] else
+          ("Renovación manual" if r["renovacion_manual"] else "Cobro automático")]
+         for r in d["renovaciones"]]))
+    cuerpo.append("<h2>En mora</h2>" + tabla(
+        ["Nombre", "Correo", "Corte", "Intento", "Próximo intento"],
+        [[e(r["nombre"]), e(r["correo"]), e(r["proximo_corte"]), e(r["intento"]), e(r["proximo_intento"])]
+         for r in d["en_mora"]]))
+    cuerpo.append("<h2>Últimos pagos</h2>" + tabla(
+        ["Fecha", "Nombre", "Tipo", "Periodo", "Monto", "Estado", "Medio"],
+        [[fecha(r["aprobado_en"] or r["creado"]), e(r["nombre"]), e(r["tipo"]), e(r["periodo"]),
+          f'<td class="n">{pesos((r["monto"] or 0) // 100)}</td>',
+          f'<td class="{e(r["estado"])}">{e(ESTADOS_PAGO.get(r["estado"], r["estado"]))}</td>', e(r["metodo"])]
+         for r in d["ultimos_pagos"]]))
+    if d["avisos_con_error"]:
+        cuerpo.append("<h2>Correos con error</h2>" + tabla(
+            ["Para", "Asunto", "Intentos", "Error"],
+            [[e(r["para"]), e(r["asunto"]), e(r["intentos"]), e((r["error"] or "")[:120])]
+             for r in d["avisos_con_error"]]))
+    return pagina("Tablero del Pase", "".join(cuerpo), sandbox).replace(
+        b"</style>", CSS_TABLERO.encode() + b"</style>", 1)
 
 
 def formulario(canal):
@@ -203,6 +293,18 @@ class App:
             def json(self, codigo, datos):
                 self.responder(codigo, json.dumps(datos).encode(), "application/json")
 
+            def admin_valido(self):
+                """Usuario cualquiera y como clave PASE_ADMIN_TOKEN (autenticación básica del navegador)."""
+                token = os.environ.get("PASE_ADMIN_TOKEN", "")
+                auth = self.headers.get("Authorization", "")
+                if len(token) < 16 or not auth.startswith("Basic "):
+                    return False
+                try:
+                    clave = base64.b64decode(auth[6:]).decode().split(":", 1)[1]
+                except (ValueError, IndexError):
+                    return False
+                return hmac.compare_digest(clave.encode(), token.encode())
+
             def ip(self):
                 reenviada = self.headers.get("X-Forwarded-For", "")
                 if reenviada and self.client_address[0] == "127.0.0.1":
@@ -263,6 +365,17 @@ class App:
                     return self.json(200, {"estado": fila["estado"] if fila else "PENDIENTE"})
                 if u.path == "/salud":
                     return self.json(200, {"ok": True, "entorno": app.c.entorno})
+                if u.path in ("/tablero", "/tablero/pagos.csv"):
+                    if not self.admin_valido():
+                        return self.responder(401, pagina("Tablero", "<h1>Acceso restringido</h1>", sb),
+                                              extra={"WWW-Authenticate": 'Basic realm="Tablero del Pase"'})
+                    sin_cache = {"Cache-Control": "no-store"}
+                    if u.path == "/tablero":
+                        return self.responder(200, tablero_html(app.pase.tablero(),
+                                                                app.c.precio_centavos // 100, sb), extra=sin_cache)
+                    return self.responder(200, ("\ufeff" + app.pase.pagos_csv()).encode(), "text/csv; charset=utf-8",
+                                          extra={**sin_cache, "Content-Disposition":
+                                                 'attachment; filename="pagos-pase.csv"'})
                 if u.path == "/admin/resumen":
                     token = os.environ.get("PASE_ADMIN_TOKEN")
                     if not token or self.headers.get("Authorization") != f"Bearer {token}":
