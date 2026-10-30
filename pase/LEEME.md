@@ -1,7 +1,11 @@
-# Conector del Pase Empresario (Wompi → Moodle)
+# Conector del Pase Empresario (ePayco → Moodle)
 
-Documento interno de EduNest · 20 de octubre de 2026 · estado: **sandbox, sin cobros reales**.
+Documento interno de EduNest · 28 de octubre de 2026 · estado: **simulador, sin cobros reales**.
 Implementa la fase A y el núcleo de la fase B de `presentaciones/requerimientos-tablero-pase.md`.
+
+El 28-oct-2026 la pasarela pasó de Wompi a **ePayco**, porque la cuenta de EduNest es de Banco
+Caja Social y Wompi solo dispersa a Cuenta Wompi, Bancolombia, Occidente y Bogotá. La versión
+con Wompi (validada en su sandbox el 20-oct) queda en el historial de git, PR #2.
 
 ## Cómo encaja en el pipeline
 
@@ -13,109 +17,150 @@ Formulario EduNest  ── «Solo registro gratis» ──► Moodle: usuario + 
    │  (autorización Ley 1581 con versión, IP y fecha)        (U1-U3 de todos los cursos)
    ▼ «Quiero el Pase»
 Pantalla de pago
-   ├─ Tarjeta / Nequi → token directo a Wompi → fuente de pago → primer cobro (recurrente)
-   └─ PSE → Web Checkout de Wompi (renovación manual con enlace cada mes)
+   ├─ Tarjeta → token en el navegador (epayco.js) → cliente ePayco → primer cobro con token
+   └─ PSE, Nequi, Daviplata → Smart Checkout v2 (sesión creada en el backend; renovación manual con enlace cada mes)
    │
-   ▼  Wompi envía transaction.updated (firmado)
-POST /webhooks/wompi ── firma OK, se guarda, responde 200 ── cola
+   ▼  ePayco llama a la URL de confirmación (campos x_…, x_signature con P_KEY)
+POST /webhooks/epayco ── firma OK, se guarda, responde 200 ── cola
    │
-   ▼  el conector consulta GET /transactions/{id} (doble verificación de estado, monto, referencia)
-APPROVED → Moodle: cohorte pase-empresario (U4-U7 y certificados) + correo a la persona,
+   ▼  el conector consulta /validation/v1/reference/{x_ref_payco} (estado, monto, referencia, prueba)
+Aceptada → Moodle: cohorte pase-empresario (U4-U7 y certificados) + correo a la persona,
            a la Cámara y a EduNest
    │
    ▼  tarea diaria
-Cobro mensual con la fuente guardada → reintentos día 0, 3 y 7 → cancelado (sale de la
-cohorte del Pase, conserva avance y cursos gratis) → si vuelve a pagar, se reactiva.
+Cobro mensual con el token guardado → reintentos día 0, 3 y 7 → cancelado (sale de la
+cohorte del Pase, conserva avance y cursos gratis; se borra el token) → si vuelve a pagar, se reactiva.
 ```
 
-La página de retorno del navegador **nunca** activa el acceso: solo el evento firmado y
-confirmado contra la API.
+La página de retorno del navegador **nunca** activa el acceso: solo la confirmación firmada y
+verificada contra la API. Ojo: la firma de ePayco cubre referencia, transacción, monto y moneda,
+**no el estado**; por eso el estado siempre se toma de la API, nunca del aviso.
 
 ## Archivos
 
 | Archivo | Qué hace |
 |---|---|
-| `config.py` | Variables de entorno; candado que impide producción sin `PASE_PERMITIR_PRODUCCION=1` y llaves `prv_prod_` |
-| `wompi.py` | Firma de integridad, verificación del checksum de eventos, cliente API (comercio, fuentes de pago, cobros, enlaces, Web Checkout) |
+| `config.py` | Variables de entorno; candado que impide producción sin `PASE_PERMITIR_PRODUCCION=1` |
+| `epayco.py` | Firma de confirmaciones, estados, cliente API (login, cliente con token, cobro, validación, borrar token, datos del Checkout) |
 | `moodle.py` | Alta de usuario y cohortes por REST (y un Moodle simulado para pruebas) |
-| `nucleo.py` | Estados de la persona, pagos, idempotencia de eventos, cobro mensual, reintentos, cancelación, reactivación, conciliación |
-| `servidor.py` | Formulario, pantalla de pago, retorno, `/webhooks/wompi`, `/estado-pago`, `/admin/resumen` |
+| `nucleo.py` | Estados de la persona, pagos, idempotencia, cobro mensual, reintentos, cancelación, reactivación, conciliación |
+| `servidor.py` | Pantallas con la marca del portal (Poppins, verde #00806b, 3 pasos), formulario, pantalla de pago, `/checkout`, retorno, `/webhooks/epayco`, `/estado-pago`, `/admin/resumen` |
+| `estaticos/` | Logos que sirve `/estaticos/<nombre>.svg`: EduNest, ePayco (epayco.com), Visa, Mastercard, Amex y Nequi (Wikimedia Commons), PSE y Daviplata (archivos de David). Solo se sirven los de la lista `ESTATICOS` de `servidor.py` |
 | `tareas.py` | `cobro`, `conciliar`, `pendientes`, `resumen` para cron |
-| `simulador_wompi.py` | Imita el sandbox de Wompi (tarjetas y Nequi de prueba, PSE, eventos firmados) |
-| `pruebas.py` | 16 pruebas de punta a punta |
+| `simulador_epayco.py` | Imita ePayco en modo prueba (API, epayco.js, checkout.js y confirmaciones firmadas) |
+| `pruebas.py` | 22 pruebas de punta a punta |
+| `probar_sandbox.py` | Prueba contra ePayco real en modo prueba |
 | `demo.py` | Simulador + conector para probarlo en el navegador |
 
-Solo usa la biblioteca estándar de Python 3.9+ (SQLite). Para producción se puede pasar a
-PostgreSQL sin cambiar la lógica.
+Solo usa la biblioteca estándar de Python 3.9+ (SQLite).
 
 ## Probarlo ya (sin llaves ni red)
 
 ```
-python -m unittest pase.pruebas -v     # 16 pruebas, unos 11 s
+python -m unittest pase.pruebas -v     # 22 pruebas, unos 17 s
 python -m pase.demo                     # abre http://localhost:8080/?c=wa-afiliados
 ```
 
-En la demo: tarjeta `4242 4242 4242 4242` aprueba, `4111 1111 1111 1111` rechaza; Nequi
-`3991111111` aprueba, `3992222222` rechaza; PSE muestra botones Aprobar/Rechazar.
+En la demo: tarjeta `4575 6231 8229 0326` aprueba, `4151 6115 2758 3283` rechaza; el botón de
+PSE/Nequi abre un Checkout simulado con Aprobar/Rechazar.
 
-Lo que comprueban las pruebas (criterios 1 a 5 de los requerimientos):
+Lo que comprueban las pruebas:
 
-1. Tarjeta aprobada → cohortes `registro-gratis` y `pase-empresario` en menos de 1 s, correos a la persona, la Cámara y EduNest.
-2. El mismo evento enviado dos veces no duplica pagos, historial ni llamadas a Moodle.
-3. Un evento con la firma alterada («me aprobé solo») responde 401, queda registrado y no da acceso. Tampoco la página de retorno ni un monto distinto.
-4. Tres cobros mensuales rechazados (días 0, 3, 7) → `cancelado`, fuera del Pase, dentro de los cursos gratis; al pagar otra vez → `reactivo`. Cobro aprobado → `activo` y corte un mes después; cancelación voluntaria al corte sin cobrar.
+1. Tarjeta aprobada → cohortes `registro-gratis` y `pase-empresario` en menos de 1 s, correos a la persona, la Cámara y EduNest. Solo se guardan ids de ePayco, nunca datos de la tarjeta.
+2. La misma confirmación enviada dos veces no duplica pagos, historial ni llamadas a Moodle.
+3. Una confirmación con el monto alterado responde 401 y queda registrada. Una con el **estado** cambiado a «Aceptada» (firma válida, porque la firma no cubre el estado) tampoco da acceso: la API dice «Rechazada». Tampoco la página de retorno, un monto distinto ni una transacción de prueba cuando el conector está en producción.
+4. Tres cobros mensuales rechazados (días 0, 3, 7) → `cancelado`, fuera del Pase, dentro de los cursos gratis, token borrado en ePayco; al pagar otra vez → `reactivo`. Cobro aprobado → `activo` y corte un mes después; cancelación voluntaria al corte sin cobrar; un pago reversado vuelve a mora.
 5. Registro gratis sin pago; inscribirse dos veces no duplica a la persona.
-6. Nequi, PSE con renovación manual (enlace 5 días antes, mora, cancelación) y conciliación que recupera un evento perdido.
+6. Checkout con renovación manual (enlace firmado 5 días antes, mora, cancelación, renovación pagada) y conciliación que recupera confirmaciones perdidas, también de Checkout gracias al `ref_payco` del retorno.
 
-## Pasar al sandbox real de Wompi (lo que falta de David)
+## Pasar a ePayco real en modo prueba (lo que falta de David)
 
-1. **Llaves de sandbox** del comercio EduNest en Wompi (panel › Desarrolladores, con el panel en **modo pruebas / sandbox**): llave pública `pub_test_…`, llave privada `prv_test_…`, secreto de integridad `test_integrity_…` y secreto de eventos `test_events_…`. Ojo: las que se cargaron el 20-oct son de producción (`pub_prod_…`, `prod_integrity_…`) y el candado las rechaza con `WOMPI_ENTORNO=sandbox`; hay que cambiarlas por las de prueba. Con ellas, la prueba de punta a punta (sin webhook, por conciliación) es `python -m pase.probar_sandbox`. Van como variables del entorno en la nube (`WOMPI_LLAVE_PUBLICA`, `WOMPI_LLAVE_PRIVADA`, `WOMPI_SECRETO_INTEGRIDAD`, `WOMPI_SECRETO_EVENTOS`), nunca en el chat.
-2. ~~Dominios permitidos~~ Hecho el 20-oct: `sandbox.wompi.co`, `checkout.wompi.co` y `docs.wompi.co` responden.
-3. **Dónde vive el conector**: un subdominio con HTTPS (propuesto `pase.edunest.co`) en DigitalOcean, separado del Moodle, para que Wompi pueda llamar a `https://pase.edunest.co/webhooks/wompi`. Esa URL se pone en el panel de Wompi como URL de eventos del sandbox.
-4. **Moodle** (primero en un curso de prueba):
-   - Cohortes de sistema con idnumber `registro-gratis` y `pase-empresario`.
-   - En cada curso: método «Sincronización de cohortes» con `registro-gratis` (rol Estudiante) y otro con `pase-empresario` que **agrega al grupo «Pase»**; U4-U7, la Demuestra de U1-U3 y el certificado se restringen a ese grupo (modelo de dos tramos aprobado el 14-oct).
-   - Como en estos cursos la persona sigue matriculada por `registro-gratis`, la instancia del Pase puede usar «Dar de baja» al salir de la cohorte: así se quita el grupo «Pase» y el avance se conserva. Con «Desactivar», Moodle podría dejarle el grupo y por tanto el acceso: **verificarlo en el curso de prueba** antes de decidir.
-   - Usuario de servicio `conector-pase` (no ClaudeBot) con un servicio externo que solo tenga: `core_user_get_users_by_field`, `core_user_create_users`, `core_cohort_search_cohorts`, `core_cohort_add_cohort_members`, `core_cohort_delete_cohort_members`. Su token va como `PASE_MOODLE_TOKEN` y se pone `PASE_MOODLE_SIMULADO=0`.
+1. **Cuenta ePayco** de EduNest con la cuenta de Banco Caja Social inscrita para retiros.
+2. **Credenciales** (dashboard.epayco.com › Configuración › Personalizaciones › Llaves secretas): `P_CUST_ID_CLIENTE`, `P_KEY`, `PUBLIC_KEY`, `PRIVATE_KEY`. Van como `EPAYCO_CLIENTE`, `EPAYCO_P_KEY`, `EPAYCO_LLAVE_PUBLICA`, `EPAYCO_LLAVE_PRIVADA` en el entorno de la nube y en `/etc/pase/pase.env`, nunca en el chat.
+3. ~~Dominios permitidos~~ Hecho el 28-oct. Con las llaves en una sesión nueva: `python -m pase.probar_sandbox`.
+4. **Servidor**: actualizar pase.edunest.co (ver «Pasar el servidor de Wompi a ePayco» en `despliegue/DESPLIEGUE.md`) y poner `https://pase.edunest.co/webhooks/epayco` como URL de confirmación en el panel.
+5. **Moodle**: igual que antes (`despliegue/MOODLE.md`): cohortes, usuario `conector-pase`, curso de prueba.
 
 ## Variables de entorno
 
 | Variable | Ejemplo / valor por defecto |
 |---|---|
-| `WOMPI_ENTORNO` | `sandbox` (o `produccion`, bloqueado sin `PASE_PERMITIR_PRODUCCION=1`) |
-| `WOMPI_LLAVE_PUBLICA`, `WOMPI_LLAVE_PRIVADA` | `pub_test_…`, `prv_test_…` |
-| `WOMPI_SECRETO_INTEGRIDAD`, `WOMPI_SECRETO_EVENTOS` | del panel de Wompi |
-| `PASE_PRECIO_CENTAVOS` | `2900000` ($29.000) |
+| `EPAYCO_ENTORNO` | `sandbox` = modo prueba (o `produccion`, bloqueado sin `PASE_PERMITIR_PRODUCCION=1`) |
+| `EPAYCO_CLIENTE`, `EPAYCO_P_KEY` | del panel de ePayco (firma de confirmaciones) |
+| `EPAYCO_LLAVE_PUBLICA`, `EPAYCO_LLAVE_PRIVADA` | del panel de ePayco (API, epayco.js y Checkout) |
+| `EPAYCO_API_URL`, `EPAYCO_VALIDACION_URL`, `EPAYCO_APIFY_URL`, `EPAYCO_CHECKOUT_JS`, `EPAYCO_TOKEN_JS` | solo si ePayco cambia sus direcciones |
+| `PASE_PRECIO_CENTAVOS` | `2900000` ($29.000; ePayco cobra en pesos enteros) |
 | `PASE_URL_PUBLICA` | `https://pase.edunest.co` |
 | `PASE_MOODLE_URL`, `PASE_MOODLE_TOKEN`, `PASE_MOODLE_SIMULADO` | `https://portal.edunest.co`, token de `conector-pase`, `1` |
 | `PASE_REINTENTOS_DIAS` | `0,3,7` |
 | `PASE_AVISOS_CORREO` | correos de la Cámara y de EduNest, separados por coma |
 | `PASE_ADMIN_TOKEN` | protege `/admin/resumen` |
+| `PASE_ADMIN_USUARIO`, `PASE_ADMIN_CLAVE` | acceso al tablero `/tablero` (sesión de 12 h; 5 fallos bloquean 15 min la IP) |
 | `PASE_SECRETO_SESION` | firma los enlaces de pago de cada persona |
 
-Cron sugerido: `cobro` y `conciliar` una vez al día (6:00), `pendientes` cada hora.
+## Verificado contra docs.epayco.com (28-oct-2026)
 
-## Verificado contra docs.wompi.co (20-oct-2026)
+Con los dominios ya permitidos se revisó la documentación vigente y se ajustó el conector:
 
-Ya se pudo leer la documentación oficial y se ajustó el conector:
+- **Llaves**: dashboard.epayco.com › Configuración › Personalizaciones › Llaves secretas.
+- **Firma de la confirmación** `x_signature` = SHA-256 de `p_cust_id_cliente^p_key^x_ref_payco^x_transaction_id^x_amount^x_currency_code`, y estados `x_cod_transaction_state` 1 a 11: coinciden con lo implementado.
+- **Validación** `GET secure.epayco.co/validation/v1/reference/{ref_payco}`: confirmada (con una referencia inexistente responde `status:false`, que el conector trata como «no encontrada»).
+- **Smart Checkout v2**: el Checkout actual ya no se abre solo con la llave pública; el backend crea una sesión (`POST apify.epayco.co/login` con Basic `PUBLIC_KEY:PRIVATE_KEY` y luego `POST /payment/session/create`) y el navegador abre `checkout-v2.js` con el `sessionId`. Cambiado. Sus `ref_payco` son alfanuméricos (p. ej. `68fb83729d094878e015be00`), ya aceptados en el retorno.
+- **Tokenización**: `https://checkout.epayco.co/epayco.min.js` (antes apuntaba a una copia vieja en S3), con jQuery y campos `data-epayco="card[…]"`. Probado en Chromium con la librería real: lee el formulario, cifra y llama a `api.secure.payco.co/token/tokenize`; con llaves falsas ePayco responde 400 y la página muestra el error.
+- **Tarjetas de prueba** (vencen 12/2027, CVV 123): 4575 6231 8229 0326 aceptada, 4151 6115 2758 3283 fondos insuficientes, 5170 3944 9037 9427 fallida, 3731 1885 6457 642 pendiente.
 
-- **Tokens de aceptación**: `GET /merchants/{llave}` deja de funcionar el **31 de octubre de 2026**. El conector usa ya `GET /merchants/info` con la cabecera `x-merchant-public-key`.
-- **Consultar una transacción** (`GET /transactions/{id}`) ahora exige la llave privada; con la pública responde 404. Corregido.
-- **Crear transacciones** exige `acceptance_token` (y `accept_personal_auth`). El primer cobro usa los que aceptó la persona; los cobros mensuales piden los prefirmados del comercio. Confirmar en la primera prueba de sandbox que Wompi los acepta así en cobros con fuente de pago.
-- `payment_method` (cuotas) solo se envía con tarjeta; `recurrent: true` activa COF en Visa/Mastercard con RBM.
-- Al cancelar se anula la fuente de pago (`PUT /payment_sources/{id}/void`), para no volver a cobrarle.
-- Firma de eventos: concatenar los valores de `signature.properties` + `timestamp` + secreto de eventos, SHA-256 (prueba con la cadena de la guía). Si el webhook no responde 200, Wompi reintenta a los 30 min, 3 h y 24 h; la conciliación diaria cubre lo que se pierda.
-- Prefijos de sandbox: `pub_test_`, `prv_test_`, `test_events_`, `test_integrity_` (el conector rechaza cualquier otro en modo sandbox).
+**Probado con las llaves reales en modo prueba (28-oct-2026, `python -m pase.probar_sandbox`)**: login, token de tarjeta, cliente, cobro con token (4575… aceptada, 4151… rechazada, 5170… fallida), consulta, marca de prueba, `x_signature` con P_KEY, borrar token y sesión del Smart Checkout v2: todo OK. Hallazgos:
 
-Mejoras posibles que la documentación habilita:
+- Los cobros con token dan `ref_payco` **numérico** que `/validation/v1/reference` no encuentra; se consultan en `secure.payco.co/restpagos/transaction/response.json?ref_payco=…&public_key=…`. El conector usa uno u otro según el formato.
+- ePayco reutiliza el mismo cliente para el mismo correo; el token nuevo se le agrega.
+- La sesión del Smart Checkout rechaza URLs de respuesta o confirmación con `localhost`: hay que probarlo desde pase.edunest.co.
+- Las variables pueden llamarse `EPAYCO_*` o como en el panel (`P_CUST_ID_CLIENTE`, `P_KEY`, `PUBLIC_KEY`, `PRIVATE_KEY`).
 
-- **Daviplata y Botón Bancolombia también se pueden tokenizar** como fuente de pago (Daviplata con código OTP), así que también podrían renovarse solos. Hoy el conector solo implementa tarjeta y Nequi.
-- **Widget en modo tokenización** (`data-widget-operation="tokenize"`): la tarjeta se captura en el widget de Wompi en vez del formulario propio, lo que reduce el alcance PCI de EduNest. Recomendado antes de producción.
+**Prueba en el servidor (29-oct-2026)**, ya con el conector en pase.edunest.co:
 
-## Por hacer después del sandbox
+- En modo prueba `/validation/v1/reference` responde «Error de datos o conexión» también para los `ref_payco` del Smart Checkout. Si las dos consultas anteriores no la encuentran, el conector la busca en Apify `/transaction/detail` (filtro `referencePayco`), que sí trae las de prueba con los campos `x_…` en `log`.
+- Moodle crea el usuario y manda el correo con la contraseña en la misma llamada, que puede tardar: `core_user_create_users` espera hasta 90 s y, si falla o se agota la espera, se vuelve a buscar el usuario antes de dar error.
+- Sin `moodle/user:viewalldetails` en el rol del usuario de servicio, la búsqueda por correo devuelve vacío y el segundo pago de la misma persona falla con «Duplicate entry» (ver `despliegue/MOODLE.md`).
+- En modo prueba la pantalla de pago muestra las tarjetas de prueba; los errores de la tarjeta salen en español y con el campo marcado.
 
-- Envío real de correos (hoy quedan en la tabla `avisos`) y WhatsApp (fase C).
-- Tablero compartido Cámara/EduNest sobre esta misma base, liquidación del 25 % (falta decidir base bruta o neta) y conciliación contra el reporte de Wompi.
+Falta el pago por PSE de punta a punta en el Smart Checkout, que necesita el conector publicado en pase.edunest.co. Nequi y Daviplata siguen por Checkout con renovación manual.
+
+## Mi Pase: ver y cancelar el Pase
+
+`/mi-pase` es la cuenta de la persona: estado, próxima renovación, medio de pago y el botón
+«Cancelar mi Pase». Se entra con el enlace firmado que traen los correos de pago aprobado y de
+cancelación (vale 30 días) o pidiendo un código de 6 dígitos al correo (vence en 15 minutos,
+5 intentos, máximo 3 códigos cada 15 minutos; la respuesta es igual si el correo no tiene Pase).
+Desde Moodle se llega con el elemento «Mi Pase» del menú de usuario (ver `despliegue/MOODLE.md`, paso 8).
+
+- **Cancelar** (dos pasos, motivo opcional): el acceso sigue hasta el corte y no se vuelve a cobrar
+  ni se manda enlace de renovación. Llega un correo de confirmación. En el corte la tarea diaria
+  cierra el Pase, quita la cohorte y borra la tarjeta en ePayco. Con el Pase en mora se cierra ya.
+- **Seguir con mi Pase**: hasta el corte deshace la cancelación sin volver a pagar.
+- **Tablero › Buscar persona** (soporte): «Cancelar al corte», «Cancelar ya» (cierra hoy, sin
+  devolución) y «Deshacer cancelación». Todo queda en el historial con su origen.
+
+## Correos de los avisos
+
+Los avisos (bienvenida, pago aprobado o rechazado, cobro fallido, renovación, código de Mi Pase,
+cancelación, fin del Pase y
+los de las organizaciones) se guardan en la tabla `avisos` y la tarea `pase-correos.timer` los
+envía cada 5 minutos por SMTP con Brevo, el mismo servicio del correo de Moodle
+(`smtp-relay.brevo.com:2525`, el único puerto de correo que DigitalOcean deja salir).
+
+1. En Brevo › Seguridad › IP autorizadas, la IP del droplet del Pase (142.93.10.108 ya está).
+2. En `/etc/pase/pase.env`: `PASE_SMTP_HOST=smtp-relay.brevo.com`, `PASE_SMTP_USUARIO` y
+   `PASE_SMTP_CLAVE` (login y clave SMTP de Brevo; la clave empieza por `xsmtpsib-`).
+3. Probar: `cd /opt/pase && sudo -u pase bash -c 'set -a; . /etc/pase/pase.env; python3 -m pase.tareas probar-correo tu@correo'`
+   (si el remitente tiene espacios, va entre comillas en `pase.env`).
+
+Sin `PASE_SMTP_HOST` los avisos quedan guardados y no se envía nada. Un aviso que falla se
+reintenta hasta 5 veces y el error queda en la columna `error`.
+
+## Por hacer después
+
+- WhatsApp (fase C).
+- Tablero compartido Cámara/EduNest y liquidación del 25 %. ePayco tiene **pagos divididos (split payment)**, que podrían girar ese 25 % en cada pago: preguntarlo al abrir la cuenta.
 - Pase para organizaciones (varios usuarios por pago).
-- Confirmar con Wompi: tarifa vigente, Nequi como fuente recurrente, campo `recurrent` y política de reintentos de eventos.
+- Confirmar con ePayco: tarifa vigente, retiros a Caja Social, cobro con token habilitado.
 - Texto final de la autorización de datos (hoy es un borrador v1) revisado por el abogado junto con el convenio.

@@ -80,9 +80,9 @@ systemctl reload nginx
 echo "› Pruebas del código en el servidor"
 (cd "$APP" && PASE_LOG=0 sudo -u pase -H python3 -m unittest pase.pruebas 2>&1 | tail -3)
 
-if grep -qE '^WOMPI_LLAVE_PRIVADA=prv_(test|prod)_.+' "$ENVF"; then
+if grep -qE '^EPAYCO_LLAVE_PRIVADA=.+' "$ENVF" && grep -qE '^EPAYCO_P_KEY=.+' "$ENVF"; then
   echo "› Arranque"
-  systemctl enable --now pase.service pase-cobro.timer pase-conciliar.timer pase-pendientes.timer
+  systemctl enable --now pase.service pase-cobro.timer pase-conciliar.timer pase-pendientes.timer pase-correos.timer
   systemctl restart pase.service
   sleep 2; curl -fsS "http://127.0.0.1:$PUERTO/salud" && echo
 else
