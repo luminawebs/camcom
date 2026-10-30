@@ -245,7 +245,7 @@ def pagina_pase(c, n):
     todos = cursos_con_pase()
     lista = "".join(
         f'<li class="as-paso"{" style=\"border:2px solid var(--as-rojo)\"" if k == canal else ""}><span class="as-paso__n">📘</span>'
-        f'<span class="as-paso__t"><b>{t(x)}</b>{"<small>Este curso</small>" if k == canal else ""}</span>'
+        f'<span class="as-paso__t"><b>{t(x)}</b>{"<small style=\"display:block\">Este curso</small>" if k == canal else ""}</span>'
         f'<span class="as-chip as-chip--ok">🎓 Certificado</span></li>' for k, x in todos)
     filas = "".join(
         f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{t(x)}</b></span>'
