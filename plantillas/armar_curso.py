@@ -226,34 +226,55 @@ def ficha_moodle(eti, titulo, actividad, lineas, extra=""):
             f'<ul class="as-check">{lis}</ul>{extra}</div>')
 
 
+def cursos_con_pase():
+    """[(canal, título corto)] de los cursos del repo que tienen tramo del Pase, en el orden de su canal (AVS-G01, G02...)."""
+    out = []
+    for f in sorted((RAIZ.parent / "cursos").glob("*/curso.json")):
+        x = json.loads(f.read_text(encoding="utf-8"))
+        if x.get("pase"):
+            out.append((x["pase"].get("canal", "curso-" + x["id"]), x.get("titulo_corto", x["titulo"])))
+    return sorted(out)
+
+
 def pagina_pase(c, n):
-    """Invitación a comprar el Pase al final de la unidad n (la última gratuita), con lo que abren las unidades 4 a 7."""
+    """Invitación a comprar el Pase al final de la unidad n (la última gratuita). Lo que más resalta es que el Pase
+    abre todos los cursos y todos sus certificados; debajo, lo que sigue en este curso (unidades 4 a 7)."""
     pa = c["pase"]
-    enlace = f"{PASE_URL}?c={urllib.parse.quote(pa.get('canal', 'curso-' + c['id']))}"
+    canal = pa.get("canal", "curso-" + c["id"])
+    enlace = f"{PASE_URL}?c={urllib.parse.quote(canal)}"
+    todos = cursos_con_pase()
+    lista = "".join(
+        f'<li class="as-paso"{" style=\"border:2px solid var(--as-rojo)\"" if k == canal else ""}><span class="as-paso__n">📘</span>'
+        f'<span class="as-paso__t"><b>{t(x)}</b>{"<small>Este curso</small>" if k == canal else ""}</span>'
+        f'<span class="as-chip as-chip--ok">🎓 Certificado</span></li>' for k, x in todos)
     filas = "".join(
         f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{t(x)}</b></span>'
         f'<span class="as-chip as-chip--rojo">🔒 Pase</span></li>' for k, x in enumerate(pa["unidades"], n + 1))
+    dato = ('style="flex:1 1 140px;background:var(--as-rojo-100);border-radius:10px;padding:12px 14px;text-align:center"')
+    grande = 'style="display:block;font-size:2rem;font-weight:700;line-height:1.1;color:var(--as-rojo-oscuro)"'
     return {f"paginas/u{n}-pase.html": (f"Unidad {n}: Lo que sigue", f"Página al final de la Unidad {n}, después de Profundiza. Sin finalización.", f"""
   <div class="as-banda as-pila">
     <span class="as-eti">Terminaste la parte gratuita</span>
-    <h2>{t(pa.get('titulo', 'Vas muy bien. Este curso sigue con el Pase Empresario'))}</h2>
+    <h2>{t(pa.get('titulo', 'Vas muy bien. Sigue con el Pase Empresario'))}</h2>
     <p>{t(pa.get('texto', f'Ya hiciste las {n} unidades gratis de «{c.get("titulo_corto", c["titulo"])}». Con el Pase sigues aquí mismo, en la unidad {n + 1}, sin perder tu avance.'))}</p>
+  </div>
+  <div class="as-tarjeta as-pila" style="border:3px solid var(--as-rojo)">
+    <span class="as-eti">Un solo pago al mes</span>
+    <h2>Todos los cursos y todos sus certificados</h2>
+    <div class="as-fila" style="flex-wrap:wrap;gap:10px">
+      <div {dato}><b {grande}>{len(todos)}</b>cursos hoy, y nuevos cada mes</div>
+      <div {dato}><b {grande}>🎓</b>un certificado por cada curso que termines</div>
+    </div>
+    <ol class="as-pasos">{lista}</ol>
+    <p class="as-sec">Cada certificado lleva tu nombre, el curso, las horas y un código de verificación.</p>
+    <div class="as-aviso as-aviso--marca"><b>{PASE_PRECIO}.</b> Pagas con tarjeta, PSE, Nequi o Daviplata.</div>
+    <a class="as-btn as-btn--ancho" href="{html.escape(enlace)}" target="_blank" rel="noopener">Quiero el Pase Empresario ›</a>
   </div>
   <div class="as-tarjeta as-pila">
     <h3>Lo que sigue en este curso</h3>
     <ol class="as-pasos">{filas}</ol>
-  </div>
-  <div class="as-tarjeta as-pila">
-    <h3>Con el Pase Empresario tienes</h3>
-    <ul class="as-check">
-      <li>Las unidades {n + 1} a {n + len(pa['unidades'])} de este curso y de todos los cursos del Aula.</li>
-      <li>El certificado de cada curso que termines, con código de verificación.</li>
-      <li>Los cursos nuevos que salen cada mes.</li>
-    </ul>
-    <div class="as-aviso as-aviso--marca"><b>{PASE_PRECIO}.</b> Pagas con tarjeta, PSE, Nequi o Daviplata.</div>
-    <a class="as-btn as-btn--ancho" href="{html.escape(enlace)}" target="_blank" rel="noopener">Quiero el Pase Empresario ›</a>
-    <p class="as-sec"><small>Usa el mismo correo con el que entras al Aula: así las unidades se abren solas en tu usuario.
-      Si ya tienes el Pase, ya están abiertas para ti.</small></p>
+    <p class="as-sec"><small>Usa el mismo correo con el que entras al Aula: así todo se abre solo en tu usuario.
+      Si ya tienes el Pase, ya está abierto para ti.</small></p>
   </div>""")}
 
 
