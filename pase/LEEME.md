@@ -44,7 +44,8 @@ verificada contra la API. Ojo: la firma de ePayco cubre referencia, transacción
 | `epayco.py` | Firma de confirmaciones, estados, cliente API (login, cliente con token, cobro, validación, borrar token, datos del Checkout) |
 | `moodle.py` | Alta de usuario y cohortes por REST (y un Moodle simulado para pruebas) |
 | `nucleo.py` | Estados de la persona, pagos, idempotencia, cobro mensual, reintentos, cancelación, reactivación, conciliación |
-| `servidor.py` | Formulario, pantalla de pago, `/checkout`, retorno, `/webhooks/epayco`, `/estado-pago`, `/admin/resumen` |
+| `servidor.py` | Pantallas con la marca del portal (Poppins, verde #00806b, 3 pasos), formulario, pantalla de pago, `/checkout`, retorno, `/webhooks/epayco`, `/estado-pago`, `/admin/resumen` |
+| `estaticos/` | Logos que sirve `/estaticos/<nombre>.svg`: EduNest, ePayco (epayco.com), Visa, Mastercard, Amex y Nequi (Wikimedia Commons), PSE y Daviplata (archivos de David). Solo se sirven los de la lista `ESTATICOS` de `servidor.py` |
 | `tareas.py` | `cobro`, `conciliar`, `pendientes`, `resumen` para cron |
 | `simulador_epayco.py` | Imita ePayco en modo prueba (API, epayco.js, checkout.js y confirmaciones firmadas) |
 | `pruebas.py` | 22 pruebas de punta a punta |

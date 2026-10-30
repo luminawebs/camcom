@@ -300,6 +300,21 @@ class PruebasFlujo(Escenario):
         time.sleep(0.4)
         self.assertEqual(self.estado_persona(pid), "interesado")
 
+    def test_3b2_retorno_ofrece_reintentar_con_el_enlace_de_la_persona(self):
+        pid, ref = self.pagar_tarjeta(sime.TARJETA_RECHAZA)
+        _, _, pagina = self.http("GET", f"{self.c.url_publica}/retorno?ref={ref}")
+        self.assertIn(f'href="/pagar?p={pid}.'.encode(), pagina)
+        self.assertIn(b"/pagar/checkout?p=", pagina)
+        _, _, ajena = self.http("GET", f"{self.c.url_publica}/retorno?ref=NO-EXISTE")
+        self.assertNotIn(b"/pagar?p=", ajena)
+
+    def test_estaticos_solo_sirve_los_logos(self):
+        status, cab, svg = self.http("GET", f"{self.c.url_publica}/estaticos/pse.svg")
+        self.assertEqual((status, cab["Content-Type"]), (200, "image/svg+xml"))
+        self.assertIn(b"<svg", svg)
+        for ruta in ("/estaticos/../config.py", "/estaticos/logo-correo.png", "/estaticos/"):
+            self.assertEqual(self.http("GET", self.c.url_publica + ruta)[0], 404, ruta)
+
     def test_3c_transaccion_de_prueba_no_sirve_en_produccion(self):
         pid, ref = self.pagar_tarjeta(sime.TARJETA_RECHAZA)
         self.c.entorno = "produccion"

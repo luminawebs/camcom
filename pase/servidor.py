@@ -21,29 +21,148 @@ from .config import Config
 from .nucleo import TEXTO_AUTORIZACION_V1, Pase
 
 CSS = """
-:root{--azul:#0b3d6e;--verde:#1e8e5a;--fondo:#f5f7fa;--texto:#1d2733;--borde:#d5dde6}
-*{box-sizing:border-box}body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-background:var(--fondo);color:var(--texto)}main{max-width:560px;margin:0 auto;padding:24px 16px 48px}
-h1{color:var(--azul);font-size:1.5rem;margin:.2em 0 .6em}.caja{background:#fff;border:1px solid var(--borde);
-border-radius:12px;padding:20px;margin:16px 0}label{display:block;margin:12px 0 4px;font-weight:600}
-input,select{width:100%;padding:10px;border:1px solid var(--borde);border-radius:8px;font:inherit}
-.check{display:flex;gap:10px;align-items:flex-start;font-weight:400}.check input{width:auto;margin-top:4px}
-button,.boton{display:inline-block;background:var(--azul);color:#fff;border:0;border-radius:8px;
-padding:12px 18px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;margin-top:12px}
-.verde{background:var(--verde)}.sec{background:#fff;color:var(--azul);border:1px solid var(--azul)}
-.fila{display:flex;gap:10px}.fila>div{flex:1}.nota{font-size:.875rem;color:#56606b}
-.aviso{background:#fff7e0;border:1px solid #e9c46a;border-radius:8px;padding:10px 12px;font-size:.9rem}
-.tabs button{margin-right:6px}input.mal{border-color:#c0392b;background:#fff4f2}.oculto{display:none}#msg{margin-top:12px;font-weight:600}
+:root{--acento:#00806b;--acento-2:#006655;--suave:#e3f6f1;--tinta:#14181f;--tinta-2:#4a5260;--fondo:#f6f7f9;
+--borde:#dfe2e7;--campo:#c9ced6;--error:#b42318;--error-suave:#fef3f2;--aviso:#93370d;--aviso-suave:#fffaeb;
+--azul:var(--tinta);--verde:var(--acento);--sombra:0 1px 2px rgba(16,24,40,.06),0 6px 18px rgba(16,24,40,.06)}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 Poppins,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+background:var(--fondo);color:var(--tinta)}a{color:var(--acento)}a:hover{color:var(--acento-2)}
+.cabeza{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#fff;
+border-bottom:1px solid var(--borde)}.cabeza img{height:26px;width:auto;display:block}
+.banda{margin:0;background:var(--aviso-suave);color:var(--aviso);font-size:12px;font-weight:600;text-align:center;
+padding:6px 16px;border-bottom:1px solid #fedf89}
+main{max-width:480px;margin:0 auto;padding:20px 16px 40px;display:flex;flex-direction:column;gap:18px}
+main>*{margin:0}h1{font-size:1.5rem;line-height:1.25;font-weight:700;margin:0}
+.seguro{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--tinta-2)}
+.pasos{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;font-size:12px;
+font-weight:600;color:#6b7280}.pasos li{display:flex;flex-direction:column;gap:6px}
+.pasos li::before{content:"";height:4px;border-radius:4px;background:var(--borde)}
+.pasos .hecho{color:var(--acento)}.pasos .hecho::before{background:var(--acento)}
+.pasos .medio::before{background:linear-gradient(90deg,var(--acento) 50%,var(--borde) 50%)}
+.pasos .falla{color:var(--error)}.pasos .falla::before{background:var(--error)}
+.antetitulo{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--acento);margin:0 0 4px}
+.plan{background:var(--tinta);color:#fff;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.plan .fila-precio{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.plan strong{font-size:22px}.plan small{font-size:13px;color:#c5cad3}
+.plan ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px;color:#e6e8ec}
+.plan li{display:flex;gap:8px}.plan li svg{flex-shrink:0;margin-top:2px}
+.resumen{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid var(--borde);
+border-radius:14px;padding:14px 16px}.resumen p{margin:0}.resumen .der{text-align:right}
+.resumen .precio{font-size:20px;font-weight:700}.chico{font-size:12px;color:var(--tinta-2)}
+.caja{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:18px;box-shadow:var(--sombra)}
+form.caja{display:flex;flex-direction:column;gap:14px}.campo{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:600}.opc{font-weight:400;color:var(--tinta-2)}
+input,select{width:100%;height:48px;padding:0 14px;border:1px solid var(--campo);border-radius:10px;font:inherit;
+background:#fff;color:var(--tinta)}input:focus,select:focus{outline:none;border:2px solid var(--acento);padding:0 13px}
+.fila{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}.fila.doc{grid-template-columns:96px minmax(0,1fr)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:12px;font-weight:400;color:var(--tinta-2);line-height:1.45}
+.check input{width:20px;height:20px;margin:1px 0 0;flex-shrink:0;accent-color:var(--acento);padding:0}
+details{border-top:1px solid #eceef1;padding-top:12px}summary{font-size:13px;font-weight:600;color:var(--acento);cursor:pointer}
+details[open] summary{margin-bottom:12px}details .campo+.campo{margin-top:12px}
+button,.boton{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;padding:0 18px;
+border:0;border-radius:12px;background:var(--acento);color:#fff;font:inherit;font-weight:600;cursor:pointer;
+text-decoration:none;text-align:center}button:hover,.boton:hover{background:var(--acento-2);color:#fff}
+button:disabled{opacity:.6;cursor:wait}.verde{background:var(--acento)}
+.sec,.sec:hover{background:#fff;color:var(--tinta);border:1px solid var(--campo);min-height:48px}
+.enlace,.enlace:hover{background:none;color:var(--tinta);font-size:14px;font-weight:500;text-decoration:underline;min-height:44px}
+.nota{font-size:12px;color:var(--tinta-2)}.centro{text-align:center}
+.aviso{background:var(--aviso-suave);border:1px solid #fedf89;color:var(--aviso);border-radius:10px;padding:10px 12px;font-size:13px}
+.pestanas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px;background:#e9ebef;border-radius:12px}
+.pestanas a{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border-radius:9px;color:var(--tinta-2);
+font-size:14px;font-weight:600;text-decoration:none}.pestanas a[aria-current]{background:#fff;color:var(--tinta);
+box-shadow:0 1px 3px rgba(16,24,40,.12)}
+.tarjeta-vista{height:196px;border-radius:16px;padding:20px;background:var(--tinta);color:#fff;display:flex;flex-direction:column;
+justify-content:space-between;position:relative;overflow:hidden}.tarjeta-vista::before{content:"";position:absolute;right:-40px;
+top:-40px;width:180px;height:180px;border-radius:40px;background:var(--acento);transform:rotate(45deg);opacity:.55}
+.tarjeta-vista>*{position:relative}.tarjeta-vista .arriba{display:flex;justify-content:space-between;align-items:center}
+.chip{width:40px;height:30px;border-radius:6px;background:#d9c38a}.marca{display:flex;align-items:center;min-height:24px;
+background:#fff;border-radius:6px;padding:4px 8px}.marca:empty{visibility:hidden}.marca img{height:16px;width:auto;display:block}
+.tarjeta-vista .numero{font-size:20px;letter-spacing:.12em;font-weight:500}.tarjeta-vista .abajo{display:flex;
+justify-content:space-between;gap:12px;font-size:12px;text-transform:uppercase}
+.con-marca{position:relative}.con-marca input{padding-right:64px}.con-marca img{position:absolute;right:12px;top:17px;height:14px}
+input.mal{border:2px solid var(--error);background:var(--error-suave);padding:0 13px}
+#msg:empty{display:none}#msg{display:flex;gap:6px;font-size:13px;color:var(--error);margin:-6px 0 0}
+#msg.ok{color:var(--tinta-2)}.logos{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.logos span{display:flex;align-items:center;justify-content:center;width:52px;height:34px;background:#fff;
+border:1px solid var(--borde);border-radius:6px;padding:5px}.logos img{max-width:100%;max-height:100%}
+.por{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--tinta-2)}
+.por img{height:20px;width:auto}
+.medios{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}.medios li{display:flex;align-items:center;gap:12px;
+min-height:64px;padding:12px 14px;background:#fff;border:1px solid var(--borde);border-radius:12px}
+.medios .logo{width:44px;height:32px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid
+var(--borde);border-radius:6px;padding:3px}.medios .logo img{max-width:100%;max-height:100%}
+.medios strong{display:block;font-size:14px}.medios span span{display:block;font-size:12px;line-height:1.4;color:var(--tinta-2)}
+.dato{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--borde);border-radius:12px;
+padding:12px 14px;font-size:13px;color:var(--tinta-2)}.dato svg{flex-shrink:0;margin-top:1px}.dato strong{color:var(--tinta)}
+.estado{background:#fff;border:1px solid var(--borde);border-radius:16px;padding:32px 20px 24px;display:flex;flex-direction:column;
+align-items:center;gap:12px;text-align:center}.estado p{margin:0}.estado .chico{max-width:300px}
+.icono{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--suave)}
+.icono.falla{background:var(--error-suave)}.icono .lleno{width:52px;height:52px;border-radius:50%;background:var(--acento);
+display:flex;align-items:center;justify-content:center}
+@keyframes girar{to{transform:rotate(360deg)}}.girando{animation:girar 1.1s linear infinite}
+@media (prefers-reduced-motion:reduce){.girando{animation:none}}
+.etapas{list-style:none;padding:0;margin:8px 0 0;width:100%;display:flex;flex-direction:column;gap:10px;text-align:left;font-size:14px}
+.etapas li{display:flex;align-items:center;gap:10px;color:#6b7280}.etapas li::before{content:"";width:24px;height:24px;
+flex-shrink:0;border-radius:50%;border:2px solid var(--borde);box-sizing:border-box}
+.etapas .hecho{color:var(--tinta)}.etapas .hecho::before{border:0;background:var(--acento) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/14px no-repeat}
+.etapas .ahora{color:var(--tinta);font-weight:600}.etapas .ahora::before{border-color:var(--acento);background:var(--suave)}
+.razones{width:100%;padding:14px;background:var(--fondo);border-radius:12px;text-align:left;font-size:13px;color:var(--tinta-2)}
+.razones ul{margin:6px 0 0;padding-left:18px}.oculto{display:none!important}
 """
+
+FUENTE = ("<link rel='preconnect' href='https://fonts.googleapis.com'><link rel='preconnect' "
+          "href='https://fonts.gstatic.com' crossorigin><link rel='stylesheet' "
+          "href='https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap'>")
 
 
 def pagina(titulo, cuerpo, sandbox=True):
-    banda = ('<p class="aviso">Ambiente de PRUEBAS (modo prueba de ePayco): no se hacen cobros reales.</p>'
-             if sandbox else "")
+    banda = '<p class="banda">Modo prueba · no se hacen cobros reales</p>' if sandbox else ""
     return (f"<!doctype html><html lang='es'><head><meta charset='utf-8'>"
             f"<meta name='viewport' content='width=device-width,initial-scale=1'>"
-            f"<title>{html.escape(titulo)}</title><style>{CSS}</style></head>"
-            f"<body><main>{banda}{cuerpo}</main></body></html>").encode()
+            f"<title>{html.escape(titulo)}</title>{FUENTE}<style>{CSS}</style></head>"
+            f"<body><header class='cabeza'><img src='/estaticos/edunest.svg' alt='edunest.co'>"
+            f"</header>{banda}<main>{cuerpo}</main></body></html>").encode()
+
+
+# Logos que sirve /estaticos/ (archivos oficiales de cada marca, ver pase/LEEME.md)
+ESTATICOS = {n: os.path.join(os.path.dirname(__file__), "estaticos", n) for n in (
+    "edunest.svg", "epayco.svg", "visa.svg", "mastercard.svg", "amex.svg", "pse.svg", "nequi.svg", "daviplata.svg")}
+
+ICONO_CANDADO = ('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00806b" stroke-width="2.2" '
+                 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" '
+                 'height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>')
+ICONO_FLECHA = ('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+                'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
+ICONO_OK = ('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2affcd" stroke-width="2.4" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>')
+ICONO_TARJETA = ('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+                 'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" '
+                 'height="14" rx="2"/><path d="M2 10h20"/></svg>')
+ICONO_BANCO = ('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+               'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6"/>'
+               '<path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg>')
+ICONO_ALERTA = ('<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+                'stroke-linecap="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" '
+                'r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>')
+
+
+def pasos(actual, falla=False):
+    """Barra de 3 pasos (datos, pago, listo). actual=2.5: el paso 3 va a medias (confirmando el pago)."""
+    items = []
+    for n, nombre in enumerate(("1 · Tus datos", "2 · Pago", "3 · Listo"), 1):
+        clase = ("falla" if falla and n == actual else "hecho" if n <= actual else
+                 "medio" if n - 0.5 == actual else "")
+        items.append(f'<li class="{clase}">{nombre}</li>')
+    return '<ol class="pasos" aria-label="Pasos del pago">' + "".join(items) + "</ol>"
+
+
+def pesos_cop(c):
+    return f"${c.precio_centavos // 100:,}".replace(",", ".")
+
+
+def resumen(c, persona=None, detalle="al mes · IVA incluido", plan="Pase Empresario"):
+    hola = f'<p class="chico">Hola, {html.escape(persona["nombre"].split()[0])}</p>' if persona else ""
+    return (f'<section class="resumen"><div>{hola}<p><b>{plan}</b></p></div><div class="der">'
+            f'<p class="precio">{pesos_cop(c)}</p><p class="chico">{detalle}</p></div></section>')
 
 
 ESTADOS_PAGO = {"APPROVED": "Aprobado", "DECLINED": "Rechazado", "PENDING": "Pendiente", "ERROR": "Error",
@@ -154,118 +273,215 @@ def login_html(configurado, error=""):
 </form>"""
 
 
-def formulario(canal):
-    c = html.escape(canal)
+def formulario(canal, c=None):
+    canal = html.escape(canal)
+    precio = pesos_cop(c) if c else "$29.000"
     return f"""
-<h1>Aula Virtual Empresarial Soacha</h1>
-<p>Regístrate gratis para ver los cursos gratuitos, o toma el Pase Empresario para tener todos los certificados.</p>
+{pasos(1)}
+<div><p class="antetitulo">Aula Virtual Empresarial Soacha</p>
+<h1>Fortalece tu negocio desde el celular</h1></div>
+<section class="plan" aria-label="Pase Empresario">
+<div class="fila-precio"><b>Pase Empresario</b><span><strong>{precio}</strong><small> /mes</small></span></div>
+<ul><li>{ICONO_OK}Todos los cursos completos, no solo las unidades gratis</li>
+<li>{ICONO_OK}Certificado de cada curso que termines</li>
+<li>{ICONO_OK}Cursos nuevos cada mes · cancelas cuando quieras</li></ul>
+</section>
 <form class="caja" method="post" action="/inscripcion">
-<input type="hidden" name="canal" value="{c}">
-<label>Nombre completo</label><input name="nombre" required autocomplete="name">
-<div class="fila"><div><label>Tipo</label><select name="tipo_doc"><option>CC</option><option>CE</option>
-<option>NIT</option><option>PPT</option></select></div>
-<div><label>Número de documento</label><input name="documento" required inputmode="numeric" pattern="[0-9A-Za-z\\-]{{5,15}}"></div></div>
-<label>Correo</label><input name="correo" type="email" required autocomplete="email">
-<label>WhatsApp</label><input name="whatsapp" inputmode="tel" pattern="(\\+?57)?3[0-9]{{9}}" placeholder="3001234567">
-<label>Nombre del negocio</label><input name="negocio">
-<label>Matrícula mercantil (opcional)</label><input name="matricula_mercantil">
-<label>Municipio</label><input name="municipio" value="Soacha">
+<input type="hidden" name="canal" value="{canal}">
+<div class="campo"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" required autocomplete="name"></div>
+<div class="fila doc"><div class="campo"><label for="tipo">Tipo</label><select id="tipo" name="tipo_doc"><option>CC</option>
+<option>CE</option><option>NIT</option><option>PPT</option></select></div>
+<div class="campo"><label for="documento">Número de documento</label><input id="documento" name="documento" required
+inputmode="numeric" pattern="[0-9A-Za-z\\-]{{5,15}}"></div></div>
+<div class="campo"><label for="correo">Correo</label><input id="correo" name="correo" type="email" required autocomplete="email">
+<span class="nota">Aquí te llega el acceso al aula.</span></div>
+<div class="campo"><label for="whatsapp">WhatsApp <span class="opc">(opcional)</span></label><input id="whatsapp" name="whatsapp"
+inputmode="tel" autocomplete="tel" pattern="(\\+?57)?3[0-9]{{9}}" placeholder="3001234567"></div>
+<details><summary>Datos de tu negocio (opcional)</summary>
+<div class="campo"><label for="negocio">Nombre del negocio</label><input id="negocio" name="negocio"></div>
+<div class="campo"><label for="matricula">Matrícula mercantil</label><input id="matricula" name="matricula_mercantil"></div>
+<div class="campo"><label for="municipio">Municipio</label><input id="municipio" name="municipio" value="Soacha"></div>
+</details>
 <label class="check"><input type="checkbox" name="acepta_datos" required>
 <span>{html.escape(TEXTO_AUTORIZACION_V1)}</span></label>
-<label class="check"><input type="checkbox" name="acepta_whatsapp"><span>Quiero recibir mensajes por WhatsApp (opcional).</span></label>
-<button name="opcion" value="pase" class="verde">Quiero el Pase Empresario</button>
-<button name="opcion" value="gratis" class="sec">Solo el registro gratis</button>
+<label class="check"><input type="checkbox" name="acepta_whatsapp"><span>Quiero recibir mensajes por WhatsApp.</span></label>
+<button name="opcion" value="pase">Continuar al pago {ICONO_FLECHA}</button>
+<button name="opcion" value="gratis" class="enlace" formnovalidate>Prefiero solo el registro gratis</button>
 </form>"""
 
 
+def pestanas(firma, activa):
+    tarjeta = f'href="/pagar?p={firma}"' + (' aria-current="page"' if activa == "tarjeta" else "")
+    otros = f'href="/pagar/checkout?p={firma}"' + (' aria-current="page"' if activa == "otros" else "")
+    return (f'<nav class="pestanas" aria-label="Medio de pago"><a {tarjeta}>{ICONO_TARJETA}Tarjeta</a>'
+            f'<a {otros}>{ICONO_BANCO}PSE · Nequi</a></nav>')
+
+
 def pantalla_pago(c, persona, firma):
-    precio = f"${c.precio_centavos // 100:,}".replace(",", ".")
+    precio = pesos_cop(c)
     cfg = json.dumps({"pub": c.llave_publica, "p": firma})
     nombre, correo = html.escape(persona["nombre"]), html.escape(persona["correo"])
-    ayuda = ('<p class="nota">Modo prueba: usa la tarjeta 4575 6231 8229 0326 (aprueba) o 4151 6115 2758 3283 '
-             '(rechaza), vence 12/2027, CVC 123. Una tarjeta inventada no la acepta ePayco.</p>'
+    ayuda = ('<p class="aviso">Modo prueba: usa la tarjeta 4575 6231 8229 0326 (aprueba) o 4151 6115 2758 3283 '
+             '(rechaza), vence 12/27, CVC 123. Una tarjeta inventada no la acepta ePayco.</p>'
              if c.pruebas else "")
     return f"""
-<h1>Pase Empresario · {precio} al mes</h1>
-<p>Hola, {html.escape(persona['nombre'].split()[0])}. Con tarjeta el cobro se repite cada mes y puedes cancelar cuando quieras.</p>
-<div class="caja">
-<form id="tarjeta" onsubmit="return tarjeta(event)">
+<span class="seguro">{ICONO_CANDADO}Pago seguro</span>
+{pasos(2)}
+{resumen(c, persona)}
+{pestanas(firma, "tarjeta")}
+<div class="tarjeta-vista" aria-hidden="true"><div class="arriba"><span class="chip"></span><span class="marca" id="v-marca"></span></div>
+<p class="numero" id="v-num">•••• •••• •••• ••••</p>
+<div class="abajo"><span>{nombre}</span><span id="v-venc">MM/AA</span></div></div>
+<form id="tarjeta" class="caja" onsubmit="return tarjeta(event)" novalidate>
 <input type="hidden" data-epayco="card[name]" value="{nombre}">
 <input type="hidden" data-epayco="card[email]" value="{correo}">
-<label>Número de tarjeta</label><input id="num" data-epayco="card[number]" inputmode="numeric" autocomplete="cc-number" required>
-<div class="fila"><div><label>Mes</label><input id="mes" data-epayco="card[exp_month]" placeholder="08" inputmode="numeric" required></div>
-<div><label>Año</label><input id="anio" data-epayco="card[exp_year]" placeholder="2028" inputmode="numeric" required></div>
-<div><label>CVC</label><input id="cvc" data-epayco="card[cvc]" inputmode="numeric" required></div></div>
+<input type="hidden" id="mes" data-epayco="card[exp_month]">
+<input type="hidden" id="anio" data-epayco="card[exp_year]">
+<div class="campo"><label for="num">Número de tarjeta</label><div class="con-marca">
+<input id="num" data-epayco="card[number]" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" required>
+<img id="num-marca" class="oculto" alt=""></div></div>
+<div class="fila"><div class="campo"><label for="venc">Vence (MM/AA)</label>
+<input id="venc" inputmode="numeric" autocomplete="cc-exp" placeholder="08/28" maxlength="7" required></div>
+<div class="campo"><label for="cvc">CVC</label><input id="cvc" data-epayco="card[cvc]" inputmode="numeric"
+autocomplete="cc-csc" placeholder="3 dígitos" maxlength="4" required></div></div>
+<p id="msg" role="alert"></p>
 <label class="check"><input type="checkbox" id="acepto" required><span>Autorizo a EduNest a cobrar {precio}
 cada mes a esta tarjeta por medio de ePayco hasta que cancele el Pase.</span></label>
-<button class="verde">Pagar {precio}</button></form>
-<p id="msg"></p>{ayuda}
-<p class="nota">Los datos de tu tarjeta van directo a ePayco; EduNest no los ve ni los guarda.</p>
-<p><a class="boton sec" href="/pagar/checkout?p={firma}">Pagar con PSE, Nequi o Daviplata (renuevas cada mes)</a></p>
-</div>
+<button id="pagar">{ICONO_CANDADO.replace('#00806b', 'currentColor')}Pagar {precio}</button></form>
+{ayuda}
+<div class="logos"><span><img src="/estaticos/visa.svg" alt="Visa"></span><span><img src="/estaticos/mastercard.svg"
+alt="Mastercard"></span><span><img src="/estaticos/amex.svg" alt="American Express"></span></div>
+<p class="por">Procesado por <img src="/estaticos/epayco.svg" alt="ePayco"></p>
+<p class="nota centro">Tus datos de tarjeta van directo a ePayco. EduNest no los ve ni los guarda.
+Cancelas cuando quieras.</p>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="{html.escape(c.token_js)}"></script>
 <script>
 const C={cfg};
-const $id=id=>document.getElementById(id), msg=t=>$id('msg').textContent=t;
+const $id=id=>document.getElementById(id);
+function msg(t,ok){{const m=$id('msg');m.className=ok?'ok':'';m.innerHTML=t?(ok?'':'{ICONO_ALERTA}')+'<span></span>':'';
+ if(t) m.lastChild.textContent=t}}
 ePayco.setPublicKey(C.pub);
+// Marca de la tarjeta por los primeros dígitos, solo para mostrar el logo
+function marca(n){{return /^4/.test(n)?'visa':/^(5[1-5]|2[2-7])/.test(n)?'mastercard':/^3[47]/.test(n)?'amex':''}}
+function vista(){{const n=$id('num').value.replace(/\\D/g,''), m=marca(n);
+ $id('v-num').textContent=(n+'•'.repeat(Math.max(0,16-n.length))).replace(/(.{{4}})/g,'$1 ').trim();
+ $id('v-venc').textContent=$id('venc').value||'MM/AA';
+ const i=$id('num-marca'); i.classList.toggle('oculto',!m); if(m) i.src='/estaticos/'+m+'.svg';
+ $id('v-marca').innerHTML=m?'<img src="/estaticos/'+m+'.svg" alt="">':''}}
+$id('num').addEventListener('input',e=>{{const d=e.target.value.replace(/\\D/g,'').slice(0,19);
+ e.target.value=d.replace(/(\\d{{4}})(?=\\d)/g,'$1 ');vista()}});
+$id('venc').addEventListener('input',e=>{{let d=e.target.value.replace(/\\D/g,'').slice(0,4);
+ if(d.length>2) d=d.slice(0,2)+'/'+d.slice(2); e.target.value=d;vista()}});
+$id('cvc').addEventListener('input',e=>{{e.target.value=e.target.value.replace(/\\D/g,'').slice(0,4)}});
 // Mensajes en español y el campo marcado (ePayco responde en inglés, p. ej. «…field is empty: number»)
-const CAMPO={{number:['num','El número de tarjeta no es válido. Revísalo.'],cvc:['cvc','El CVC son los 3 o 4 dígitos del respaldo de la tarjeta.'],
- exp_month:['mes','El mes debe ser de 01 a 12.'],exp_year:['anio','La tarjeta está vencida o el año no es válido.'],
- date_exp:['mes','La fecha de vencimiento no es válida (mes 01 a 12 y año de 4 dígitos, sin vencer).'],
- name:['num','Falta el nombre del titular.'],email:['num','Falta un correo válido.']}};
+const CAMPO={{number:['num','El número de tarjeta no es válido. Revísalo.'],cvc:['cvc','Escribe los 3 o 4 números del respaldo de tu tarjeta.'],
+ exp_month:['venc','El mes de vencimiento debe ser de 01 a 12.'],exp_year:['venc','La tarjeta está vencida o el año no es válido.'],
+ date_exp:['venc','La fecha de vencimiento no es válida (MM/AA, sin vencer).'],
+ name:['num','Falta el nombre del titular.'],email:['num','Falta un correo válido.'],acepto:['acepto','Marca la autorización de cobro mensual para continuar.']}};
 function marcar(clave){{document.querySelectorAll('input.mal').forEach(e=>e.classList.remove('mal'));
- const c=CAMPO[clave]; if(!c) return false; const e=$id(c[0]); e.classList.add('mal');
- if(clave==='date_exp') $id('anio').classList.add('mal'); e.focus(); msg(c[1]); return true}}
+ const c=CAMPO[clave]; if(!c) return false; const e=$id(c[0]); if(e.type!=='checkbox') e.classList.add('mal');
+ e.focus(); msg(c[1]); return true}}
 function luhn(n){{let s=0;for(let i=0;i<n.length;i++){{let d=+n[n.length-1-i];if(i%2){{d*=2;if(d>9)d-=9}}s+=d}}return n.length>=13&&n.length<=19&&s%10===0}}
-function revisar(num){{const m=+$id('mes').value, hoy=new Date(), cvc=$id('cvc').value;
+function revisar(num){{const v=$id('venc').value.split('/'), m=+v[0], hoy=new Date(), cvc=$id('cvc').value;
  if(!luhn(num)) return 'number';
  if(!(m>=1&&m<=12)) return 'exp_month';
- if($id('anio').value.length===2) $id('anio').value='20'+$id('anio').value;  // ePayco espera el año con 4 dígitos
- const a=+$id('anio').value;
- if($id('anio').value.length!==4||a<hoy.getFullYear()||(a===hoy.getFullYear()&&m<hoy.getMonth()+1)) return 'exp_year';
- if(!/^\\d{{3,4}}$/.test(cvc)) return 'cvc'; return ''}}
+ let a=(v[1]||'').trim(); if(a.length===2) a='20'+a;  // ePayco espera el año con 4 dígitos
+ if(a.length!==4||+a<hoy.getFullYear()||(+a===hoy.getFullYear()&&m<hoy.getMonth()+1)) return 'exp_year';
+ $id('mes').value=String(m).padStart(2,'0'); $id('anio').value=a;
+ if(!/^\\d{{3,4}}$/.test(cvc)) return 'cvc';
+ if(!$id('acepto').checked) return 'acepto'; return ''}}
 function tarjeta(ev){{ev.preventDefault();
- for(const id of ['num','mes','anio','cvc']) $id(id).value=$id(id).value.replace(/\\D/g,'');
- const num=$id('num').value;
+ const num=$id('num').value.replace(/\\D/g,'');
  const malo=revisar(num); if(malo) return marcar(malo)&&false;
- marcar('');msg('Procesando…');
+ marcar('');msg('Procesando tu pago…',true);$id('pagar').disabled=true;
+ $id('num').value=num;  // ePayco lee el número sin espacios
  ePayco.token.create(window.jQuery?jQuery('#tarjeta'):$id('tarjeta'),async function(error,token){{
-  if(error){{const t=String(error.description||error.message||error);
+  $id('num').dispatchEvent(new Event('input'));
+  if(error){{$id('pagar').disabled=false;const t=String(error.description||error.message||error);
    const clave=Object.keys(CAMPO).find(k=>t.endsWith(': '+k)); if(clave&&marcar(clave)) return;
    return msg('ePayco no aceptó la tarjeta: '+t)}}
   try{{const r=await fetch('/pagar/token',{{method:'POST',headers:{{'Content-Type':'application/json'}},
    body:JSON.stringify({{p:C.p,token:String(token&&token.id||token),enmascarado:'**** '+num.slice(-4)}})}});
    const j=await r.json(); if(!r.ok) throw new Error(j.error||r.status);
-   location='/retorno?ref='+encodeURIComponent(j.referencia)}}catch(e){{msg('No se pudo: '+e.message)}}}});
+   location='/retorno?ref='+encodeURIComponent(j.referencia)}}catch(e){{$id('pagar').disabled=false;msg('No se pudo: '+e.message)}}}});
  return false}}
 </script>"""
 
 
 def pantalla_checkout(c, datos):
-    precio = f"${c.precio_centavos // 100:,}".replace(",", ".")
+    precio = pesos_cop(c)
+    medios = (("pse", "PSE", "Débito desde tu cuenta de ahorros o corriente"),
+              ("nequi", "Nequi", "Apruebas el pago en tu app"),
+              ("daviplata", "Daviplata", "Apruebas el pago en tu app"))
+    lista = "".join(f'<li><span class="logo"><img src="/estaticos/{n}.svg" alt=""></span><span><strong>{t}</strong>'
+                    f'<span>{d}</span></span></li>' for n, t, d in medios)
     return f"""
-<h1>Pase Empresario · {precio}</h1>
-<div class="caja"><p>Paga con PSE, Nequi, Daviplata o tarjeta en la ventana segura de ePayco.
-Este pago cubre un mes; antes del corte te enviamos el enlace para renovar.</p>
-<button class="verde" onclick="abrir()">Pagar {precio}</button></div>
+<span class="seguro">{ICONO_CANDADO}Pago seguro</span>
+{pasos(2)}
+{resumen(c, detalle="IVA incluido", plan="Pase Empresario · 1 mes")}
+<div><h1>Paga con PSE, Nequi o Daviplata</h1>
+<p class="nota">También puedes usar una tarjeta sin guardarla.</p></div>
+<ul class="medios">{lista}</ul>
+<div class="dato"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00806b" stroke-width="2"
+stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/>
+<path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Este pago cubre <strong>un mes</strong>. Antes del corte te enviamos
+el enlace para renovar.</span></div>
+<button onclick="abrir()">Ir a pagar {precio} {ICONO_FLECHA}</button>
+<p class="nota centro">Se abre la ventana segura de ePayco. Al terminar vuelves aquí.</p>
+<p class="por">Procesado por <img src="/estaticos/epayco.svg" alt="ePayco"></p>
 <script src="{html.escape(c.checkout_js)}"></script>
 <script>
 function abrir(){{ePayco.checkout.configure({json.dumps(datos)}).open()}}
 </script>"""
 
 
-RETORNO = """
-<h1 id="t">Estamos confirmando tu pago</h1>
-<div class="caja"><p id="e">Esto suele tardar menos de un minuto. No cierres esta página.</p></div>
+def retorno(c, firma=None):
+    aula = html.escape(c.moodle_url or "", quote=True)
+    entrar = f'<a class="boton" href="{aula}">Entrar al aula {ICONO_FLECHA}</a>' if aula else ""
+    if firma:
+        otra_vez = (f'<a class="boton" href="/pagar?p={firma}">Intentar de nuevo</a>'
+                    f'<a class="boton sec" href="/pagar/checkout?p={firma}">Pagar con PSE o Nequi</a>')
+    else:
+        otra_vez = '<p class="chico">Vuelve al enlace de pago que te enviamos para intentarlo de nuevo.</p>'
+    return f"""
+<span class="seguro">{ICONO_CANDADO}Pago seguro</span>
+<div id="pasos">{pasos(2.5)}</div>
+<section class="estado" aria-live="polite">
+<div id="esperando" style="display:contents">
+<svg class="girando" width="56" height="56" viewBox="0 0 48 48" fill="none" aria-hidden="true"><circle cx="24" cy="24" r="20"
+stroke="#e3f6f1" stroke-width="5"/><path d="M24 4a20 20 0 0 1 20 20" stroke="#00806b" stroke-width="5" stroke-linecap="round"/></svg>
+<h1>Estamos confirmando tu pago</h1>
+<p class="chico">Suele tardar menos de un minuto. No cierres esta página.</p>
+<ul class="etapas"><li class="hecho">Pago enviado a ePayco</li><li class="ahora">Esperando respuesta del banco</li>
+<li>Activando tu acceso al aula</li></ul></div>
+<div id="aprobado" class="oculto" style="display:contents">
+<span class="icono"><span class="lleno"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"
+stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span></span>
+<h1>¡Listo! Tu Pase está activo</h1>
+<p class="chico">Te enviamos un correo con tu usuario y el enlace al aula.</p>{entrar}</div>
+<div id="rechazado" class="oculto" style="display:contents">
+<span class="icono falla"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#b42318" stroke-width="2.4"
+stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.5"/></svg></span>
+<h1>Tu pago no se aprobó</h1>
+<p class="chico">El banco no autorizó el cobro. <strong>No se te descontó nada.</strong></p>
+<div class="razones"><b>Suele pasar por:</b><ul><li>Fondos o cupo insuficiente</li>
+<li>Compras por internet desactivadas en la tarjeta</li><li>Algún dato mal escrito (vencimiento o CVC)</li></ul></div>
+{otra_vez}</div>
+</section>
+<p class="nota centro" id="ref"></p>
 <script>
-const ref=new URLSearchParams(location.search).get('ref')||'';
-const tx=new URLSearchParams(location.search).get('ref_payco')||'';
-async function mirar(){const r=await fetch('/estado-pago?ref='+encodeURIComponent(ref)+'&ref_payco='+encodeURIComponent(tx));
+const q=new URLSearchParams(location.search), ref=q.get('ref')||'', tx=q.get('ref_payco')||'';
+const $id=id=>document.getElementById(id);
+if(ref) $id('ref').textContent='Referencia '+ref+' · Guárdala si necesitas ayuda';
+function ver(id,pasosHtml){{for(const x of ['esperando','aprobado','rechazado']) $id(x).classList.toggle('oculto',x!==id);
+ $id('pasos').innerHTML=pasosHtml}}
+async function mirar(){{try{{const r=await fetch('/estado-pago?ref='+encodeURIComponent(ref)+'&ref_payco='+encodeURIComponent(tx));
  const j=await r.json();
- if(j.estado==='APPROVED'){document.getElementById('t').textContent='Pago aprobado';document.getElementById('e').innerHTML='¡Listo! Tu Pase está activo. Te enviamos un correo con el acceso al aula.';return}
- if(j.estado==='DECLINED'||j.estado==='ERROR'||j.estado==='VOIDED'){document.getElementById('t').textContent='Pago no aprobado';document.getElementById('e').textContent='El pago no se aprobó. Puedes intentarlo de nuevo.';return}
- setTimeout(mirar,2500)}
+ if(j.estado==='APPROVED'){{document.title='Pago aprobado';return ver('aprobado',{json.dumps(pasos(3))})}}
+ if(j.estado==='DECLINED'||j.estado==='ERROR'||j.estado==='VOIDED'){{document.title='Pago no aprobado';
+  return ver('rechazado',{json.dumps(pasos(2, falla=True))})}}}}catch(e){{}}
+ setTimeout(mirar,2500)}}
 mirar();
 </script>"""
 
@@ -386,7 +602,7 @@ class App:
                 q = dict(urllib.parse.parse_qsl(u.query))
                 sb = app.c.entorno == "sandbox"
                 if u.path == "/":
-                    return self.responder(200, pagina("Inscripción", formulario(q.get("c", "sin-canal")), sb))
+                    return self.responder(200, pagina("Inscripción", formulario(q.get("c", "sin-canal"), app.c), sb))
                 if u.path == "/pagar":
                     pid = app.verificar(q.get("p"))
                     if not pid:
@@ -414,7 +630,9 @@ class App:
                 if u.path == "/retorno":
                     # ePayco añade ?ref_payco=; nosotros pusimos ?ref=. Solo informa: no activa nada.
                     app.pase.anotar_ref_pasarela(q.get("ref"), q.get("ref_payco"))
-                    return self.responder(200, pagina("Confirmando pago", RETORNO, sb))
+                    fila = app.pase.uno("SELECT persona_id FROM pagos WHERE referencia=?", q.get("ref", ""))
+                    firma = app.firmar(fila["persona_id"]) if fila else None
+                    return self.responder(200, pagina("Confirmando pago", retorno(app.c, firma), sb))
                 if u.path == "/webhooks/epayco":  # por si la confirmación se configura como GET
                     return self.confirmacion(q)
                 if u.path == "/estado-pago":
@@ -424,6 +642,10 @@ class App:
                     elif q.get("ref_payco"):
                         fila = app.pase.uno("SELECT estado FROM pagos WHERE ref_pasarela=?", q["ref_payco"])
                     return self.json(200, {"estado": fila["estado"] if fila else "PENDIENTE"})
+                if u.path.startswith("/estaticos/") and u.path[11:] in ESTATICOS:
+                    with open(ESTATICOS[u.path[11:]], "rb") as f:
+                        return self.responder(200, f.read(), "image/svg+xml",
+                                              {"Cache-Control": "public, max-age=86400"})
                 if u.path == "/salud":
                     return self.json(200, {"ok": True, "entorno": app.c.entorno})
                 if u.path in ("/tablero", "/tablero/pagos.csv"):
