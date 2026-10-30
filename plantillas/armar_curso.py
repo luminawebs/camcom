@@ -250,7 +250,7 @@ def pagina_pase(c, n):
     filas = "".join(
         f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{t(x)}</b></span>'
         f'<span class="as-chip as-chip--rojo">🔒 Pase</span></li>' for k, x in enumerate(pa["unidades"], n + 1))
-    dato = ('style="flex:1 1 140px;background:var(--as-rojo-100);border-radius:10px;padding:12px 14px;text-align:center"')
+    dato = ('style="background:var(--as-rojo-100);border-radius:10px;padding:12px 14px;text-align:center"')
     grande = 'style="display:block;font-size:2rem;font-weight:700;line-height:1.1;color:var(--as-rojo-oscuro)"'
     return {f"paginas/u{n}-pase.html": (f"Unidad {n}: Lo que sigue", f"Página al final de la Unidad {n}, después de Profundiza. Sin finalización.", f"""
   <div class="as-banda as-pila">
@@ -261,10 +261,7 @@ def pagina_pase(c, n):
   <div class="as-tarjeta as-pila" style="border:3px solid var(--as-rojo)">
     <span class="as-eti">Un solo pago al mes</span>
     <h2>Todos los cursos y todos sus certificados</h2>
-    <div class="as-fila" style="flex-wrap:wrap;gap:10px">
-      <div {dato}><b {grande}>📚</b>todos los cursos del Aula, y los nuevos que salgan</div>
-      <div {dato}><b {grande}>🎓</b>un certificado por cada curso que termines</div>
-    </div>
+    <div {dato}><b {grande}>📚 🎓</b>Todos los cursos del Aula y los nuevos que salgan, con un certificado por cada curso que termines</div>
     <ol class="as-pasos">{lista}</ol>
     <p class="as-sec">Cada certificado lleva tu nombre, el curso, las horas y un código de verificación.</p>
     <div class="as-aviso as-aviso--marca"><b>{PASE_PRECIO}.</b> Pagas con tarjeta, PSE, Nequi o Daviplata.</div>
