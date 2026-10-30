@@ -237,5 +237,14 @@
     ],
     "siguiente": "Vende más por WhatsApp Business · Unidades 4 a 7",
     "siguiente_texto": "Con el Pase Empresario: listas de difusión y estados que venden, cobros con link de pago, Nequi y Daviplata, y cómo medir tus ventas por WhatsApp."
+  },
+  "pase": {
+    "canal": "curso-avs-g04",
+    "unidades": [
+      "Listas de difusión y estados que venden",
+      "Cobra con link de pago",
+      "Nequi y Daviplata en tus ventas",
+      "Mide lo que vendes por WhatsApp"
+    ]
   }
 }
