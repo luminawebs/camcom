@@ -1,17 +1,22 @@
-"""Lógica del Pase: personas, pagos, eventos de Wompi, cobro mensual y cohortes de Moodle.
+"""Lógica del Pase: personas, pagos, confirmaciones de ePayco, cobro mensual y cohortes de Moodle.
 
-Regla de oro (RF-14): la matrícula SOLO se activa por un evento de Wompi con firma
-válida y confirmado contra la API, nunca por la página de retorno del navegador.
+Regla de oro (RF-14): la matrícula SOLO se activa por una confirmación de ePayco con firma
+válida y verificada contra su API, nunca por la página de retorno del navegador.
 """
 import calendar
 import datetime as dt
+import hashlib
+import hmac
 import json
+import re
 import secrets
 import sqlite3
 import sys
 import threading
+import time
+import urllib.parse
 
-from . import wompi as w
+from . import epayco as ep
 
 ESQUEMA = """
 CREATE TABLE IF NOT EXISTS personas (
@@ -30,17 +35,24 @@ CREATE TABLE IF NOT EXISTS suscripciones (
   cancelar_al_corte INTEGER DEFAULT 0, cancelada_en TEXT, motivo TEXT);
 CREATE TABLE IF NOT EXISTS pagos (
   id INTEGER PRIMARY KEY, suscripcion_id INTEGER, persona_id INTEGER, tipo TEXT,
-  periodo TEXT, referencia TEXT UNIQUE, wompi_transaction_id TEXT, monto INTEGER,
+  periodo TEXT, referencia TEXT UNIQUE, ref_pasarela TEXT, monto INTEGER,
   estado TEXT, metodo TEXT, intento INTEGER, creado TEXT, aprobado_en TEXT);
-CREATE TABLE IF NOT EXISTS eventos_wompi (
-  id INTEGER PRIMARY KEY, transaction_id TEXT, status TEXT, payload_crudo TEXT,
+CREATE TABLE IF NOT EXISTS eventos_pasarela (
+  id INTEGER PRIMARY KEY, ref_payco TEXT, status TEXT, payload_crudo TEXT,
   firma_valida INTEGER, recibido_en TEXT, procesado_en TEXT, error TEXT,
-  UNIQUE (transaction_id, status));
+  UNIQUE (ref_payco, status));
 CREATE TABLE IF NOT EXISTS eventos_rechazados (recibido_en TEXT, ip TEXT, payload_crudo TEXT);
 CREATE TABLE IF NOT EXISTS historial (persona_id INTEGER, evento TEXT, detalle TEXT, origen TEXT, fecha TEXT);
 CREATE TABLE IF NOT EXISTS avisos (
-  id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, creado TEXT, enviado_en TEXT);
+  id INTEGER PRIMARY KEY, para TEXT, asunto TEXT, cuerpo TEXT, creado TEXT, enviado_en TEXT,
+  intentos INTEGER DEFAULT 0, error TEXT, html TEXT);
+CREATE TABLE IF NOT EXISTS codigos_acceso (
+  id INTEGER PRIMARY KEY, correo TEXT, huella TEXT, creado REAL, intentos INTEGER DEFAULT 0,
+  usado INTEGER DEFAULT 0);
 """
+MAX_INTENTOS_AVISO = 5
+CODIGO_MINUTOS, CODIGO_INTENTOS, CODIGOS_POR_CUARTO_HORA = 15, 5, 3
+ENLACE_CORREO_DIAS, ENLACE_CODIGO_HORAS = 30, 12
 
 TEXTO_AUTORIZACION_V1 = (
     "Autorizo a Lúmina Interactiva S.A.S. (EduNest) y a la Cámara de Comercio de Soacha, "
@@ -48,9 +60,6 @@ TEXTO_AUTORIZACION_V1 = (
     "mis cursos, mis pagos del Pase Empresario y enviarme información de la plataforma, "
     "según la Ley 1581 de 2012 y sus políticas de tratamiento de datos. (v1, borrador)"
 )
-
-
-TIPO_FUENTE = {"tarjeta": "CARD", "nequi": "NEQUI"}
 
 
 def ahora():
@@ -63,14 +72,35 @@ def sumar_mes(fecha: dt.date) -> dt.date:
 
 
 class Pase:
-    def __init__(self, config, moodle, cliente_wompi=None, hoy=None):
+    def __init__(self, config, moodle, cliente_pasarela=None, hoy=None):
         self.c, self.moodle = config, moodle
-        self.wompi = cliente_wompi or w.Wompi(config)
+        self.pasarela = cliente_pasarela or ep.Epayco(config)
         self._hoy = hoy
         self.bd = sqlite3.connect(config.base_datos, check_same_thread=False, isolation_level=None)
         self.bd.row_factory = sqlite3.Row
+        if self.bd.execute("SELECT 1 FROM sqlite_master WHERE name='eventos_wompi'").fetchone():
+            self.bd.close()
+            raise RuntimeError(f"{config.base_datos} es de la versión con Wompi: archívala y arranca "
+                               "con una base nueva (solo tenía pagos de sandbox).")
         self.bd.executescript(ESQUEMA)
+        columnas = {r[1] for r in self.bd.execute("PRAGMA table_info(avisos)")}
+        for col, tipo in (("intentos", "INTEGER DEFAULT 0"), ("error", "TEXT"), ("html", "TEXT")):
+            if col not in columnas:  # bases creadas antes del envío real
+                self.bd.execute(f"ALTER TABLE avisos ADD COLUMN {col} {tipo}")
         self.candado = threading.RLock()
+        clave = config.secreto_sesion or config.p_key or "solo-desarrollo"
+        self._clave = hashlib.sha256(("sesion:" + clave).encode()).digest()
+
+    # Enlaces firmados: nadie puede pagar ni consultar a nombre de otro.
+    def firma(self, texto):
+        return hmac.new(self._clave, str(texto).encode(), "sha256").hexdigest()[:24]
+
+    def firma_valida(self, texto, firma):
+        return bool(firma) and hmac.compare_digest(self.firma(texto), firma)
+
+    def enlace_checkout(self, referencia):
+        q = urllib.parse.urlencode({"r": referencia, "f": self.firma(f"pago:{referencia}")})
+        return f"{self.c.url_publica}/checkout?{q}"
 
     def hoy(self) -> dt.date:
         return self._hoy() if callable(self._hoy) else (self._hoy or dt.date.today())
@@ -85,14 +115,55 @@ class Pase:
     def historial(self, persona_id, evento, detalle="", origen="conector"):
         self.q("INSERT INTO historial VALUES (?,?,?,?,?)", persona_id, evento, detalle, origen, ahora())
 
-    def avisar(self, para, asunto, cuerpo):
+    def avisar(self, para, asunto, cuerpo, html=None):
         for destino in ([para] if isinstance(para, str) else para):
-            self.q("INSERT INTO avisos (para, asunto, cuerpo, creado) VALUES (?,?,?,?)",
-                   destino, asunto, cuerpo, ahora())
+            self.q("INSERT INTO avisos (para, asunto, cuerpo, html, creado) VALUES (?,?,?,?,?)",
+                   destino, asunto, cuerpo, html, ahora())
+
+    def avisar_con_diseno(self, para, tipo, **datos):
+        """Aviso con la plantilla de marca (texto + HTML); ver plantillas_correo.py."""
+        from .plantillas_correo import armar
+        asunto, texto, cuerpo_html = armar(tipo, self.c, **datos)
+        self.avisar(para, asunto, texto, cuerpo_html)
+
+    def enviar_avisos(self, smtp=None):
+        """Envía los avisos pendientes. Un fallo de un destinatario no frena a los demás; tras
+        MAX_INTENTOS_AVISO fallos el aviso se deja (queda el error en la tabla)."""
+        from .correo import Smtp
+        # Un aviso «enviando:» de hace más de 15 min es de una corrida que se cayó a mitad.
+        vencido = "enviando:" + (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=15)).isoformat(
+            timespec="seconds")
+        pendientes = self.q("SELECT * FROM avisos WHERE (enviado_en IS NULL OR "
+                            "(enviado_en LIKE 'enviando:%' AND enviado_en < ?)) AND intentos < ? ORDER BY id",
+                            vencido, MAX_INTENTOS_AVISO).fetchall()
+        if not pendientes:
+            return {"enviados": 0, "fallidos": 0}
+        if smtp is None:
+            if not self.c.smtp_host:
+                return {"enviados": 0, "fallidos": 0, "sin_smtp": len(pendientes)}
+            smtp = Smtp(self.c)
+        enviados = fallidos = 0
+        with smtp as s:
+            for a in pendientes:
+                # Reserva atómica: si otra corrida (el timer y probar-correo a la vez) ya lo tomó, se salta.
+                if self.q("UPDATE avisos SET enviado_en=? WHERE id=? AND enviado_en IS ?",
+                          "enviando:" + ahora(), a["id"], a["enviado_en"]).rowcount != 1:
+                    continue
+                try:
+                    s.enviar(a["para"], a["asunto"], a["cuerpo"], a["html"])
+                except Exception as exc:
+                    fallidos += 1
+                    self.q("UPDATE avisos SET enviado_en=NULL, intentos=intentos+1, error=? WHERE id=?",
+                           str(exc)[:500], a["id"])
+                else:
+                    enviados += 1
+                    self.q("UPDATE avisos SET enviado_en=?, intentos=intentos+1, error=NULL WHERE id=?",
+                           ahora(), a["id"])
+        return {"enviados": enviados, "fallidos": fallidos}
 
     def avisar_organizaciones(self, asunto, cuerpo):
         if self.c.avisos_correo:
-            self.avisar(self.c.avisos_correo, asunto, cuerpo)
+            self.avisar_con_diseno(self.c.avisos_correo, "interno", asunto=asunto, texto=cuerpo)
 
     def estado(self, persona_id, nuevo, origen="conector"):
         p = self.persona(persona_id)
@@ -140,8 +211,8 @@ class Pase:
         self.moodle.agregar_a_cohorte(uid, self.c.cohorte_gratis)
         if p["estado"] == "interesado":
             self.estado(persona_id, "registro_gratis", "formulario")
-        self.avisar(p["correo"], "Bienvenido al Aula Virtual Empresarial",
-                    "Tu registro gratuito está listo. Revisa el correo de Moodle con tu contraseña.")
+        from .moodle import nombre_usuario
+        self.avisar_con_diseno(p["correo"], "registro", nombre=p["nombre"], usuario=nombre_usuario(p["correo"]))
         return uid
 
     def _usuario_moodle(self, p):
@@ -155,7 +226,7 @@ class Pase:
     def _nueva_referencia(self, persona_id, periodo):
         n = self.uno("SELECT COUNT(*) n FROM pagos WHERE persona_id=? AND periodo=?",
                      persona_id, periodo)["n"]
-        # El sufijo evita chocar con referencias ya usadas en Wompi si la base se reinicia
+        # El sufijo evita chocar con referencias ya usadas en ePayco si la base se reinicia
         return f"PASE-{persona_id}-{periodo}-{n + 1}-{secrets.token_hex(3)}"
 
     def _registrar_pago(self, persona_id, tipo, metodo, intento=1, periodo=None):
@@ -180,48 +251,61 @@ class Pase:
         self.q("UPDATE pagos SET suscripcion_id=(SELECT id FROM suscripciones WHERE persona_id=?) "
                "WHERE persona_id=? AND suscripcion_id IS NULL", persona_id, persona_id)
 
-    def pagar_con_token(self, persona_id, tipo, token, token_aceptacion, token_datos=None,
-                        enmascarado=""):
-        """Tarjeta o Nequi tokenizados en el navegador (directo a Wompi): crea la fuente de pago
-        y hace el primer cobro con ella. EduNest solo guarda el id de la fuente (RF-12).
-        Los tokens de aceptación del navegador se gastan al crear la fuente (Wompi los acepta
-        una sola vez); el primer cobro pide unos prefirmados nuevos, igual que la renovación."""
+    def ip_persona(self, persona_id):
+        fila = self.uno("SELECT ip FROM consentimientos WHERE persona_id=? AND ip<>'' "
+                        "ORDER BY rowid DESC LIMIT 1", persona_id)
+        return fila["ip"] if fila else ""
+
+    def pagar_con_token(self, persona_id, token, enmascarado="", ip=""):
+        """Tarjeta tokenizada en el navegador (directo a ePayco): crea el cliente en ePayco y
+        hace el primer cobro con su token. EduNest solo guarda ids (RF-12)."""
         p = self.persona(persona_id)
-        fuente = self.wompi.crear_fuente_pago(tipo, token, p["correo"], token_aceptacion, token_datos)
-        medio = {"CARD": "tarjeta", "NEQUI": "nequi"}[tipo]
-        self._asegurar_suscripcion(persona_id, medio, str(fuente["id"]), enmascarado)
-        ref = self._registrar_pago(persona_id, "inicial", medio)
-        tx = self.wompi.cobrar_fuente(fuente["id"], ref, p["correo"], tipo)
-        self.q("UPDATE pagos SET wompi_transaction_id=? WHERE referencia=?", tx["id"], ref)
-        self.historial(persona_id, "pago_iniciado", f"{medio} {ref}", "formulario")
+        fuente = self.pasarela.crear_cliente(token, dict(p))
+        self._asegurar_suscripcion(persona_id, "tarjeta", json.dumps(fuente), enmascarado)
+        ref = self._registrar_pago(persona_id, "inicial", "tarjeta")
+        tx = self.pasarela.cobrar_tarjeta(fuente, ref, dict(p), ip or self.ip_persona(persona_id))
+        self.q("UPDATE pagos SET ref_pasarela=? WHERE referencia=?", tx["id"], ref)
+        self.historial(persona_id, "pago_iniciado", f"tarjeta {ref}", "formulario")
         return ref, tx
 
     def url_pago_manual(self, persona_id):
-        """PSE y otros medios no tokenizables: Web Checkout y renovación manual (RF-13)."""
-        p = self.persona(persona_id)
-        self._asegurar_suscripcion(persona_id, "pse", manual=True)
-        ref = self._registrar_pago(persona_id, "inicial", "pse")
-        self.historial(persona_id, "pago_iniciado", f"web checkout {ref}", "formulario")
-        return ref, self.wompi.url_web_checkout(ref, p["correo"], p["nombre"])
+        """PSE, Nequi, Daviplata o tarjeta sin guardar: Checkout de ePayco y renovación manual (RF-13)."""
+        self._asegurar_suscripcion(persona_id, "checkout", manual=True)
+        ref = self._registrar_pago(persona_id, "inicial", "checkout")
+        self.historial(persona_id, "pago_iniciado", f"checkout {ref}", "formulario")
+        return ref, self.enlace_checkout(ref)
+
+    def datos_checkout(self, referencia):
+        """Datos para abrir el Checkout de un pago aún pendiente (None si ya no se puede pagar)."""
+        pago = self.uno("SELECT * FROM pagos WHERE referencia=?", referencia)
+        if not pago or pago["estado"] != "PENDIENTE":
+            return None
+        return self.pasarela.datos_checkout(referencia, dict(self.persona(pago["persona_id"])))
+
+    def anotar_ref_pasarela(self, referencia, ref_payco):
+        """La página de retorno trae ?ref_payco=: se guarda para que la conciliación pueda
+        consultarla. No activa nada; el estado siempre sale de la API de ePayco."""
+        if referencia and ref_payco and re.fullmatch(r"[0-9A-Za-z]{1,40}", str(ref_payco)):
+            self.q("UPDATE pagos SET ref_pasarela=? WHERE referencia=? AND ref_pasarela IS NULL "
+                   "AND estado='PENDIENTE'", str(ref_payco), referencia)
 
     # ------------------------------------------------------------------ webhook
-    def recibir_evento(self, crudo: bytes, checksum_cabecera="", ip=""):
-        """RF-15 a RF-17. Devuelve (código_http, id_evento | None). Rápido: no llama a nadie."""
-        try:
-            ev = json.loads(crudo)
-        except ValueError:
-            return 400, None
-        if not w.evento_valido(ev, self.c.secreto_eventos, checksum_cabecera):
-            self.q("INSERT INTO eventos_rechazados VALUES (?,?,?)", ahora(), ip,
-                   crudo.decode(errors="replace")[:20000])
+    def recibir_evento(self, datos: dict, ip=""):
+        """RF-15 a RF-17: confirmación de ePayco (campos x_…). Devuelve (código_http, id | None).
+        Rápido: no llama a nadie; la verificación contra la API va en la cola."""
+        crudo = json.dumps(datos, ensure_ascii=False)
+        if not ep.confirmacion_valida(datos, self.c.cliente_id, self.c.p_key):
+            self.q("INSERT INTO eventos_rechazados VALUES (?,?,?)", ahora(), ip, crudo[:20000])
             return 401, None
-        if ev.get("event") != "transaction.updated":
-            return 200, None
-        tx = ev["data"]["transaction"]
+        if str(datos.get("x_cust_id_cliente", self.c.cliente_id)) != str(self.c.cliente_id):
+            self.q("INSERT INTO eventos_rechazados VALUES (?,?,?)", ahora(), ip, crudo[:20000])
+            return 401, None
+        codigo = str(datos.get("x_cod_transaction_state") or datos.get("x_cod_response") or "")
         try:
-            eid = self.q("""INSERT INTO eventos_wompi (transaction_id, status, payload_crudo,
+            eid = self.q("""INSERT INTO eventos_pasarela (ref_payco, status, payload_crudo,
                             firma_valida, recibido_en) VALUES (?,?,?,1,?)""",
-                         tx["id"], tx["status"], crudo.decode(), ahora()).lastrowid
+                         str(datos["x_ref_payco"]), ep.ESTADOS.get(codigo, "PENDING"), crudo,
+                         ahora()).lastrowid
         except sqlite3.IntegrityError:
             return 200, None  # repetido: ya está guardado, no se vuelve a procesar
         return 200, eid
@@ -229,27 +313,29 @@ class Pase:
     def procesar_pendientes(self):
         """Procesa eventos guardados sin procesar (cola). Se puede correr las veces que sea."""
         hechos = 0
-        for fila in self.q("SELECT id FROM eventos_wompi WHERE procesado_en IS NULL ORDER BY id").fetchall():
+        for fila in self.q("SELECT id FROM eventos_pasarela WHERE procesado_en IS NULL ORDER BY id").fetchall():
             hechos += self.procesar_evento(fila["id"])
         return hechos
 
     def procesar_evento(self, evento_id):
         with self.candado:
-            ev = self.uno("SELECT * FROM eventos_wompi WHERE id=?", evento_id)
+            ev = self.uno("SELECT * FROM eventos_pasarela WHERE id=?", evento_id)
             if not ev or ev["procesado_en"]:
                 return 0
             try:
-                tx = self.wompi.transaccion(ev["transaction_id"])  # RF-18: doble verificación
-                self.aplicar_transaccion(tx, origen="evento Wompi")
-                self.q("UPDATE eventos_wompi SET procesado_en=?, error=NULL WHERE id=?", ahora(), evento_id)
+                tx = self.pasarela.transaccion(ev["ref_payco"])  # RF-18: doble verificación
+                if tx["status"] == "PENDING":
+                    raise ValueError(f"ref_payco {ev['ref_payco']} sigue pendiente en ePayco")
+                self.aplicar_transaccion(tx, origen="confirmación ePayco")
+                self.q("UPDATE eventos_pasarela SET procesado_en=?, error=NULL WHERE id=?", ahora(), evento_id)
                 return 1
             except Exception as e:  # queda pendiente para el siguiente intento
                 print(f"Evento {evento_id} pendiente: {e!r}"[:500], file=sys.stderr, flush=True)
-                self.q("UPDATE eventos_wompi SET error=? WHERE id=?", repr(e)[:500], evento_id)
+                self.q("UPDATE eventos_pasarela SET error=? WHERE id=?", repr(e)[:500], evento_id)
                 return 0
 
     def aplicar_transaccion(self, tx, origen="conector"):
-        """RF-19. Aplica el estado REAL de una transacción consultada en la API de Wompi.
+        """RF-19. Aplica el estado REAL de una transacción consultada en la API de ePayco.
 
         Todo o nada: si Moodle falla, el pago no queda APPROVED sin matrícula y el
         siguiente intento lo vuelve a aplicar."""
@@ -268,12 +354,17 @@ class Pase:
             raise ValueError(f"Referencia desconocida {tx['reference']}")
         if tx["amount_in_cents"] != pago["monto"] or tx.get("currency", "COP") != self.c.moneda:
             raise ValueError(f"Monto o moneda no coinciden en {tx['reference']}")
+        if "prueba" in tx and tx["prueba"] != self.c.pruebas:
+            # Con la llave pública cualquiera puede crear transacciones de prueba con nuestra
+            # referencia: en producción una transacción de prueba nunca da acceso.
+            raise ValueError(f"{tx['reference']}: transacción de {'prueba' if tx['prueba'] else 'producción'} "
+                             f"en entorno {self.c.entorno}")
         estado = tx["status"]
         if pago["estado"] == estado:
             return  # nada nuevo
         if pago["estado"] in ("APPROVED", "VOIDED") and estado != "VOIDED":
             return  # un estado final no retrocede
-        self.q("UPDATE pagos SET estado=?, wompi_transaction_id=?, metodo=COALESCE(?, metodo), "
+        self.q("UPDATE pagos SET estado=?, ref_pasarela=?, metodo=COALESCE(?, metodo), "
                "aprobado_en=CASE WHEN ?='APPROVED' THEN ? ELSE aprobado_en END WHERE id=?",
                estado, tx["id"], (tx.get("payment_method_type") or "").lower() or None,
                estado, ahora(), pago["id"])
@@ -313,14 +404,16 @@ class Pase:
             self.avisar_organizaciones("Nueva suscripción al Pase",
                                        f"{p['nombre']} ({p['negocio']}) · canal {p['canal_origen']}")
         if anterior not in ("suscrito", "activo", "en_mora"):
-            self.avisar(p["correo"], "¡Ya tienes tu Pase Empresario!",
-                        "Tu pago fue aprobado. Ya puedes entrar a todos los cursos con certificado.")
+            sus = self.suscripcion(pid)
+            self.avisar_con_diseno(p["correo"], "pase_activo", nombre=p["nombre"],
+                                   medio=sus["medio_enmascarado"], proximo_corte=sus["proximo_corte"],
+                                   enlace_cuenta=self.enlace_mi_pase(pid))
 
     def _pago_rechazado(self, pago, origen):
         pid = pago["persona_id"]
         p = self.persona(pid)
         if pago["tipo"] == "inicial":
-            self.avisar(p["correo"], "Tu pago no se aprobó", "Puedes intentarlo otra vez con otro medio.")
+            self.avisar_con_diseno(p["correo"], "pago_rechazado", nombre=p["nombre"])
             return
         sus = self.suscripcion(pid)
         intento = pago["intento"]
@@ -331,8 +424,8 @@ class Pase:
                    intento, siguiente.isoformat(), pid)
             self.estado(pid, "en_mora", origen)
             if intento == 1:
-                self.avisar(p["correo"], "No pudimos cobrar tu Pase",
-                            f"Intentaremos de nuevo el {siguiente}. Si quieres, actualiza tu medio de pago.")
+                self.avisar_con_diseno(p["correo"], "cobro_fallido", nombre=p["nombre"], reintento=siguiente,
+                                       medio=sus["medio_enmascarado"])
         else:
             self.cancelar(pid, "reintentos agotados", origen)
 
@@ -353,9 +446,10 @@ class Pase:
         filas = self.q("SELECT * FROM suscripciones WHERE estado IN ('activa','en_mora')").fetchall()
         for s in filas:
             pid, corte = s["persona_id"], dt.date.fromisoformat(s["proximo_corte"])
-            if s["cancelar_al_corte"] and hoy >= corte:
-                self.cancelar(pid, "cancelación voluntaria", "tarea programada")
-                hechos.append((pid, "cancelada"))
+            if s["cancelar_al_corte"]:
+                if hoy >= corte:  # antes del corte no se cobra ni se manda enlace de renovación
+                    self.cancelar(pid, "cancelación voluntaria", "tarea programada")
+                    hechos.append((pid, "cancelada"))
                 continue
             if s["renovacion_manual"]:
                 hechos += self._renovacion_manual(s, hoy, corte)
@@ -375,11 +469,11 @@ class Pase:
             ref = self._registrar_pago(pid, "mensual", s["medio"], intento, corte.strftime("%Y%m"))
             self.q("UPDATE suscripciones SET intento=? WHERE persona_id=?", intento, pid)
             try:
-                tx = self.wompi.cobrar_fuente(s["payment_source_id"], ref, p["correo"],
-                                              TIPO_FUENTE.get(s["medio"], "CARD"))
-                self.q("UPDATE pagos SET wompi_transaction_id=? WHERE referencia=?", tx["id"], ref)
+                tx = self.pasarela.cobrar_tarjeta(json.loads(s["payment_source_id"]), ref, dict(p),
+                                                  self.ip_persona(pid))
+                self.q("UPDATE pagos SET ref_pasarela=? WHERE referencia=?", tx["id"], ref)
                 hechos.append((pid, f"cobro {ref}"))
-            except w.ErrorWompi as e:
+            except ep.ErrorEpayco as e:
                 self.q("UPDATE pagos SET estado='ERROR' WHERE referencia=?", ref)
                 self._pago_rechazado(self.uno("SELECT * FROM pagos WHERE referencia=?", ref), "tarea programada")
                 hechos.append((pid, f"error {e.estado}"))
@@ -391,11 +485,10 @@ class Pase:
         pend = self.uno("SELECT * FROM pagos WHERE persona_id=? AND periodo=? AND tipo='mensual'",
                         pid, periodo)
         if not pend and hoy >= corte - dt.timedelta(days=5):
-            ref = self._registrar_pago(pid, "mensual", "pse", 1, periodo)
+            ref = self._registrar_pago(pid, "mensual", "checkout", 1, periodo)
             p = self.persona(pid)
-            enlace = self.wompi.url_web_checkout(ref, p["correo"], p["nombre"])
-            self.avisar(p["correo"], "Renueva tu Pase Empresario",
-                        f"Tu Pase vence el {corte}. Paga aquí: {enlace}")
+            enlace = self.enlace_checkout(ref)
+            self.avisar_con_diseno(p["correo"], "renovar", nombre=p["nombre"], corte=corte, enlace=enlace)
             return [(pid, f"enlace {ref}")]
         ultimo = corte + dt.timedelta(days=self.c.reintentos_dias[-1])
         if hoy > ultimo and not self.uno("SELECT 1 FROM pagos WHERE persona_id=? AND periodo=? "
@@ -416,41 +509,186 @@ class Pase:
             self.moodle.quitar_de_cohorte(p["moodle_user_id"], self.c.cohorte_pase)
         sus = self.suscripcion(persona_id)
         if sus and sus["payment_source_id"]:
-            try:  # no se vuelve a cobrar a esa fuente; para volver se tokeniza de nuevo
-                self.wompi.anular_fuente(sus["payment_source_id"])
+            try:  # no se vuelve a cobrar a esa tarjeta; para volver se tokeniza de nuevo
+                self.pasarela.quitar_tarjeta(json.loads(sus["payment_source_id"]))
                 self.historial(persona_id, "fuente_anulada", sus["medio_enmascarado"] or "", origen)
-            except w.ErrorWompi as e:
+            except (ep.ErrorEpayco, ValueError) as e:
                 self.historial(persona_id, "error_anular_fuente", str(e)[:300], origen)
         self.estado(persona_id, "cancelado", origen)
         self.historial(persona_id, "cancelo", motivo, origen)
         self.avisar_organizaciones("Cancelación del Pase", f"{p['nombre']}: {motivo}")
-        self.avisar(p["correo"], "Tu Pase Empresario terminó",
-                    "Conservas tu avance y tus cursos gratuitos. Puedes volver cuando quieras.")
+        self.avisar_con_diseno(p["correo"], "pase_termino", nombre=p["nombre"], motivo=motivo)
 
-    def pedir_cancelacion(self, persona_id):
-        """RF-26: el acceso sigue hasta el corte; no se vuelve a cobrar."""
+    def pedir_cancelacion(self, persona_id, motivo="", origen="persona"):
+        """RF-26: el acceso sigue hasta el corte y no se vuelve a cobrar. Con el Pase en mora el
+        periodo no está pagado, así que se cierra ya. Devuelve la suscripción o None si no aplica."""
+        sus = self.suscripcion(persona_id)
+        if not sus or sus["estado"] not in ("activa", "en_mora"):
+            return None
+        motivo = (motivo or "").strip()[:200]
+        if sus["estado"] == "en_mora":
+            self.historial(persona_id, "pidio_cancelar", motivo, origen)
+            self.cancelar(persona_id, "cancelación voluntaria", origen)
+            return self.suscripcion(persona_id)
+        if sus["cancelar_al_corte"]:
+            return sus
         self.q("UPDATE suscripciones SET cancelar_al_corte=1 WHERE persona_id=?", persona_id)
-        self.historial(persona_id, "pidio_cancelar", "", "persona")
+        self.historial(persona_id, "pidio_cancelar", motivo, origen)
+        p = self.persona(persona_id)
+        self.avisar_organizaciones("Cancelación programada del Pase",
+                                   f"{p['nombre']} cancela el {sus['proximo_corte']}"
+                                   + (f" · motivo: {motivo}" if motivo else "") + f" · {origen}")
+        self.avisar_con_diseno(p["correo"], "cancelacion", nombre=p["nombre"], corte=sus["proximo_corte"],
+                               enlace_cuenta=self.enlace_mi_pase(persona_id))
+        return self.suscripcion(persona_id)
+
+    def deshacer_cancelacion(self, persona_id, origen="persona"):
+        """Antes del corte la persona sigue con el Pase sin volver a pagar ni poner la tarjeta."""
+        sus = self.suscripcion(persona_id)
+        if not sus or sus["estado"] != "activa" or not sus["cancelar_al_corte"]:
+            return False
+        self.q("UPDATE suscripciones SET cancelar_al_corte=0 WHERE persona_id=?", persona_id)
+        self.historial(persona_id, "deshizo_cancelar", "", origen)
+        p = self.persona(persona_id)
+        self.avisar_organizaciones("El Pase sigue", f"{p['nombre']} deshizo la cancelación · {origen}")
+        return True
+
+    # ------------------------------------------------------------------ Mi Pase: acceso de la persona
+    # Enlace firmado con vencimiento: pid.vence.firma. Llega en los correos del Pase o tras un código.
+    def firma_mi_pase(self, persona_id, segundos):
+        vence = int(time.time()) + int(segundos)
+        return f"{persona_id}.{vence}.{self.firma(f'mi:{persona_id}:{vence}')}"
+
+    def enlace_mi_pase(self, persona_id, dias=ENLACE_CORREO_DIAS):
+        return f"{self.c.url_publica}/mi-pase?p={self.firma_mi_pase(persona_id, dias * 86400)}"
+
+    def verificar_mi_pase(self, valor):
+        partes = (valor or "").split(".")
+        if len(partes) != 3 or not partes[0].isdigit() or not partes[1].isdigit():
+            return None
+        pid, vence, f = partes
+        if int(vence) < time.time() or not self.firma_valida(f"mi:{pid}:{vence}", f):
+            return None
+        return int(pid)
+
+    def pedir_codigo(self, correo):
+        """Manda un código de 6 dígitos si el correo tiene o tuvo el Pase. Quien llama responde
+        igual en todos los casos, para no revelar quién tiene el Pase."""
+        correo = (correo or "").strip().lower()
+        p = self.uno("SELECT p.* FROM personas p JOIN suscripciones s ON s.persona_id=p.id "
+                     "WHERE p.correo=?", correo)
+        if not p:
+            return False
+        if self.uno("SELECT COUNT(*) n FROM codigos_acceso WHERE correo=? AND creado>?",
+                    correo, time.time() - 15 * 60)["n"] >= CODIGOS_POR_CUARTO_HORA:
+            return False
+        codigo = f"{secrets.randbelow(10 ** 6):06d}"
+        self.q("UPDATE codigos_acceso SET usado=1 WHERE correo=?", correo)  # solo vale el último
+        self.q("INSERT INTO codigos_acceso (correo, huella, creado) VALUES (?,?,?)",
+               correo, self.firma(f"codigo:{correo}:{codigo}"), time.time())
+        self.avisar_con_diseno(correo, "codigo", nombre=p["nombre"], codigo=codigo, minutos=CODIGO_MINUTOS)
+        return True
+
+    def validar_codigo(self, correo, codigo):
+        """persona_id si el código es el último enviado, no venció ni se usó; si no, None."""
+        correo = (correo or "").strip().lower()
+        codigo = "".join(ch for ch in (codigo or "") if ch.isdigit())
+        with self.candado:
+            fila = self.uno("SELECT * FROM codigos_acceso WHERE correo=? AND usado=0 AND creado>? "
+                            "ORDER BY id DESC LIMIT 1", correo, time.time() - CODIGO_MINUTOS * 60)
+            if not fila or fila["intentos"] >= CODIGO_INTENTOS:
+                return None
+            if not self.firma_valida(f"codigo:{correo}:{codigo}", fila["huella"]):
+                self.q("UPDATE codigos_acceso SET intentos=intentos+1 WHERE id=?", fila["id"])
+                return None
+            self.q("UPDATE codigos_acceso SET usado=1 WHERE id=?", fila["id"])
+        p = self.uno("SELECT id FROM personas WHERE correo=?", correo)
+        self.historial(p["id"], "entro_mi_pase", "código por correo", "persona")
+        return p["id"]
 
     # ------------------------------------------------------------------ conciliación
     def conciliar(self):
-        """RNF-05: recupera eventos perdidos consultando pagos pendientes en la API."""
+        """RNF-05: recupera confirmaciones perdidas consultando en ePayco los pagos pendientes
+        cuyo x_ref_payco se conoce (cobros con tarjeta y checkouts que volvieron al retorno)."""
         n = 0
-        for pago in self.q("SELECT * FROM pagos WHERE estado='PENDIENTE'").fetchall():
+        for pago in self.q("SELECT * FROM pagos WHERE estado='PENDIENTE' AND ref_pasarela IS NOT NULL").fetchall():
             try:
-                if pago["wompi_transaction_id"]:
-                    tx = self.wompi.transaccion(pago["wompi_transaction_id"])
-                else:
-                    lista = self.wompi.transacciones_por_referencia(pago["referencia"])
-                    if not lista:
-                        continue
-                    tx = lista[0]
+                tx = self.pasarela.transaccion(pago["ref_pasarela"])
                 if tx["status"] != "PENDING":
                     self.aplicar_transaccion(tx, origen="conciliación")
                     n += 1
             except Exception as e:
                 self.historial(pago["persona_id"], "error_conciliacion", repr(e)[:300])
         return n
+
+    def tablero(self, dias_renovacion=7):
+        """Datos del tablero interno: cifras del mes (hora Colombia), estados, canales, próximas
+        renovaciones, últimos pagos y lo que está fallando."""
+        col = dt.timezone(dt.timedelta(hours=-5))
+        mes = dt.datetime.now(col).strftime("%Y-%m")
+        aprobados = self.q("SELECT monto, aprobado_en FROM pagos WHERE estado='APPROVED'").fetchall()
+        del_mes = [r["monto"] for r in aprobados if r["aprobado_en"] and
+                   dt.datetime.fromisoformat(r["aprobado_en"]).astimezone(col).strftime("%Y-%m") == mes]
+        filas = lambda sql, *a: [dict(r) for r in self.q(sql, *a).fetchall()]
+        cuenta = lambda sql: {r[0] or "—": r[1] for r in self.q(sql).fetchall()}
+        limite = (self.hoy() + dt.timedelta(days=dias_renovacion)).isoformat()
+        return {
+            "mes": mes,
+            "personas": cuenta("SELECT estado, COUNT(*) FROM personas GROUP BY estado ORDER BY 2 DESC"),
+            "suscripciones": cuenta("SELECT estado, COUNT(*) FROM suscripciones GROUP BY estado ORDER BY 2 DESC"),
+            "canales": filas("""SELECT COALESCE(p.canal_origen,'sin-canal') canal, COUNT(*) inscritos,
+                                  SUM(s.estado='activa') activos
+                                FROM personas p LEFT JOIN suscripciones s ON s.persona_id=p.id
+                                GROUP BY 1 ORDER BY 2 DESC"""),
+            "recaudo_mes_cop": sum(del_mes) // 100,
+            "pagos_mes": len(del_mes),
+            "recaudo_total_cop": sum(r["monto"] for r in aprobados) // 100,
+            "renovaciones": filas("""SELECT p.nombre, p.correo, s.proximo_corte, s.medio, s.medio_enmascarado,
+                                       s.renovacion_manual, s.cancelar_al_corte
+                                     FROM suscripciones s JOIN personas p ON p.id=s.persona_id
+                                     WHERE s.estado='activa' AND s.proximo_corte <= ?
+                                     ORDER BY s.proximo_corte""", limite),
+            "en_mora": filas("""SELECT p.nombre, p.correo, s.proximo_corte, s.intento, s.proximo_intento
+                                FROM suscripciones s JOIN personas p ON p.id=s.persona_id
+                                WHERE s.estado='en_mora' ORDER BY s.proximo_intento"""),
+            "ultimos_pagos": filas("""SELECT pg.creado, pg.aprobado_en, p.nombre, pg.tipo, pg.periodo, pg.monto,
+                                        pg.estado, pg.metodo, pg.referencia
+                                      FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id
+                                      ORDER BY pg.id DESC LIMIT 25"""),
+            "avisos_con_error": filas("SELECT para, asunto, intentos, error FROM avisos "
+                                      "WHERE enviado_en IS NULL AND error IS NOT NULL ORDER BY id DESC LIMIT 10"),
+            "avisos_en_cola": self.uno("SELECT COUNT(*) n FROM avisos WHERE enviado_en IS NULL")["n"],
+            "eventos_pendientes": self.uno("SELECT COUNT(*) n FROM eventos_pasarela "
+                                           "WHERE procesado_en IS NULL")["n"],
+            "eventos_rechazados": self.uno("SELECT COUNT(*) n FROM eventos_rechazados")["n"],
+        }
+
+    def buscar_personas(self, texto, limite=20):
+        """Tablero, soporte: personas con Pase por nombre, correo o documento."""
+        t = "%" + (texto or "").strip().lower().replace("%", "").replace("_", "") + "%"
+        if len(t) < 5:  # al menos 3 letras
+            return []
+        return [dict(r) for r in self.q("""SELECT p.id, p.nombre, p.correo, p.documento, s.estado,
+                  s.proximo_corte, s.medio, s.medio_enmascarado, s.renovacion_manual, s.cancelar_al_corte
+                FROM personas p JOIN suscripciones s ON s.persona_id=p.id
+                WHERE lower(p.nombre) LIKE ? OR p.correo LIKE ? OR p.documento LIKE ?
+                ORDER BY p.nombre LIMIT ?""", t, t, t, limite).fetchall()]
+
+    def pagos_csv(self):
+        import csv
+        import io
+        sal = io.StringIO()
+        w = csv.writer(sal)
+        w.writerow(["referencia", "ref_epayco", "creado", "aprobado_en", "documento", "nombre", "correo",
+                    "canal", "tipo", "periodo", "monto_cop", "estado", "metodo"])
+        for r in self.q("""SELECT pg.referencia, pg.ref_pasarela, pg.creado, pg.aprobado_en, p.documento,
+                             p.nombre, p.correo, p.canal_origen, pg.tipo, pg.periodo, pg.monto, pg.estado,
+                             pg.metodo
+                           FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id ORDER BY pg.id"""):
+            fila = list(r)
+            fila[10] = (fila[10] or 0) // 100
+            w.writerow(fila)
+        return sal.getvalue()
 
     def resumen(self):
         cuenta = lambda sql: {r[0]: r[1] for r in self.q(sql).fetchall()}
@@ -459,7 +697,7 @@ class Pase:
             "pagos": cuenta("SELECT estado, COUNT(*) FROM pagos GROUP BY estado"),
             "recaudo_aprobado_cop": (self.uno("SELECT COALESCE(SUM(monto),0) s FROM pagos "
                                               "WHERE estado='APPROVED'")["s"]) // 100,
-            "eventos_pendientes": self.uno("SELECT COUNT(*) n FROM eventos_wompi "
+            "eventos_pendientes": self.uno("SELECT COUNT(*) n FROM eventos_pasarela "
                                            "WHERE procesado_en IS NULL")["n"],
             "eventos_rechazados": self.uno("SELECT COUNT(*) n FROM eventos_rechazados")["n"],
         }

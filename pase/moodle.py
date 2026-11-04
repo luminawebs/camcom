@@ -40,11 +40,11 @@ class Moodle:
         self.url, self.token = url.rstrip("/"), token
         self._cohortes = {}
 
-    def llamar(self, funcion, **params):
+    def llamar(self, funcion, espera=30, **params):
         campos = [("wstoken", self.token), ("wsfunction", funcion),
                   ("moodlewsrestformat", "json")] + _aplanar("", params, [])
         datos = urllib.parse.urlencode(campos).encode()
-        with urllib.request.urlopen(f"{self.url}/webservice/rest/server.php", datos, timeout=30) as r:
+        with urllib.request.urlopen(f"{self.url}/webservice/rest/server.php", datos, timeout=espera) as r:
             res = json.loads(r.read() or b"null")
         if isinstance(res, dict) and res.get("exception"):
             raise ErrorMoodle(f"{funcion}: {res.get('errorcode')} {res.get('message')} "
@@ -60,7 +60,8 @@ class Moodle:
 
     def crear_usuario(self, persona):
         nombre, _, apellido = persona["nombre"].strip().partition(" ")
-        res = self.llamar("core_user_create_users", users=[{
+        # Moodle manda el correo con la contraseña dentro de la misma llamada: puede tardar
+        res = self.llamar("core_user_create_users", espera=90, users=[{
             "username": nombre_usuario(persona["correo"]),
             "createpassword": 1,  # Moodle envía la contraseña por correo
             "firstname": nombre, "lastname": apellido or "-",
@@ -71,7 +72,21 @@ class Moodle:
         return res[0]["id"]
 
     def asegurar_usuario(self, persona):
-        return self.buscar_usuario(persona["correo"]) or self.crear_usuario(persona)
+        encontrado = self.buscar_usuario(persona["correo"])
+        if encontrado:
+            return encontrado
+        try:
+            return self.crear_usuario(persona)
+        except (ErrorMoodle, OSError) as e:
+            # Si un intento anterior sí lo creó (p. ej. se agotó la espera), ya existe
+            encontrado = self.buscar_usuario(persona["correo"])
+            if encontrado:
+                return encontrado
+            if "Duplicate entry" in str(e) or "already exists" in str(e):
+                raise ErrorMoodle("El usuario ya existe en Moodle pero el conector no lo ve: al rol del "
+                                  "usuario de servicio le falta moodle/user:viewalldetails (o "
+                                  "viewdetails) en el contexto Sistema") from None
+            raise
 
     def id_cohorte(self, idnumber):
         if idnumber not in self._cohortes:

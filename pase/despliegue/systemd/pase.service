@@ -1,5 +1,5 @@
 [Unit]
-Description=Conector del Pase Empresario (Wompi → Moodle)
+Description=Conector del Pase Empresario (ePayco → Moodle)
 After=network-online.target
 Wants=network-online.target
 
