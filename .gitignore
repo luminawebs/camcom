@@ -7,5 +7,6 @@ cursos/*/vista-previa/
 cursos/*/paginas/
 cursos/*/medios/
 cursos/*/medios-moodle/
+*.db
 cursos/*/ilustraciones/originales/
 cursos/*/ilustraciones/personajes/
