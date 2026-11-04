@@ -1,6 +1,6 @@
 # La plata del negocio no es la de la casa
 
-Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 1 h 36 min de estudiante · 27 piezas
+Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 1 h 36 min de estudiante · 28 piezas
 
 **Promesa:** Al terminar sabrás cuánto gana de verdad tu negocio, cuánto te puedes pagar cada mes y tendrás una cuenta y un registro solo para el negocio.
 
@@ -48,7 +48,8 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 1 h 36 min de estudian
 │   ├── U3 · Practica | Cuadra el registro del día [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-practica (calculadora)
 │   ├── U3 · Aplica | Comparte tu registro [Foro de preguntas y respuestas · 8 min] → paginas/u3-aplica.html
 │   ├── U3 · Llévatelo | Las 3 reglas de la plata [Página + Archivo · 2 min] → paginas/u3-llevatelo.html
-│   └── U3 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u3-profundiza.html
+│   ├── U3 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u3-profundiza.html
+│   └── U3 · Lo que sigue | Unidades 4 a 7 con el Pase Empresario [Página · opcional] → paginas/u3-pase.html
 │
 └── CIERRE  (18 min)
     ├── Reto final entre pares [Taller (revisión entre pares) · 15 min] → paginas/99-reto-final-entre-pares.html

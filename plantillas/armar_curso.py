@@ -18,6 +18,7 @@ import html
 import json
 import re
 import shutil
+import urllib.parse
 import sys
 from pathlib import Path
 
@@ -32,6 +33,10 @@ NOMBRE_PASO = {"entrada": "Entrada", "aprende": "Aprende", "practica": "Practica
 PREGUNTA_PASO = {"entrada": "¿Por qué me importa?", "aprende": "¿Qué necesito saber?", "practica": "¿Lo entendí?",
                  "aplica": "¿Me sirve a mí?", "demuestra": "¿Lo logré?", "llevatelo": "¿Qué me llevo?",
                  "profundiza": "¿Dónde aprendo más?"}
+# Invitación al Pase al final de la última unidad gratuita (curso.json "pase": {"unidades": [4 títulos de U4-U7]}).
+# El canal ?c= le dice al conector de qué curso llegó la persona.
+PASE_URL = "https://pase.edunest.co/"
+PASE_PRECIO = "$29.000 al mes"
 
 # Receta por perfil: paso -> (formato, actividad de Moodle, min certificado, min gancho, molde HTML5 o None)
 # Profundiza es opcional (0 min). En el gancho, Aplica se reemplaza por PEER_G (foro entre pares, sin tutor).
@@ -94,7 +99,7 @@ INICIO_GANCHO = [
 PEER_G = ("Comparte y comenta", "Foro de preguntas y respuestas", 15, 8, None)
 # Resumen de unidad: video O audio, nunca los dos. curso.json "resumen_formato" (o unidad.resumen.formato).
 RESUMEN = {
-    "video": ("Video de 60 s (NotebookLM)", "H5P · Video interactivo", "▶ Resumen en video · 1 min", "Resumen en video"),
+    "video": ("Video de 60 s (automático o NotebookLM)", "H5P · Video interactivo", "▶ Resumen en video · 1 min", "Resumen en video"),
     "audio": ("Audio de 5 min (NotebookLM)", "Página con audio", "♪ Resumen en audio · 5 min", "Resumen en audio"),
 }
 
@@ -157,12 +162,42 @@ def mapa(c, nombre, que):
     return hueco("imagen", "Mapa mental", f"{que}. Lo arma Claude desde los guiones: mapas/{nombre}.png")
 
 
+def ficha(c, i):
+    """Ficha vertical 1080 × 1920 para el celular: la arma plantillas/fichas.py en <curso>/fichas/ (ya no Canva)."""
+    kb = c.get("_fichas", {}).get(f"u{i}-ficha")
+    if kb:
+        return (f'<img src="../fichas/u{i}-ficha.jpg" alt="Ficha de la Unidad {i} para guardar en el celular" '
+                f'style="display:block;width:100%;max-width:360px;height:auto;margin:0 auto;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.18)">'
+                f'<a class="as-btn" href="../fichas/u{i}-ficha.jpg" download="u{i}-ficha.jpg" target="_blank">⬇ Guarda la ficha en tu celular · JPG {kb} KB</a>')
+    return hueco('vertical', 'Ficha vertical', f'Ficha 1080 × 1920 para guardar en el celular. La arma Claude con plantillas/fichas.py en fichas/u{i}-ficha.jpg. Máx. 250 KB.')
+
+
 def guia(c, i):
     """Guía de estudio en PDF: la arma Claude con el logo en <curso>/guias-pdf/ (ya no NotebookLM)."""
     kb = c.get("_guias", {}).get(f"u{i}-guia")
     if kb:
         return f'<a class="as-btn as-btn--sec" href="../guias-pdf/u{i}-guia.pdf" target="_blank">⬇ Guía de estudio de la Unidad {i} · PDF {kb} KB</a>'
     return f'<a class="as-btn as-btn--sec" href="#">⬇ <em class="as-ph">[Guía de estudio de la Unidad {i} · PDF A5. La arma Claude en guias-pdf/u{i}-guia.pdf]</em></a>'
+
+
+def video_vertical(c, nombre, alterno):
+    """Video vertical hecho con plantillas/video_resumen.py en medios-moodle/<nombre>.mp4 (bienvenida, uN-resumen). Si no existe, el espacio."""
+    if f"{nombre}.mp4" not in c.get("_videos", ()):
+        return alterno
+    pista = f'<track kind="captions" srclang="es" label="Español" src="../medios-moodle/{nombre}.vtt">' if f"{nombre}.vtt" in c["_videos"] else ""
+    return (f'<video controls preload="metadata" playsinline style="width:100%;max-width:420px;display:block;margin:0 auto;border-radius:12px;'
+            f'background:#000" src="../medios-moodle/{nombre}.mp4">{pista}</video>')
+
+
+def imagen_entrada(c, i, nota):
+    """Ilustración de la Entrada (plantillas/ilustrar.py, Gemini) en medios-moodle/uN-entrada.jpg. Si no existe, deja el espacio."""
+    if f"u{i}-entrada.mp4" in c.get("_imagenes", ()):  # video de la Entrada (plantillas/video_entrada.py): imagen + narración
+        return (f'<video controls preload="metadata" playsinline poster="../medios-moodle/u{i}-entrada.jpg" style="display:block;width:100%;'
+                f'border-radius:8px;background:#000" src="../medios-moodle/u{i}-entrada.mp4">'
+                f'<track kind="captions" srclang="es" label="Español" src="../medios-moodle/u{i}-entrada.vtt"></video>')
+    if f"u{i}-entrada.jpg" in c.get("_imagenes", ()):
+        return f'<img src="../medios-moodle/u{i}-entrada.jpg" alt="{html.escape(nota.split(" (")[0])}" style="display:block;width:100%;height:auto;border-radius:8px">'
+    return hueco("imagen", "Imagen", nota)
 
 
 def narracion(c, nombre, que):
@@ -191,6 +226,55 @@ def ficha_moodle(eti, titulo, actividad, lineas, extra=""):
             f'<ul class="as-check">{lis}</ul>{extra}</div>')
 
 
+def cursos_con_pase():
+    """[(canal, título corto)] de los cursos del repo que tienen tramo del Pase, en el orden de su canal (AVS-G01, G02...)."""
+    out = []
+    for f in sorted((RAIZ.parent / "cursos").glob("*/curso.json")):
+        x = json.loads(f.read_text(encoding="utf-8"))
+        if x.get("pase"):
+            out.append((x["pase"].get("canal", "curso-" + x["id"]), x.get("titulo_corto", x["titulo"])))
+    return sorted(out)
+
+
+def pagina_pase(c, n):
+    """Invitación a comprar el Pase al final de la unidad n (la última gratuita). Lo que más resalta es que el Pase
+    abre todos los cursos y todos sus certificados; debajo, lo que sigue en este curso (unidades 4 a 7)."""
+    pa = c["pase"]
+    canal = pa.get("canal", "curso-" + c["id"])
+    enlace = f"{PASE_URL}?c={urllib.parse.quote(canal)}"
+    todos = cursos_con_pase()
+    lista = "".join(
+        f'<li class="as-paso"{" style=\"border:2px solid var(--as-rojo)\"" if k == canal else ""}><span class="as-paso__n">📘</span>'
+        f'<span class="as-paso__t"><b>{t(x)}</b>{"<small style=\"display:block\">Este curso</small>" if k == canal else ""}</span>'
+        f'<span class="as-chip as-chip--ok">🎓 Certificado</span></li>' for k, x in todos)
+    filas = "".join(
+        f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{t(x)}</b></span>'
+        f'<span class="as-chip as-chip--rojo">🔒 Pase</span></li>' for k, x in enumerate(pa["unidades"], n + 1))
+    dato = ('style="background:var(--as-rojo-100);border-radius:10px;padding:12px 14px;text-align:center"')
+    grande = 'style="display:block;font-size:2rem;font-weight:700;line-height:1.1;color:var(--as-rojo-oscuro)"'
+    return {f"paginas/u{n}-pase.html": (f"Unidad {n}: Lo que sigue", f"Página al final de la Unidad {n}, después de Profundiza. Sin finalización.", f"""
+  <div class="as-banda as-pila">
+    <span class="as-eti">Terminaste la parte gratuita</span>
+    <h2>{t(pa.get('titulo', 'Vas muy bien. Sigue con el Pase Empresario'))}</h2>
+    <p>{t(pa.get('texto', f'Ya hiciste las {n} unidades gratis de «{c.get("titulo_corto", c["titulo"])}». Con el Pase sigues aquí mismo, en la unidad {n + 1}, sin perder tu avance.'))}</p>
+  </div>
+  <div class="as-tarjeta as-pila" style="border:3px solid var(--as-rojo)">
+    <span class="as-eti">Un solo pago al mes</span>
+    <h2>Todos los cursos y todos sus certificados</h2>
+    <div {dato}><b {grande}>📚 🎓</b>Todos los cursos del Aula y los nuevos que salgan, con un certificado por cada curso que termines</div>
+    <ol class="as-pasos">{lista}</ol>
+    <p class="as-sec">Cada certificado lleva tu nombre, el curso, las horas y un código de verificación.</p>
+    <div class="as-aviso as-aviso--marca"><b>{PASE_PRECIO}.</b> Pagas con tarjeta, PSE, Nequi o Daviplata.</div>
+    <a class="as-btn as-btn--ancho" href="{html.escape(enlace)}" target="_blank" rel="noopener">Quiero el Pase Empresario ›</a>
+  </div>
+  <div class="as-tarjeta as-pila">
+    <h3>Lo que sigue en este curso</h3>
+    <ol class="as-pasos">{filas}</ol>
+    <p class="as-sec"><small>Usa el mismo correo con el que entras al Aula: así todo se abre solo en tu usuario.
+      Si ya tienes el Pase, ya está abierto para ti.</small></p>
+  </div>""")}
+
+
 # ---------------------------------------------------------------- estructura
 def estructura(c):
     nivel, receta = c["nivel"], RECETAS[c["perfil"]]
@@ -205,7 +289,8 @@ def estructura(c):
         items = [{"codigo": f"U{i} · Resumen", "paso": "resumen", "nombre": r[3], "formato": r[0],
                   "actividad": r[1], "min": 0, "opcional": True, "pagina": f"paginas/u{i}-resumen.html"}]
         for p in pasos:
-            formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else receta["pasos"][p]
+            ajuste = c.get("receta", {}).get(p)   # curso.json "receta": {"aprende": [formato, actividad, min c, min g, molde]}
+            formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else (tuple(ajuste) if ajuste else receta["pasos"][p])
             it = {"codigo": f"U{i} · {NOMBRE_PASO[p]}", "paso": p, "formato": formato, "actividad": act,
                   "min": mg if nivel == "g" else mc}
             if p == "profundiza":
@@ -215,6 +300,10 @@ def estructura(c):
             else:
                 it.update(nombre=u[p].get("titulo", formato) if isinstance(u.get(p), dict) else formato, pagina=f"paginas/u{i}-{p}.html")
             items.append(it)
+        if nivel == "g" and c.get("pase") and i == n_u:
+            items.append({"codigo": f"U{i} · Lo que sigue", "paso": "pase", "nombre": "Unidades 4 a 7 con el Pase Empresario",
+                          "formato": "Invitación al Pase", "actividad": "Página", "min": 0, "opcional": True,
+                          "pagina": f"paginas/u{i}-pase.html"})
         secciones.append({"titulo": f"UNIDAD {i}", "tema": u["tema"], "objetivo": u["objetivo"], "items": items,
                           "cabecera": f"paginas/u{i}-cabecera.html", "n": i, "de": n_u})
     cierre = {"titulo": "CIERRE", "tema": "Reto, constancia y siguiente paso", "items": []}
@@ -280,7 +369,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Inicio · Bienvenida</span>
     <h2>{t(ini['bienvenida'])}</h2>
-    {hueco('vertical', 'Video vertical', ini.get('video_nota', 'Bienvenida de 60 s: Luz Dary cuenta su problema y qué vas a lograr. Con subtítulos.'))}
+    {video_vertical(c, 'bienvenida', hueco('vertical', 'Video vertical', ini.get('video_nota', 'Bienvenida de 60 s: Luz Dary cuenta su problema y qué vas a lograr. Con subtítulos.')))}
     <p>{t(ini['texto'])}</p>
   </div>
   <div class="as-tarjeta as-pila">
@@ -314,7 +403,7 @@ def paginas(c, secs):
 
     for s, u in zip(u_secs, c["unidades"]):
         i = s["n"]
-        pasos_u = [x for x in s["items"] if x["paso"] != "resumen"]
+        pasos_u = [x for x in s["items"] if x["paso"] not in ("resumen", "pase")]
         num = {x["paso"]: k for k, x in enumerate(pasos_u, 1)}
         mins = {x["paso"]: x["min"] for x in pasos_u}
         filas = "".join(
@@ -336,7 +425,7 @@ def paginas(c, secs):
     <span class="as-eti">Unidad {i} · Resumen · opcional</span>
     <h2>{t(u['tema'])} en un minuto</h2>
     <p class="as-sec">Míralo antes de empezar como adelanto, o al final para repasar.</p>
-    {hueco('video', 'Video', f'Resumen en video de 60 s generado con NotebookLM (solicitud 2A, Unidad {i}). H5P, con subtítulos.')}
+    {video_vertical(c, f'u{i}-resumen', hueco('video', 'Video', f'Resumen en video de 60 s (plantillas/video_resumen.py con video/u{i}-resumen.json, o NotebookLM). Con subtítulos.'))}
   </div>"""
         else:
             cuerpo_res = f"""
@@ -364,7 +453,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Paso 1 · Entrada · {mins['entrada']} min</span>
     <h2>{t(e['titulo'])}</h2>
-    {hueco('imagen', 'Imagen', e['imagen'])}{narracion(c, f"u{i}-entrada-narracion", "Escucha el caso")}
+    {imagen_entrada(c, i, e['imagen'])}{"" if f"u{i}-entrada.mp4" in c.get("_imagenes", ()) else narracion(c, f"u{i}-entrada-narracion", "Escucha el caso")}
     <p>{t(e['texto'])}</p>
   </div>
   <div class="as-aviso as-aviso--marca as-pila">
@@ -397,7 +486,7 @@ def paginas(c, secs):
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Paso {k_ll} · Llévatelo · {mins['llevatelo']} min</span>
     <h2>{t(L['titulo'])}</h2>
-    {hueco('vertical', 'Ficha vertical', 'Ficha 1080 × 1920 para guardar en el celular, hecha en Canva. Máx. 250 KB.')}
+    {ficha(c, i)}
   </div>
   <div class="as-tarjeta as-pila">
     <h3>En tres frases</h3>
@@ -412,6 +501,9 @@ def paginas(c, secs):
     <h3>Descarga</h3>
     {desc}
   </div>""")
+
+    if c.get("pase") and c["nivel"] == "g":
+        P.update(pagina_pase(c, len(u_secs)))
 
     ci = c["cierre"]
     P["paginas/99-cierre.html"] = ("Cierre del curso", "Resumen de la sección CIERRE.", f"""
@@ -488,12 +580,16 @@ def vista_previa(c, secs, carpeta, pags):
         (destino / "mapas").mkdir()
         for n in c["_mapas"]:
             shutil.copy(carpeta / "mapas" / f"{n}.png", destino / "mapas" / f"{n}.png")
-    for carpeta_extra, clave in (("medios-moodle", "_narraciones"), ("descargas", "_descargas")):
+    for carpeta_extra, clave in (("medios-moodle", "_narraciones"), ("medios-moodle", "_imagenes"), ("medios-moodle", "_videos"), ("descargas", "_descargas")):
         if c.get(clave):
-            (destino / carpeta_extra).mkdir()
+            (destino / carpeta_extra).mkdir(exist_ok=True)
             for n in c[clave]:
                 n = n if "." in n else n + ".mp3"
                 shutil.copy(carpeta / carpeta_extra / n, destino / carpeta_extra / n)
+    if c.get("_fichas"):
+        (destino / "fichas").mkdir()
+        for n in c["_fichas"]:
+            shutil.copy(carpeta / "fichas" / f"{n}.jpg", destino / "fichas" / f"{n}.jpg")
     if c.get("_guias"):
         (destino / "guias-pdf").mkdir()
         for n in c["_guias"]:
@@ -535,8 +631,12 @@ def main():
         c["_mapas"] = sorted(p.stem for p in (carpeta / "mapas").glob("*.png"))
     if (carpeta / "guias-pdf").is_dir():
         c["_guias"] = {p.stem: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "guias-pdf").glob("*.pdf"))}
+    if (carpeta / "fichas").is_dir():
+        c["_fichas"] = {p.stem: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "fichas").glob("u*-ficha.jpg"))}
     if (carpeta / "medios-moodle").is_dir():
         c["_narraciones"] = sorted(p.stem for p in (carpeta / "medios-moodle").glob("*-narracion.mp3"))
+        c["_videos"] = sorted(p.name for p in (carpeta / "medios-moodle").iterdir() if re.match(r"(bienvenida|u\d+-resumen)\.(mp4|vtt)$", p.name))
+        c["_imagenes"] = sorted(p.name for p in (carpeta / "medios-moodle").glob("u*-entrada.*") if p.suffix in (".jpg", ".mp4", ".vtt"))
     if (carpeta / "descargas").is_dir():
         c["_descargas"] = {p.name: max(1, round(p.stat().st_size / 1024)) for p in sorted((carpeta / "descargas").iterdir())
                            if p.suffix in (".pdf", ".xlsx")}

@@ -53,7 +53,7 @@ Los arma Claude: `mapas/` (PNG) y `guias-pdf/` (PDF A5). Los números se dejan v
 ## 5. Borrador de la ficha de Llévatelo · Infografía
 
 - **Herramienta:** Infografía · vertical. **Fuentes:** el guion de la unidad.
-- **Uso:** solo borrador; la ficha final se arma en Canva con la plantilla de la marca.
+- **Uso:** solo borrador; la ficha final la arma Claude con `plantillas/fichas.py` (no hace falta pedir la infografía).
 
 ```
 Infografía vertical para guardar en el celular con lo que hay que recordar de la Unidad [n]: [la ruta RUT, matrícula y local | el RUT en 6 pasos | el calendario de la matrícula y los requisitos del local]. Pocas palabras, letra grande, en español.

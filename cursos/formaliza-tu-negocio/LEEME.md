@@ -22,4 +22,4 @@ python3 plantillas/armar_curso.py cursos/formaliza-tu-negocio --scorm
 python3 moodle/publicar_curso.py cursos/formaliza-tu-negocio --corto AVS-G02
 ```
 
-Pendiente: los 4 videos de NotebookLM, las ilustraciones de las Entradas y de las lecciones, las fichas de Canva y la revisión del asesor (lista de [VERIFICAR] en la vista previa).
+Pendiente: los 4 videos de NotebookLM, las ilustraciones de las Entradas y de las lecciones y la revisión del asesor (lista de [VERIFICAR] en la vista previa).

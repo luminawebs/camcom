@@ -1,0 +1,161 @@
+{
+ "hechas": {
+  "personaje-gloria": "55c20b5cd05b",
+  "u1-entrada": "c4325076d8cc",
+  "personaje-andres": "daec8c465dbe",
+  "personaje-doris": "6f75edaae558",
+  "u1-flujo": "0088a5910c60",
+  "u1-quienes": "66fdb433b4c8",
+  "u2-entrada": "7db3daf4041c",
+  "u2-numeracion": "e41ccd396614",
+  "u3-entrada": "a130566630e0",
+  "u3-partes": "ae9ae570aac8",
+  "u3-contingencia": "2e88e069803e"
+ },
+ "llamadas": [
+  {
+   "id": "personaje-gloria",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:47:18",
+   "tokens_entrada": 252,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:47:26",
+   "tokens_entrada": 510,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "personaje-gloria",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:48:32",
+   "tokens_entrada": 268,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-andres",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:48:38",
+   "tokens_entrada": 241,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-doris",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:48:44",
+   "tokens_entrada": 242,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:48:52",
+   "tokens_entrada": 532,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u1-flujo",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:48:59",
+   "tokens_entrada": 215,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-quienes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:49:05",
+   "tokens_entrada": 191,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:49:14",
+   "tokens_entrada": 494,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-numeracion",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:49:22",
+   "tokens_entrada": 196,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:49:30",
+   "tokens_entrada": 493,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-partes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:49:37",
+   "tokens_entrada": 221,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-contingencia",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:49:43",
+   "tokens_entrada": 181,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-andres",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:50:09",
+   "tokens_entrada": 241,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:50:20",
+   "tokens_entrada": 494,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-partes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:50:26",
+   "tokens_entrada": 221,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-partes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:50:44",
+   "tokens_entrada": 221,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-partes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-14T21:51:25",
+   "tokens_entrada": 263,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  }
+ ]
+}

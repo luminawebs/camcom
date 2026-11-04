@@ -1,0 +1,62 @@
+{
+ "titulo": "Responde rápido",
+ "etiqueta": "Unidad 3 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Responde rápido sin vivir pegado al celular",
+   "texto": "Esperanza · frutas y verduras en El Altico",
+   "voz": "A Esperanza le llegan cuarenta mensajes al día con las mismas preguntas. Y en la madrugada, en la plaza, no alcanza a contestar."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Salen solos",
+   "items": [
+    [
+     "Bienvenida",
+     "Saluda al cliente nuevo."
+    ],
+    [
+     "Ausencia",
+     "Dice cuándo vuelves."
+    ],
+    [
+     "Horario",
+     "En tu perfil de empresa."
+    ]
+   ],
+   "voz": "WhatsApp Business tiene dos mensajes que salen solos: la bienvenida, para el cliente nuevo, y la ausencia, que dice a qué hora vuelves."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Respuestas rápidas",
+   "items": [
+    [
+     "/domicilio",
+     "Zonas, horario y valor."
+    ],
+    [
+     "/horario",
+     "Días y horas."
+    ],
+    [
+     "/pagos",
+     "Nequi, Daviplata, efectivo."
+    ]
+   ],
+   "voz": "Y las respuestas rápidas: mensajes guardados que mandas en segundos. Escribes la barra y eliges."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Como en el mostrador",
+   "texto": "Corto, amable y con los datos completos",
+   "voz": "Rápido, pero como persona: corto, amable y con los datos completos."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Tus mensajes listos",
+   "texto": "Bienvenida + ausencia + 3 respuestas rápidas",
+   "voz": "En esta unidad vas a dejar listos tu bienvenida, tu ausencia y tres respuestas rápidas."
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+{
+  "titulo": "El RUT, gratis y desde el celular",
+  "etiqueta": "Unidad 2 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "El RUT, gratis y desde el celular", "texto": "Yuli · uñas y peinados a domicilio en Ciudad Latina",
+     "voz": "A Yuli le ofrecen trabajo fijo en un salón, pero le piden el RUT. Y le dijeron que cuesta plata y que hay que hacer fila. No es así."},
+    {"tipo": "lista", "titulo": "Lo que necesitas",
+     "items": [["Tu cédula y una selfie", "Fotos claras de las dos caras."], ["Correo y celular", "Te llega un código al correo."], ["Dirección y actividad", "Con su código CIIU."]],
+     "voz": "El RUT se saca gratis y desde el celular. Necesitas tu cédula, una selfie, tu correo y la dirección donde trabajas. Y el código de tu actividad, el CIIU."},
+    {"tipo": "lista", "titulo": "En la página de la DIAN",
+     "items": [["Inscripción en el RUT", "Persona natural y tu cédula."], ["Llena tus datos", "Sube las fotos y escribe el código."], ["Descarga tu RUT", "En PDF, y guárdalo en el celular."]],
+     "voz": "En la página de la DIAN eliges Inscripción en el RUT, persona natural, llenas tus datos, subes las fotos y escribes el código que te llega al correo. Descargas tu RUT y listo."},
+    {"tipo": "frase", "titulo": "El RUT no vence", "texto": "Tu NIT es tu cédula con un dígito al final. Solo actualizas el RUT si cambian tus datos.",
+     "voz": "Tu NIT es tu cédula con un dígito al final. Y el RUT no vence: solo lo actualizas si cambias de dirección o de actividad."},
+    {"tipo": "cierre", "titulo": "Saca o revisa tu RUT", "texto": "RUT = gratis + en línea + no vence",
+     "voz": "En esta unidad lo vas a sacar o a revisar."}
+  ]
+}

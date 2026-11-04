@@ -1,0 +1,20 @@
+{
+  "titulo": "Lee tus números",
+  "etiqueta": "Bienvenida",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Lee tus números", "texto": "Patricia · comidas rápidas en La Despensa",
+     "imagen": "ilustraciones/originales/u1-entrada.png",
+     "voz": "Hola, te damos la bienvenida a Lee tus números. Ella es Patricia. Vende perros calientes y hamburguesas en La Despensa hace siete años. La cooperativa le puede prestar para una plancha nueva, pero le pide el estado de resultados del negocio. Y Patricia sabe que vende bien, pero no sabe cuánto gana."},
+    {"tipo": "frase", "titulo": "Unidad 1 · Ingresos, costos y gastos", "texto": "Cada peso en su lugar",
+     "imagen": "ilustraciones/originales/u1-cajas.png",
+     "voz": "Primero vas a separar lo que vendes, lo que te cuesta lo que vendes y lo que pagas por tener el negocio abierto."},
+    {"tipo": "frase", "titulo": "Unidad 2 · El mes en números", "texto": "Óscar · tienda de mascotas en Ciudad Verde",
+     "imagen": "ilustraciones/originales/u2-entrada.png",
+     "voz": "Luego, con Óscar, vas a juntar las ventas y los gastos de un mes, sin contar nada dos veces."},
+    {"tipo": "frase", "titulo": "Unidad 3 · Tu estado de resultados", "texto": "Marisol · papelería en León XIII",
+     "imagen": "ilustraciones/originales/u3-entrada.png",
+     "voz": "Y con Marisol vas a armar tu estado de resultados y a ver por qué vender más no siempre es ganar más."},
+    {"tipo": "cierre", "titulo": "Tu estado de resultados", "texto": "Tres unidades cortas, desde tu celular",
+     "voz": "Son tres unidades cortas, desde tu celular. Al final vas a tener el estado de resultados de tu negocio, con tu utilidad y tu margen. ¡Empecemos!"}
+  ]
+}

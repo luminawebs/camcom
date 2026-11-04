@@ -1,0 +1,135 @@
+{
+ "hechas": {
+  "personaje-patricia": "d986fe5088f6",
+  "personaje-oscar": "5e5128adcc13",
+  "personaje-marisol": "f7ba773ba2a2",
+  "u1-entrada": "252c66c9f5c8",
+  "u1-cajas": "4fef6dc4ebcf",
+  "u2-entrada": "fb3ebaf852bf",
+  "u2-fuentes": "b4d36ef6128f",
+  "u3-entrada": "153e41035789",
+  "u3-escalera": "ee42124a0927"
+ },
+ "llamadas": [
+  {
+   "id": "personaje-patricia",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:10:41",
+   "tokens_entrada": 256,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-oscar",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:10:46",
+   "tokens_entrada": 246,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-marisol",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:10:52",
+   "tokens_entrada": 259,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:11:01",
+   "tokens_entrada": 528,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u1-cajas",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:11:07",
+   "tokens_entrada": 228,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:11:17",
+   "tokens_entrada": 518,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u2-fuentes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:11:23",
+   "tokens_entrada": 230,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:11:33",
+   "tokens_entrada": 520,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u3-escalera",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:11:40",
+   "tokens_entrada": 237,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-patricia",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:12:08",
+   "tokens_entrada": 256,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-oscar",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:12:15",
+   "tokens_entrada": 246,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-marisol",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:12:20",
+   "tokens_entrada": 259,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-cajas",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:12:26",
+   "tokens_entrada": 259,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-fuentes",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:12:32",
+   "tokens_entrada": 261,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-escalera",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-20T22:12:38",
+   "tokens_entrada": 268,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  }
+ ]
+}

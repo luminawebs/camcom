@@ -293,6 +293,8 @@ def main():
                                    revision=1, timemodified=NOW))
                 fileids += adjuntar(r, curso, contenido, ctx, "mod_page", "content")
                 visible, completion, cview = (0, 0, 0) if configurar else (1, 2, 1)
+                if destino.endswith("-pase.html"):
+                    completion, cview = 0, 0  # la invitación al Pase no cuenta para terminar la unidad
             d = f"activities/{modname}_{cm}"
             r.out[f"{d}/{modname}.xml"] = actividad(r, inst, cm, ctx, modname, body)
             r.out[f"{d}/module.xml"] = module_xml(cm, modname, secid, snum, visible, completion, cview)

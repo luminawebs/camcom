@@ -1,0 +1,63 @@
+{
+ "titulo": "Lo que no le cuentas a la IA",
+ "etiqueta": "Unidad 3 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Lo que no le cuentas a la IA",
+   "texto": "Yaneth · peluquería en Rincón de Santa Fe",
+   "voz": "Yaneth iba a pegar en la inteligencia artificial la lista de sus clientas, con cédula, celular y alergias. Su hija la frenó a tiempo."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "El semáforo de datos",
+   "items": [
+    [
+     "Rojo, nunca",
+     "cédulas, claves, cuentas, salud."
+    ],
+    [
+     "Amarillo",
+     "quita nombres y números."
+    ],
+    [
+     "Verde",
+     "lo público de tu negocio."
+    ]
+   ],
+   "voz": "Lo que escribes puede quedar guardado. En rojo, nunca: cédulas, claves, cuentas y datos de salud. En amarillo, quita nombres y celulares. En verde, lo público de tu negocio."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Pide sin datos",
+   "items": [
+    [
+     "«Clienta 1»",
+     "en vez del nombre."
+    ],
+    [
+     "[nombre]",
+     "y lo pones tú."
+    ],
+    [
+     "Ajustes",
+     "apaga el entrenamiento."
+    ]
+   ],
+   "voz": "Cambia los nombres por clienta uno, o deja el espacio del nombre para ponerlo tú. Y en los ajustes, apaga el uso de tus chats para entrenar."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "La IA te ayuda igual",
+   "texto": "No pongas nada que no publicarías",
+   "voz": "La inteligencia artificial te ayuda igual, sin conocer a tus clientes.",
+   "imagen": "ilustraciones/originales/u3-semaforo.png"
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Tu IA sin datos de clientes",
+   "texto": "Revisa tus ajustes hoy",
+   "voz": "En esta unidad vas a revisar tus ajustes y a reescribir un pedido sin datos personales."
+  }
+ ]
+}

@@ -1,0 +1,74 @@
+{
+  "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto. Las pantallas de la app NO se dibujan con IA: salen de pantallas/armar_pantallas.py. Ningún teléfono debe mostrar logos ni la marca de WhatsApp.",
+  "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people.",
+  "personajes": {
+    "sandra": "ONE single woman only, alone, no other people, no background scene. Sandra, a 41-year-old Colombian home baker, medium build, light-brown skin, long dark-brown hair tied in a low ponytail, small hoop earrings, warm tired smile. Wears a pink-and-white checked blouse with rolled sleeves, a charcoal apron with a little flour, dark jeans and white sneakers.",
+    "camilo": "ONE single man only, alone, no other people, no background scene. Camilo, a 27-year-old Colombian who sells phone accessories with home delivery, slim, brown skin, short black curly hair with a fade, thin moustache. Wears a black hoodie with a small red stripe on the sleeve, grey cargo trousers, white sneakers and a small crossbody bag.",
+    "esperanza": "ONE single woman only, alone, no other people, no background scene. Esperanza, a 52-year-old Colombian fruit and vegetable seller, short and strong, dark-brown skin, black hair with grey streaks in a bun under a red cap, kind face with smile lines. Wears a light-blue fleece jacket over a white t-shirt, a dark-red waist apron with a coin pocket, dark trousers and rubber boots."
+  },
+  "imagenes": [
+    {
+      "id": "u1-entrada",
+      "personajes": [
+        "sandra"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Sandra appearing only ONCE (do not copy the reference sheet pose). Evening in Sandra's small home kitchen in Hogares Soacha: a counter with two finished cakes, a tray of cupcakes, mixing bowls, a window with brick houses outside. Sandra stands at the counter holding her smartphone with both hands, overwhelmed, the phone screen shows many small notification bubbles (no readable text, no logos). Medium shot.",
+      "destinos": [
+        "medios-moodle/u1-entrada.jpg",
+        "piezas/u1-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u1-fotos",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "Split comparison, two panels side by side with a thin vertical divider, no text: LEFT panel, a dark blurry photo of a chocolate cake on a messy kitchen table with clutter around it and a red cross mark in the corner; RIGHT panel, the same chocolate cake photographed in soft natural window light on a clean white surface with a plain background, sharp and appetizing, with a green check mark in the corner. Flat illustration, off-white background.",
+      "destinos": [
+        "piezas/u1-aprende/medios/ilustracion-5.jpg"
+      ]
+    },
+    {
+      "id": "u2-entrada",
+      "personajes": [
+        "camilo"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Camilo appearing only ONCE (do not copy the reference sheet pose). Late afternoon on a residential street of an apartment complex in Ducales, Soacha (brick towers, a small guard booth). Camilo stands next to a motorbike holding a small delivery box under one arm and looking worried at his smartphone, whose screen shows a long list of chat rows (no readable text, no logos). Medium shot.",
+      "destinos": [
+        "medios-moodle/u2-entrada.jpg",
+        "piezas/u2-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u2-etapas",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "A simple horizontal flow of four small cardboard delivery boxes in a row, connected by dashed charcoal arrows, on an off-white background, no text: the first box has a yellow tag, the second a red tag with a coin icon, the third a green tag with a check mark, the fourth is closed and has a grey tag with a small house icon. Clean flat infographic style. No people at all, no human figures, no buildings; only the objects described.",
+      "destinos": [
+        "piezas/u2-aprende/medios/ilustracion-3.jpg"
+      ]
+    },
+    {
+      "id": "u3-entrada",
+      "personajes": [
+        "esperanza"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Esperanza appearing only ONCE (do not copy the reference sheet pose). Before dawn inside a busy wholesale market: crates of oranges, avocados, bananas and tomatoes, hanging light bulbs, other vendors in the background as small simple figures. Esperanza carries a crate of avocados with both hands while her smartphone lights up and buzzes in her apron pocket (no readable text, no logos). Medium shot.",
+      "destinos": [
+        "medios-moodle/u3-entrada.jpg",
+        "piezas/u3-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u3-horario",
+      "personajes": [],
+      "proporcion": "16:9",
+      "escena": "A flat infographic, no text and no numbers: a large round wall clock and a crescent moon with small stars on the left; on the right a smartphone standing upright that is automatically sending a speech bubble (a small lightning icon next to the bubble), while a basket of fruit sits beside it. Off-white background, clean and calm. No people at all, no human figures, no buildings; only the objects described.",
+      "destinos": [
+        "piezas/u3-aprende/medios/ilustracion-3.jpg"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "titulo": "Facturación electrónica sin miedo",
+  "etiqueta": "Bienvenida",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Facturación electrónica sin miedo", "texto": "Gloria · panadería en San Mateo",
+     "imagen": "ilustraciones/originales/u1-entrada.png",
+     "voz": "Hola, te damos la bienvenida a Facturación electrónica sin miedo. Ella es Gloria. Tiene una panadería en San Mateo hace doce años. Un colegio le quiere comprar los refrigerios de todos los días, pero le pide factura electrónica. Y Gloria cree que para eso necesita un programa caro y un contador de planta."},
+    {"tipo": "frase", "titulo": "Facturar no es pagar más impuestos", "texto": "Es dejar constancia de lo que vendes, y la DIAN tiene un servicio gratis.",
+     "imagen": "ilustraciones/originales/u1-flujo.png",
+     "voz": "En este curso vas a ver que facturar no es pagar más impuestos, y que la DIAN tiene un servicio gratis para hacerlo."},
+    {"tipo": "frase", "titulo": "Unidad 2 · Habilítate gratis en la DIAN", "texto": "Andrés · ferretería en Quintanares",
+     "imagen": "ilustraciones/originales/u2-entrada.png",
+     "voz": "Primero vas a ver si a tu negocio le toca facturar. Luego, con Andrés, vas a ver los pasos para habilitarte sin pagar un programa."},
+    {"tipo": "frase", "titulo": "Unidad 3 · Tu primera factura, sin errores", "texto": "Doris · almuerzos en el centro de Soacha",
+     "imagen": "ilustraciones/originales/u3-entrada.png",
+     "voz": "Y con Doris vas a hacer tu primera factura, y a saber qué hacer si te equivocas."},
+    {"tipo": "cierre", "titulo": "Tu plan de facturación", "texto": "Tres unidades cortas, desde tu celular",
+     "voz": "Son tres unidades cortas, desde tu celular. Al final vas a tener tu plan: si te toca facturar, en qué paso vas y tu primera factura revisada. ¡Empecemos!"}
+  ]
+}

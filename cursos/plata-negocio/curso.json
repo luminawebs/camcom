@@ -194,5 +194,14 @@
     "siguiente": "Contabilidad práctica para emprendedores",
     "siguiente_texto": "Curso certificado de 4 unidades: ingresos y gastos, registros básicos, estado de resultados y decisiones."
   },
-  "notebooklm": "notebooklm/LEEME.md"
+  "notebooklm": "notebooklm/LEEME.md",
+  "pase": {
+    "canal": "curso-avs-g01",
+    "unidades": [
+      "Registra tus ventas y gastos sin enredos",
+      "Tu libro sencillo del negocio",
+      "Cuánto ganas de verdad: tu utilidad real",
+      "Cierra el mes en 20 minutos"
+    ]
+  }
 }

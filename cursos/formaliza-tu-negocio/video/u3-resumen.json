@@ -1,0 +1,18 @@
+{
+  "titulo": "Matrícula mercantil y tu local en regla",
+  "etiqueta": "Unidad 3 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Matrícula mercantil y tu local en regla", "texto": "Wilson · taller de motos en El Danubio",
+     "voz": "Wilson tiene un taller de motos en El Danubio. No renueva su matrícula hace tres años. Pasó la Policía y le preguntó por la matrícula, el uso de suelo y la música. No supo qué decir."},
+    {"tipo": "lista", "titulo": "La matrícula mercantil",
+     "items": [["Te registra a ti", "Como comerciante."], ["Y a tu negocio", "La tienda, el taller o el local."], ["En la Cámara de Comercio", "Se renueva cada año."]],
+     "voz": "La matrícula mercantil registra a la persona y a su negocio en la Cámara de Comercio. Y se renueva cada año."},
+    {"tipo": "frase", "titulo": "Renueva entre el 1 de enero y el 31 de marzo", "texto": "Cinco años sin renovar y la matrícula se cancela.",
+     "voz": "Se renueva entre el primero de enero y el treinta y uno de marzo. Cinco años sin renovar y se cancela."},
+    {"tipo": "lista", "titulo": "Lo que pide tu local",
+     "items": [["Uso de suelo", "En la Alcaldía."], ["Matrícula al día", "Y avisar la apertura a la Policía."], ["Sanidad y música", "Si vendes comida o pones música."]],
+     "voz": "¿Y el local? Necesita uso de suelo, la matrícula al día y avisar la apertura a la Policía. Si vendes comida, condiciones sanitarias. Y si pones música para los clientes, pagas derechos de autor."},
+    {"tipo": "cierre", "titulo": "¿Qué le falta a tu local?", "texto": "Revisa tu checklist y ponle fecha a cada pendiente",
+     "voz": "En esta unidad vas a revisar qué le falta a tu local y ponerle fecha a cada pendiente."}
+  ]
+}

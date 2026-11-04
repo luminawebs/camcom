@@ -1,0 +1,112 @@
+{
+ "hechas": {
+  "personaje-edgar": "411cb31a4ed8",
+  "personaje-yuli": "ef9c8ba9d1d1",
+  "personaje-wilson": "ccf5efc149b6",
+  "u1-entrada": "5a2328952ec7",
+  "u1-ruta": "c9b138465178",
+  "u1-beneficios": "0fa8a6939cd8",
+  "u2-entrada": "c9f60f4a7a01",
+  "u2-rut": "609edfb6af9c",
+  "u3-entrada": "259523478328",
+  "u3-matricula": "e83bdcaf6859"
+ },
+ "llamadas": [
+  {
+   "id": "personaje-edgar",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:09:50",
+   "tokens_entrada": 230,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-yuli",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:09:57",
+   "tokens_entrada": 226,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-wilson",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:10:02",
+   "tokens_entrada": 223,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "personaje-yuli",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:10:22",
+   "tokens_entrada": 241,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:10:44",
+   "tokens_entrada": 492,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-ruta",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:10:55",
+   "tokens_entrada": 206,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u1-beneficios",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:11:02",
+   "tokens_entrada": 210,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:11:14",
+   "tokens_entrada": 467,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-rut",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:11:26",
+   "tokens_entrada": 478,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:11:38",
+   "tokens_entrada": 489,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u3-matricula",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:12:03",
+   "tokens_entrada": 480,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u2-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-10-13T00:12:45",
+   "tokens_entrada": 507,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  }
+ ]
+}

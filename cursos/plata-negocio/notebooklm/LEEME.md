@@ -41,7 +41,7 @@ Abre `solicitudes.md` y sigue los bloques en orden. Para cada uno: marca solo la
 | 2A | Resumen en video, 60 s (el 2B, audio, solo si una unidad cambia de formato) | 3 | Arriba de cada unidad |
 | — | Mapas mentales: los arma Claude en `mapas/`, no NotebookLM | 1 + 3 | INICIO y Llévatelo |
 | — | Guías de estudio en PDF: las arma Claude en `guias-pdf/`, no NotebookLM | 3 | Llévatelo (PDF) |
-| 5 | Infografía (borrador) | 3 | Base para la ficha de Canva |
+| 5 | Infografía (borrador) | 3 | Opcional: la ficha final la arma `plantillas/fichas.py` |
 | 6 | Tabla de datos | 1 | Uso interno, para el contador |
 
 ## 4. Revisar antes de subir

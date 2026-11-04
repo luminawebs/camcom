@@ -1,0 +1,62 @@
+{
+ "titulo": "Tu vitrina: perfil y catálogo",
+ "etiqueta": "Unidad 1 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Tu vitrina: perfil y catálogo",
+   "texto": "Sandra · tortas por encargo en Hogares Soacha",
+   "voz": "A Sandra le preguntan todos los días qué tortas tiene y cuánto valen. Y ella manda las fotos una por una, desde su WhatsApp personal."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Tu perfil de empresa",
+   "items": [
+    [
+     "Nombre y foto",
+     "Del negocio, no tuya."
+    ],
+    [
+     "Qué vendes",
+     "Categoría y una frase."
+    ],
+    [
+     "Dónde y cuándo",
+     "Zona de domicilio y horario."
+    ]
+   ],
+   "voz": "Con WhatsApp Business, que es gratis, completas tu perfil de empresa: nombre y foto del negocio, qué vendes, dónde estás y a qué hora atiendes."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Tu catálogo",
+   "items": [
+    [
+     "Foto clara",
+     "Luz de día y fondo limpio."
+    ],
+    [
+     "Nombre y precio",
+     "«Torta de chocolate para 12»."
+    ],
+    [
+     "Descripción",
+     "Lo que el cliente iba a preguntar."
+    ]
+   ],
+   "voz": "Y armas tu catálogo: cada producto con foto clara, nombre, precio y una descripción corta."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "El cliente compra sin preguntar",
+   "texto": "Perfil completo + catálogo con precios",
+   "voz": "Así el cliente ve todo y te compra sin tener que preguntarte."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Arma tu vitrina",
+   "texto": "Empieza por tus 5 productos que más vendes",
+   "voz": "En esta unidad vas a armar tu vitrina, empezando por los cinco productos que más vendes."
+  }
+ ]
+}

@@ -1,0 +1,18 @@
+{
+  "titulo": "Ingresos, costos y gastos",
+  "etiqueta": "Unidad 1 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Ingresos, costos y gastos", "texto": "Patricia · comidas rápidas en La Despensa",
+     "voz": "A Patricia la cooperativa le pide su estado de resultados. Pero en su Nequi entra y sale todo mezclado."},
+    {"tipo": "lista", "titulo": "Cada peso en su lugar",
+     "items": [["Ingreso", "Lo que vendes."], ["Costo", "Lo que te cuesta lo que vendes."], ["Gasto", "Lo que pagas por estar abierto."]],
+     "voz": "Ingreso es lo que vendes. Costo es lo que te cuesta hacer o comprar lo que vendes. Y gasto es lo que pagas por tener el negocio abierto, vendas o no."},
+    {"tipo": "frase", "titulo": "Un préstamo no es un ingreso", "texto": "Entra, pero no lo ganaste vendiendo.",
+     "voz": "Un préstamo o la plata que pones de tu bolsillo entran, pero no son ingresos."},
+    {"tipo": "lista", "titulo": "Lo que no se te puede olvidar",
+     "items": [["Tu sueldo", "También es un gasto."], ["El mercado de la casa", "No va en el negocio."], ["Si dudas", "Pregúntate: ¿lo pago aunque no venda?"]],
+     "voz": "Tu sueldo también es un gasto del negocio. Y el mercado de la casa no va en las cuentas del negocio."},
+    {"tipo": "cierre", "titulo": "Clasifica tu semana", "texto": "Ingreso · costo · gasto · no va",
+     "voz": "En esta unidad vas a clasificar los movimientos de tu negocio."}
+  ]
+}

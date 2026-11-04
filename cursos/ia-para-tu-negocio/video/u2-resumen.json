@@ -1,0 +1,62 @@
+{
+ "titulo": "Mensajes y descripciones que venden",
+ "etiqueta": "Unidad 2 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Mensajes y descripciones",
+   "texto": "Leidy · ropa para bebé en Terreros",
+   "voz": "Leidy se quedaba hasta las once de la noche escribiendo descripciones. Y la primera vez que usó la inteligencia artificial publicó un dato que no era cierto."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Dale tus datos reales",
+   "items": [
+    [
+     "Qué es",
+     "y para quién."
+    ],
+    [
+     "Material y tallas",
+     "los de verdad."
+    ],
+    [
+     "Precio",
+     "el tuyo."
+    ]
+   ],
+   "voz": "La inteligencia artificial escribe, pero los datos los pones tú: qué es, el material, las tallas y el precio."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Lee antes de publicar",
+   "items": [
+    [
+     "Promesas",
+     "«orgánico», «garantía»."
+    ],
+    [
+     "Condiciones",
+     "«envío gratis»."
+    ],
+    [
+     "Tono",
+     "¿suena a ti?"
+    ]
+   ],
+   "voz": "A veces se inventa cosas que suenan bien. Lo que publicas tiene que ser verdad: lee todo y corrige antes de publicar."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Un texto listo para vender",
+   "texto": "Tus datos reales + un pedido claro + tu revisión",
+   "voz": "Pídele que hable como tú y guarda en tus notas los pedidos que te funcionan."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Tus textos con IA",
+   "texto": "Revisados por ti",
+   "voz": "En esta unidad vas a escribir con inteligencia artificial tus descripciones y mensajes, revisados por ti."
+  }
+ ]
+}

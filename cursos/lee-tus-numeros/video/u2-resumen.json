@@ -1,0 +1,18 @@
+{
+  "titulo": "El mes en números",
+  "etiqueta": "Unidad 2 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "El mes en números", "texto": "Óscar · tienda de mascotas en Ciudad Verde",
+     "voz": "Óscar anota en un cuaderno, recibe por Nequi y les fía a los vecinos. No sabe cuánto vendió el mes pasado."},
+    {"tipo": "lista", "titulo": "Junta tus fuentes",
+     "items": [["Cuaderno", "Las ventas en efectivo."], ["Nequi o banco", "El historial del mes."], ["Fiados", "Lo que vendiste y te pagan después."]],
+     "voz": "Junta todo lo del mes: el cuaderno, el historial de Nequi o del banco, los recibos y la lista de fiados."},
+    {"tipo": "frase", "titulo": "No cuentes dos veces", "texto": "La plata que pasas de la caja al Nequi ya estaba en las ventas.",
+     "voz": "Y no cuentes dos veces: la plata que pasas de la caja al Nequi ya estaba en las ventas."},
+    {"tipo": "lista", "titulo": "Ventas del mes",
+     "items": [["Efectivo", "+ transferencias"], ["+ Fiado del mes", "aunque te paguen después"], ["− Lo que no es venta", "traslados y préstamos"]],
+     "voz": "Las ventas del mes son el efectivo, más las transferencias, más lo que fiaste, menos lo que no es venta."},
+    {"tipo": "cierre", "titulo": "Junta tu mes", "texto": "Todo en una sola hoja",
+     "voz": "En esta unidad vas a juntar tu último mes en una sola hoja."}
+  ]
+}

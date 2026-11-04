@@ -1,0 +1,18 @@
+{
+  "titulo": "Tu estado de resultados",
+  "etiqueta": "Unidad 3 · Resumen",
+  "diapositivas": [
+    {"tipo": "portada", "titulo": "Tu estado de resultados del mes", "texto": "Marisol · papelería en León XIII",
+     "voz": "Marisol vendió el doble en febrero, pero casi no le quedó plata. ¿Cómo puede ser?"},
+    {"tipo": "lista", "titulo": "Las líneas",
+     "items": [["Ventas", "del mes"], ["− Costo de lo vendido", "= utilidad bruta"], ["− Gastos", "= utilidad del mes"]],
+     "voz": "El estado de resultados resta de arriba hacia abajo: ventas, menos el costo de lo vendido, menos los gastos. Lo que queda es la utilidad del mes."},
+    {"tipo": "frase", "titulo": "Tu sueldo va en los gastos", "texto": "Si no lo pones, el negocio parece ganar más.",
+     "voz": "Pon tu sueldo en los gastos. Si no, el negocio parece ganar más de lo que gana."},
+    {"tipo": "lista", "titulo": "El margen",
+     "items": [["Utilidad ÷ ventas", "× 100"], ["De cada 100 pesos", "cuánto te queda"], ["Compáralo", "mes a mes"]],
+     "voz": "El margen es la utilidad dividida entre las ventas, por cien. Te dice cuántos pesos te quedan de cada cien que vendes."},
+    {"tipo": "cierre", "titulo": "Arma el tuyo", "texto": "Vender más no siempre es ganar más",
+     "voz": "En esta unidad vas a armar el estado de resultados de tu negocio."}
+  ]
+}

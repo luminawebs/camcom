@@ -1,0 +1,87 @@
+{
+  "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Textos de los prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto.",
+  "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people.",
+  "personajes": {
+    "edgar": "Édgar, a 52-year-old Colombian shopkeeper, slightly heavy build, light-brown skin, short grey-black hair receding at the temples, thick grey moustache, kind tired eyes. Wears a light-blue short-sleeve button shirt, a dark-red apron, dark trousers and a pencil behind his ear.",
+    "yuli": "ONE single woman only, alone, no other people, no background scene. Yuli, a 27-year-old Colombian manicurist, slim, warm medium-brown skin, long dark curly hair tied in a high ponytail, small gold hoop earrings. Wears a white t-shirt under a short deep-red jacket, black jeans and white sneakers, with a cross-body bag.",
+    "wilson": "Wilson, a 38-year-old Colombian motorcycle mechanic, athletic build, dark-brown skin, short black hair with a fade, short trimmed beard. Wears grey work overalls with the top tied around his waist, a charcoal t-shirt, a red rag in his back pocket and work boots."
+  },
+  "imagenes": [
+    {
+      "id": "u1-entrada",
+      "personajes": [
+        "edgar"
+      ],
+      "proporcion": "4:3",
+      "escena": "Early morning at Édgar's small neighborhood store in Compartir, Soacha: shelves full of groceries, bags of bread, a fridge with soft drinks. Édgar stands behind the wooden counter, worried and unsure, listening to a soft-drink distributor (a young man in a red polo with a clipboard and a hand truck of crates) who offers him merchandise on credit.",
+      "destinos": [
+        "medios-moodle/u1-entrada.jpg",
+        "piezas/u1-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u1-ruta",
+      "personajes": [],
+      "proporcion": "3:4",
+      "escena": "A vertical winding path with three stops from top to bottom, each a large simple icon in a circle: first a paper document with a checkmark, second a civic office building with columns, third a small corner shop with an awning. The path is drawn as a dashed red line connecting the circles, on an off-white background. Infographic style, very clean.",
+      "destinos": [
+        "piezas/u1-aprende/medios/ilustracion-2.jpg"
+      ]
+    },
+    {
+      "id": "u1-beneficios",
+      "personajes": [],
+      "proporcion": "4:3",
+      "escena": "Four simple flat icons arranged in a 2 by 2 grid, each inside a rounded off-white card: a delivery truck with boxes (buying on credit from a supplier), an office building with a handshake (a company as a client), a bank building with a coin (a bank loan), and a group of three small business owners around a table (a chamber of commerce program).",
+      "destinos": [
+        "piezas/u1-aprende/medios/ilustracion-4.jpg"
+      ]
+    },
+    {
+      "id": "u2-entrada",
+      "personajes": [
+        "yuli"
+      ],
+      "proporcion": "4:3",
+      "escena": "A single scene with Yuli appearing only ONCE (do not copy the close-up from the reference sheet). Yuli on a sunny street of Ciudad Latina, Soacha, standing in front of colorful brick houses, holding her smartphone and looking at it thoughtfully, with her manicure case (a small hard case with nail polish bottles visible) in her other hand. Medium shot, she fills about half of the frame height, street in the background.",
+      "destinos": [
+        "medios-moodle/u2-entrada.jpg",
+        "piezas/u2-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u2-rut",
+      "personajes": [
+        "yuli"
+      ],
+      "proporcion": "4:3",
+      "escena": "Yuli sitting at a small kitchen table at home, smiling, holding her national ID card in one hand and her smartphone in the other; on the phone screen there is a simple official-looking document shape with blank lines (no readable text). A cup of coffee and her manicure case on the table.",
+      "destinos": [
+        "piezas/u2-aprende/medios/ilustracion-2.jpg"
+      ]
+    },
+    {
+      "id": "u3-entrada",
+      "personajes": [
+        "wilson"
+      ],
+      "proporcion": "4:3",
+      "escena": "Inside Wilson's motorcycle repair shop in El Danubio, Soacha: a motorcycle on a stand, tools on a pegboard, tires, an old radio on a shelf on the wall. Wilson, holding a wrench, talks with a Colombian police officer in a green uniform who stands at the shop's open roll-up door asking him a question.",
+      "destinos": [
+        "medios-moodle/u3-entrada.jpg",
+        "piezas/u3-aprende/medios/ilustracion-1.jpg"
+      ]
+    },
+    {
+      "id": "u3-matricula",
+      "personajes": [
+        "wilson"
+      ],
+      "proporcion": "4:3",
+      "escena": "A simple visual equation on an off-white background: on the left, Wilson standing proudly; in the middle, a large red plus sign; then the front of his small motorcycle repair shop; then a large equals sign; on the right, a framed official certificate with a seal and blank lines (no readable text).",
+      "destinos": [
+        "piezas/u3-aprende/medios/ilustracion-2.jpg"
+      ]
+    }
+  ]
+}
