@@ -690,6 +690,52 @@ class Pase:
             w.writerow(fila)
         return sal.getvalue()
 
+    def metricas(self, desde: dt.date, hasta: dt.date):
+        """Cifras agregadas de [desde, hasta) en hora Colombia, para el exportador semanal.
+        Solo conteos y sumas: ningún nombre, correo ni documento sale de aquí."""
+        col = dt.timezone(dt.timedelta(hours=-5))
+        utc = lambda d: dt.datetime.combine(d, dt.time(), col).astimezone(dt.timezone.utc).isoformat(
+            timespec="seconds")
+        a, b = utc(desde), utc(hasta)
+        n = lambda sql, *x: self.uno(sql, *x)["n"] or 0
+        aprob = "estado='APPROVED' AND aprobado_en>=? AND aprobado_en<?"
+        recaudo = n(f"SELECT COALESCE(SUM(monto),0) n FROM pagos WHERE {aprob}", a, b) // 100
+        canales = {}
+        for r in self.q("""SELECT COALESCE(canal_origen,'sin-canal') c, COUNT(*) n FROM personas
+                           WHERE creado>=? AND creado<? GROUP BY 1""", a, b):
+            canales.setdefault(r["c"], {"inscritos_nuevos": 0, "pases_nuevos": 0, "recaudo_cop": 0})[
+                "inscritos_nuevos"] = r["n"]
+        for r in self.q("""SELECT COALESCE(p.canal_origen,'sin-canal') c,
+                              COUNT(DISTINCT CASE WHEN pg.tipo='inicial' THEN pg.persona_id END) nuevos,
+                              COALESCE(SUM(pg.monto),0) monto
+                            FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id
+                            WHERE pg.estado='APPROVED' AND pg.aprobado_en>=? AND pg.aprobado_en<?
+                            GROUP BY 1""", a, b):
+            fila = canales.setdefault(r["c"], {"inscritos_nuevos": 0, "pases_nuevos": 0, "recaudo_cop": 0})
+            fila["pases_nuevos"], fila["recaudo_cop"] = r["nuevos"], r["monto"] // 100
+        historial = lambda evento: n("SELECT COUNT(DISTINCT persona_id) n FROM historial "
+                                     "WHERE evento=? AND fecha>=? AND fecha<?", evento, a, b)
+        return {
+            "desde": desde.isoformat(), "hasta": hasta.isoformat(), "entorno": self.c.entorno,
+            "inscritos_nuevos": n("SELECT COUNT(*) n FROM personas WHERE creado>=? AND creado<?", a, b),
+            "pases_nuevos": n(f"SELECT COUNT(DISTINCT persona_id) n FROM pagos WHERE tipo='inicial' AND {aprob}",
+                              a, b),
+            "renovaciones": n(f"SELECT COUNT(*) n FROM pagos WHERE tipo='mensual' AND {aprob}", a, b),
+            "pagos_aprobados": n(f"SELECT COUNT(*) n FROM pagos WHERE {aprob}", a, b),
+            "pagos_rechazados": n("SELECT COUNT(*) n FROM pagos WHERE estado IN ('DECLINED','ERROR') "
+                                  "AND creado>=? AND creado<?", a, b),
+            "recaudo_cop": recaudo,
+            "camara_25_cop": recaudo * 25 // 100,
+            "cancelaciones_pedidas": historial("pidio_cancelar"),
+            "cancelaciones_deshechas": historial("deshizo_cancelar"),
+            "cancelaciones_efectivas": n("SELECT COUNT(*) n FROM suscripciones WHERE cancelada_en>=? "
+                                         "AND cancelada_en<?", a, b),
+            # fotografía en el momento de la consulta, no al cierre del periodo
+            "pases_activos_hoy": n("SELECT COUNT(*) n FROM suscripciones WHERE estado='activa'"),
+            "en_mora_hoy": n("SELECT COUNT(*) n FROM suscripciones WHERE estado='en_mora'"),
+            "por_canal": canales,
+        }
+
     def resumen(self):
         cuenta = lambda sql: {r[0]: r[1] for r in self.q(sql).fetchall()}
         return {

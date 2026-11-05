@@ -531,6 +531,30 @@ class PruebasFlujo(Escenario):
         self.sim.cambiar_estado(ref_payco, "VOIDED")
         self.esperar_estado(pid, "en_mora")
 
+    def test_6_metricas_agregadas_con_llave(self):
+        hoy = dt.datetime.now(dt.timezone(dt.timedelta(hours=-5))).date()
+        rango = f"desde={hoy - dt.timedelta(days=7)}&hasta={hoy + dt.timedelta(days=1)}"
+        url = f"{self.c.url_publica}/metricas?{rango}"
+        with mock.patch.dict(os.environ, {"PASE_METRICAS_TOKEN": "x" * 24}):
+            self.assertEqual(self.http("GET", url)[0], 401)
+            self.assertEqual(self.http("GET", url, cabeceras={"Authorization": "Bearer otra"})[0], 401)
+            llave = {"Authorization": "Bearer " + "x" * 24}
+            self.assertEqual(self.http("GET", f"{self.c.url_publica}/metricas?desde=mal", cabeceras=llave)[0], 400)
+            pid, _ = self.pagar_tarjeta()
+            self.esperar_estado(pid, "suscrito")
+            self.pase.pedir_cancelacion(pid)
+            status, _, cuerpo = self.http("GET", url, cabeceras=llave)
+        self.assertEqual(status, 200)
+        m = json.loads(cuerpo)
+        self.assertEqual((m["inscritos_nuevos"], m["pases_nuevos"], m["pagos_aprobados"]), (1, 1, 1))
+        self.assertEqual(m["recaudo_cop"], self.c.precio_centavos // 100)
+        self.assertEqual(m["cancelaciones_pedidas"], 1)
+        self.assertEqual(m["por_canal"]["wa-afiliados"]["pases_nuevos"], 1)
+        self.assertNotIn(b"dora", cuerpo.lower())  # nada personal
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("PASE_METRICAS_TOKEN", None)
+            self.assertEqual(self.http("GET", url, cabeceras={"Authorization": "Bearer "})[0], 401)
+
     def test_5_registro_gratis(self):
         status, _, cuerpo = self.inscribir_por_formulario("gratis")
         self.assertEqual(status, 200, cuerpo)

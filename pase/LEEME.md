@@ -95,6 +95,7 @@ Lo que comprueban las pruebas:
 | `PASE_REINTENTOS_DIAS` | `0,3,7` |
 | `PASE_AVISOS_CORREO` | correos de la Cámara y de EduNest, separados por coma |
 | `PASE_ADMIN_TOKEN` | protege `/admin/resumen` |
+| `PASE_METRICAS_TOKEN` | llave de solo lectura de `/metricas?desde=AAAA-MM-DD&hasta=AAAA-MM-DD` (conteos y sumas, sin datos personales; la usa `metricas/exportar.py`). Vacía o corta = apagado |
 | `PASE_ADMIN_USUARIO`, `PASE_ADMIN_CLAVE` | acceso al tablero `/tablero` (sesión de 12 h; 5 fallos bloquean 15 min la IP) |
 | `PASE_SECRETO_SESION` | firma los enlaces de pago de cada persona |
 

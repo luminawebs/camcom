@@ -905,6 +905,20 @@ class App:
                     return self.responder(200, ("\ufeff" + app.pase.pagos_csv()).encode(), "text/csv; charset=utf-8",
                                           extra={**sin_cache, "Content-Disposition":
                                                  'attachment; filename="pagos-pase.csv"'})
+                if u.path == "/metricas":
+                    # Exportador semanal de métricas: solo cifras agregadas, con su propia llave de lectura
+                    token = os.environ.get("PASE_METRICAS_TOKEN") or ""
+                    dado = self.headers.get("Authorization") or ""
+                    if len(token) < 16 or not hmac.compare_digest(dado.encode(), f"Bearer {token}".encode()):
+                        return self.json(401, {"error": "no autorizado"})
+                    try:
+                        desde = dt.date.fromisoformat(q["desde"])
+                        hasta = dt.date.fromisoformat(q["hasta"])
+                        if not desde < hasta or (hasta - desde).days > 400:
+                            raise ValueError
+                    except (KeyError, ValueError):
+                        return self.json(400, {"error": "usa ?desde=AAAA-MM-DD&hasta=AAAA-MM-DD"})
+                    return self.json(200, app.pase.metricas(desde, hasta))
                 if u.path == "/admin/resumen":
                     token = os.environ.get("PASE_ADMIN_TOKEN")
                     if not token or self.headers.get("Authorization") != f"Bearer {token}":
