@@ -90,6 +90,110 @@ GUIAS = {
  ),
 }
 
+# Unidades 4 a 7 (tramo del Pase)
+DANE="DANE (2025). Encuesta de Micronegocios (EMICRON) 2024: boletín técnico."
+NUEVAS = {
+ "u4-guia": dict(
+  n=4, titulo="Registra tus ventas y gastos sin enredos",
+  pregunta="¿Cómo anoto todo sin enredarme?",
+  idea="Cada salida con su categoría, el fiado en su lista y la foto del soporte el mismo día. Así a fin de mes sabes en qué se fue la plata y no solo cuánto.",
+  caso="Luz Dary suma la semana: entraron $2.100.000 y salieron $1.900.000, pero todo dice «pago». Y doña Carmen se llevó $85.000 fiados que no están anotados.",
+  bloques=[
+   ("Las 5 categorías", "lista", [
+     ("Mercancía o insumos", "Lo que compras para vender o producir."),
+     ("Gastos fijos", "Arriendo y servicios del local, internet, ayudante."),
+     ("Gastos variables", "Bolsas, empaques, transporte, comisiones."),
+     ("Tu sueldo", "En tu fecha fija."),
+     ("Deudas e inversiones", "Cuotas, vitrina, máquina."),
+   ]),
+   ("La lista de fiados", "columnas", ["Fecha", "Quién", "Qué llevó", "Debe", "Paga el"]),
+  ],
+  formula=("Te deben", "fiados de antes + fiados nuevos − lo que te pagaron"),
+  ejemplo=[("Fiados de antes", "$120.000", ""), ("+ Fió a doña Carmen", "$85.000", ""), ("− Le pagó don Jairo", "$40.000", ""),
+           ("Le deben ahora", "$165.000", "total")],
+  nota_ejemplo="El fiado es venta, pero no es plata: entra al registro solo cuando te pagan.",
+  errores=["Anotar todo como «pago», sin categoría.", "Anotar el fiado como plata que ya entró.", "Guardar los recibos sueltos y perderlos."],
+  extra=("El soporte en 1 minuto", "Tómale foto a la factura o al comprobante el mismo día y guárdala en una carpeta del celular por mes."),
+  preguntas=["¿Cuál de las 5 categorías crees que te pesa más?", "¿Cuánto te deben hoy de fiado, y quién?", "¿Dónde vas a guardar las fotos de tus soportes?"],
+  dato="El 38,9 % de los micronegocios acepta transferencias o pagos por internet (DANE, 2025).",
+  fuentes=DANE + " · Banca de las Oportunidades (2021). Reporte de micronegocios.",
+ ),
+ "u5-guia": dict(
+  n=5, titulo="Tu libro sencillo del negocio",
+  pregunta="¿Cómo junto todo el mes en un solo lugar?",
+  idea="Un solo libro por mes, siete columnas, una línea por movimiento. El último día, totales por categoría.",
+  caso="Jhon Fredy tiene un cuaderno para los servicios, una libreta para el proveedor y los pantallazos de Nequi. Su contador le pidió «el libro del mes» y no supo qué entregarle.",
+  bloques=[
+   ("El libro: 7 columnas", "columnas", ["Fecha", "Qué fue", "Categoría", "Medio", "Entró", "Salió", "Saldo"]),
+   ("Cómo llenarlo", "pasos", [
+     ("Una línea por movimiento", "En orden de fecha."),
+     ("Las ventas del día, juntas", "Una línea por medio de pago: efectivo y transferencia."),
+     ("El último día, totales", "Suma cada categoría del mes."),
+   ]),
+  ],
+  formula=("Total de una categoría", "suma de todas sus líneas del mes"),
+  ejemplo=[("Insumos · lunes", "$120.000", ""), ("+ Insumos · miércoles", "$65.000", ""), ("+ Insumos · viernes", "$95.000", ""),
+           ("Total de insumos", "$280.000", "total")],
+  nota_ejemplo="Si el saldo del libro no cuadra con el cajón y la cuenta, algo falta por anotar.",
+  errores=["Llevar varios cuadernos para lo mismo.", "Sumar en una categoría líneas de otra.", "No anotar el medio de pago."],
+  extra=("¿Y la ley?", "Si eres comerciante inscrito, debes llevar contabilidad; si no, y no eres responsable de IVA, un libro fiscal de operaciones diarias. Tu contador te dice cuál aplica. Este libro es la base."),
+  preguntas=["¿Vas a llevar tu libro en cuaderno, Excel o app?", "¿Qué día del mes vas a sacar los totales?", "¿Quién te ayuda con la contabilidad, si la necesitas?"],
+  dato="El 27,1 % de los micronegocios lleva cuentas informales en cuaderno o Excel (DANE, 2025).",
+  fuentes=DANE + " · Estatuto Tributario, art. 616. · Código de Comercio, art. 19.",
+ ),
+ "u6-guia": dict(
+  n=6, titulo="Cuánto ganas de verdad: tu utilidad real",
+  pregunta="¿Cuánto gana de verdad mi negocio?",
+  idea="Resta la mercancía que vendiste, no la que compraste, y cuenta tu sueldo como un gasto. Utilidad no es plata en la cuenta.",
+  caso="Marleny vendió $5.000.000 y pagó $4.100.000: «gané $900.000». Pero compró tela para diciembre y no contó su sueldo.",
+  bloques=[
+   ("La utilidad real, paso a paso", "pasos", [
+     ("Cuenta tu inventario", "El primer y el último día del mes, a precio de compra."),
+     ("Costo de lo vendido", "Inventario al empezar + compras − inventario al terminar."),
+     ("Resta todo", "Costo, gastos fijos, variables y tu sueldo."),
+   ]),
+   ("Lo que va aparte", "lista", [
+     ("Cuotas de un crédito", "Es devolver un préstamo."),
+     ("Máquinas y vitrinas", "Te sirven muchos meses."),
+   ]),
+  ],
+  formula=("Utilidad real", "ventas − costo de lo vendido − gastos fijos − gastos variables − tu sueldo"),
+  ejemplo=[("Ventas", "$5.000.000", ""), ("− Costo de lo vendido", "$1.800.000", ""), ("− Gastos fijos", "$900.000", ""),
+           ("− Gastos variables", "$300.000", ""), ("− Sueldo de Marleny", "$1.200.000", ""), ("Utilidad real", "$800.000", "total")],
+  nota_ejemplo="Margen = $800.000 ÷ $5.000.000 = 16 %: de cada $100.000 que vende, le quedan $16.000.",
+  errores=["Restar las compras en vez del costo de lo vendido.", "Olvidar tu sueldo.", "Restar la cuota del crédito como si fuera gasto."],
+  extra=("Utilidad no es plata", "Puedes tener utilidad y no tener plata si fiaste mucho o compraste inventario."),
+  preguntas=["¿Qué día vas a contar tu inventario?", "¿Cuál fue tu margen este mes?", "¿Qué gasto podrías bajar sin afectar las ventas?"],
+  dato="El 39 % de 1.223 emprendedores encuestados mezcla la plata personal con la del negocio (Portafolio, 2025).",
+  fuentes="Gómez Guasca, C. (2025). Microempresas: más de la mitad carece de registros financieros formales. Portafolio. · Decreto 2420 de 2015, anexo 3.",
+ ),
+ "u7-guia": dict(
+  n=7, titulo="Cierra el mes en 20 minutos",
+  pregunta="¿Qué hago el último día del mes para saber cómo me fue?",
+  idea="Una alarma el último día y 5 pasos: cuadra, suma, cuenta, calcula y decide. Una sola acción por mes.",
+  caso="Luz Dary ya tiene cuenta, sueldo, libro y lista de fiados, pero el día 30 no sabe por dónde empezar. Jhon Fredy le muestra su lista de cierre.",
+  bloques=[
+   ("Los 5 pasos del cierre", "pasos", [
+     ("Cuadra · 5 min", "El libro contra la cuenta y el cajón."),
+     ("Suma · 5 min", "Totales por categoría y lo que te deben."),
+     ("Cuenta · 5 min", "El inventario a precio de compra."),
+     ("Calcula · 3 min", "Utilidad real y margen."),
+     ("Decide · 2 min", "Una acción concreta para el mes."),
+   ]),
+  ],
+  formula=("Diferencia", "saldo del libro − (saldo de la cuenta + efectivo en el cajón)"),
+  ejemplo=[("Saldo del libro", "$1.450.000", ""), ("− En la cuenta", "$980.000", ""), ("− En el cajón", "$390.000", ""),
+           ("Faltan", "$80.000", "total")],
+  nota_ejemplo="Si falta plata, busca un retiro o una comisión sin anotar. Si sobra, una venta o un fiado pagado sin anotar.",
+  errores=["Ajustar la diferencia sin buscarla.", "Escoger muchas acciones a la vez.", "No guardar la hoja de cierre de cada mes."],
+  extra=("Tu hoja de cierre", "Ventas, costo, gastos, sueldo, utilidad, margen, lo que te deben e inventario: es lo que llevas al banco o al contador."),
+  preguntas=["¿A qué hora del último día vas a poner tu alarma?", "¿Cuál es tu acción para el mes que viene?", "¿Con quién vas a compartir tu hoja de cierre?"],
+  dato="El 68,2 % de los micronegocios no lleva ningún registro contable (DANE, 2025).",
+  fuentes=DANE + " · Banca de las Oportunidades (2021). Reporte de micronegocios.",
+ ),
+}
+GUIAS.update(NUEVAS)
+
 CSS = """
 @page{size:148mm 210mm;margin:0}
 *{box-sizing:border-box;margin:0;padding:0}

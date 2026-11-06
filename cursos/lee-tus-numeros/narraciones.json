@@ -124,5 +124,173 @@
   "firma": "85ec287717c7",
   "segundos": 14.4,
   "kb": 113
+ },
+ "medios-moodle/u4-entrada-narracion.mp3": {
+  "texto": "«Ahora tráigame el balance». Patricia llevó su estado de resultados a la cooperativa. La asesora lo revisó y le dijo: «Muy bien. Ahora tráigame el balance general». Patricia pensó que era lo mismo. Pero el estado de resultados cuenta lo que pasó en un mes, y el balance muestra cómo está el negocio un día: la plata, la mercancía, la plancha, la freidora y lo que todavía debe de la freidora. La pregunta de esta unidad: ¿Cuánto vale hoy mi negocio y cuánto de eso es mío?",
+  "firma": "9d02ee152926",
+  "segundos": 26.3,
+  "kb": 206
+ },
+ "piezas/u4-aprende/medios/narracion-1.mp3": {
+  "texto": "Una foto, no una película. En la cooperativa le pidieron a Patricia el balance general. No es lo mismo que el estado de resultados: el estado de resultados es la película del mes (ventas, costos y gastos); el balance es la foto de un día, por ejemplo el 31 de octubre: lo que el negocio tiene, lo que debe y lo que es de ella.",
+  "firma": "4f77f8e20387",
+  "segundos": 18.0,
+  "kb": 141
+ },
+ "piezas/u4-aprende/medios/narracion-2.mp3": {
+  "texto": "Las tres partes del balance. Lo que tiene (activos): la plata en la caja y en Nequi, la mercancía y los insumos, lo que te deben los clientes y los equipos. Lo que debe (pasivos): a los proveedores, los préstamos, los impuestos por pagar. Lo que es tuyo (patrimonio): lo que queda si con lo que tienes pagas todo lo que debes. Patrimonio es igual a lo que tiene menos lo que debe.",
+  "firma": "e4356579a8d8",
+  "segundos": 21.2,
+  "kb": 166
+ },
+ "piezas/u4-aprende/medios/narracion-3.mp3": {
+  "texto": "El balance de Patricia. Al 31 de octubre Patricia tiene: caja 300000 pesos, Nequi 500000 pesos, mercancía e insumos 600000 pesos y equipos (plancha, freidora, nevera y carro) 5200000 pesos. Total: 6600000 pesos. Debe: al proveedor de gaseosas 400000 pesos y a la cooperativa 1200000 pesos de la freidora. Total: 1600000 pesos.",
+  "firma": "1fd4d61532aa",
+  "segundos": 27.9,
+  "kb": 218
+ },
+ "piezas/u4-aprende/medios/narracion-4.mp3": {
+  "texto": "Tres reglas para no enredarte. Uno: Solo lo del negocio. La moto de la familia, el televisor o la tarjeta de crédito de la casa no van. Dos: Todo con la misma fecha. Cuenta la plata, la mercancía y las deudas el mismo día. Tres: Los equipos a su valor de hoy: lo que te costaron menos el desgaste por los años de uso. Los fiados que te deben sí van: es plata que vas a recibir.",
+  "firma": "ab9df078b500",
+  "segundos": 23.1,
+  "kb": 181
+ },
+ "piezas/u4-aprende/medios/narracion-5.mp3": {
+  "texto": "Para qué te sirve. Con el balance ves si el negocio crece de un año a otro (si sube tu patrimonio), cuánto debes comparado con lo que tienes y qué podrías dar como respaldo de un crédito. La cooperativa lo mira junto con tu estado de resultados.",
+  "firma": "1513482038bd",
+  "segundos": 13.2,
+  "kb": 103
+ },
+ "piezas/u4-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. El balance es la foto de un día. Patrimonio es igual a lo que tiene menos lo que debe. Solo cosas del negocio, todo con la misma fecha y los equipos a su valor de hoy.",
+  "firma": "acb7db1f74dd",
+  "segundos": 10.6,
+  "kb": 83
+ },
+ "medios-moodle/u5-entrada-narracion.mp3": {
+  "texto": "Ganó, pero no le alcanzó. Óscar hizo el estado de resultados de octubre de su tienda de mascotas: le dio utilidad. Pero el 15 de noviembre no tenía con qué pagarle al proveedor de concentrado. Había fiado a los vecinos del conjunto, pagó la cuota del préstamo y el arriendo cayó la misma semana. «¿Dónde está la plata que gané?», se preguntó. La pregunta de esta unidad: Si mi negocio gana, ¿por qué a veces no tengo con qué pagar?",
+  "firma": "7a18fc953ff6",
+  "segundos": 23.7,
+  "kb": 186
+ },
+ "piezas/u5-aprende/medios/narracion-1.mp3": {
+  "texto": "Ganó, pero no le alcanzó. El estado de resultados de octubre le dio utilidad a Óscar. Pero el 15 de noviembre no tenía con qué pagarle al proveedor de concentrado. La respuesta está en el flujo de efectivo: la cuenta de la plata que de verdad entra y sale.",
+  "firma": "30b5823ef9ba",
+  "segundos": 13.5,
+  "kb": 106
+ },
+ "piezas/u5-aprende/medios/narracion-2.mp3": {
+  "texto": "Ganancia no es lo mismo que plata. Lo que fiaste este mes es venta, pero todavía no es plata. Lo que te pagaron de fiados del mes pasado es plata, pero no es venta de este mes. La cuota del préstamo saca plata del negocio. Un equipo nuevo saca mucha plata de una vez, aunque te sirva muchos meses.",
+  "firma": "b2007310f51b",
+  "segundos": 15.4,
+  "kb": 121
+ },
+ "piezas/u5-aprende/medios/narracion-3.mp3": {
+  "texto": "El flujo de Óscar en octubre. Empezó el mes con 500000 pesos entre caja y Nequi. Entradas: ventas de contado 3800000 pesos y cobros de fiados de septiembre 600000 pesos: 4400000 pesos. Salidas: concentrado y accesorios 2400000 pesos, arriendo 800000 pesos, servicios 150000 pesos, su sueldo 900000 pesos y la cuota del préstamo 300000 pesos: 4550000 pesos.",
+  "firma": "c60b9d7f3699",
+  "segundos": 29.5,
+  "kb": 231
+ },
+ "piezas/u5-aprende/medios/narracion-4.mp3": {
+  "texto": "La fórmula del flujo. Saldo al terminar es igual a saldo al empezar más entradas menos salidas. Las ventas de octubre de Óscar fueron 4200000 pesos: 3800000 pesos de contado y 400000 pesos que fió. Pero esos 400000 pesos no entran al flujo hasta que se los paguen.",
+  "firma": "a9c8a50e52f0",
+  "segundos": 18.3,
+  "kb": 143
+ },
+ "piezas/u5-aprende/medios/narracion-5.mp3": {
+  "texto": "Mira hacia adelante. El flujo sirve más si lo haces antes. Anota semana por semana lo que esperas que entre y lo que tienes que pagar en las próximas 4 semanas. Así ves la semana en que se juntan el arriendo y el proveedor, y puedes cobrar fiados con fecha fija, pedir plazo al proveedor o no hacer una compra grande esa semana. Y guarda un colchón para un mes malo.",
+  "firma": "1a384dc9b5b0",
+  "segundos": 19.9,
+  "kb": 156
+ },
+ "piezas/u5-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. El flujo cuenta solo la plata que entra y sale. Saldo al terminar es igual a saldo al empezar más entradas menos salidas. Hazlo también hacia adelante, semana por semana, para ver venir los huecos.",
+  "firma": "4f72872b1a38",
+  "segundos": 12.2,
+  "kb": 96
+ },
+ "medios-moodle/u6-entrada-narracion.mp3": {
+  "texto": "La cita del jueves. Patricia tiene cita el jueves en la cooperativa para pedir los 4 millones de la plancha. Ya tiene su estado de resultados y su balance. Pero no sabe qué más llevar, cómo explicar sus números en pocos minutos ni si la cuota le va a caber cada mes. La pregunta de esta unidad: ¿Cómo llego preparado a pedir un crédito o a ver al contador?",
+  "firma": "98ca5c3c4ad3",
+  "segundos": 19.9,
+  "kb": 156
+ },
+ "piezas/u6-aprende/medios/narracion-1.mp3": {
+  "texto": "La cita del jueves. Patricia tiene cita en la cooperativa para pedir 4000000 pesos para la plancha. Ya tiene su estado de resultados y su balance. Le falta saber qué más llevar, cómo explicar sus números en pocos minutos y si la cuota le cabe.",
+  "firma": "136cac8169fb",
+  "segundos": 14.1,
+  "kb": 111
+ },
+ "piezas/u6-aprende/medios/narracion-2.mp3": {
+  "texto": "La carpeta del crédito. Lo que suelen pedir a un micronegocio (cada entidad pide distinto, pregunta antes): Cédula y RUT. Certificado de matrícula mercantil de la Cámara de Comercio, si eres comerciante formal. Estado de resultados de los últimos meses y balance general a la fecha. Extractos de Nequi, Daviplata o el banco de los últimos 3 a 6 meses. Facturas o recibos de las ventas y las compras grandes.",
+  "firma": "0510b57e3c01",
+  "segundos": 23.7,
+  "kb": 186
+ },
+ "piezas/u6-aprende/medios/narracion-3.mp3": {
+  "texto": "Tus números en tres frases. La asesora tiene poco tiempo. Patricia lo lleva dicho así: Uno: «Mi negocio vende en promedio 6000000 pesos al mes.». Dos: «Después de pagar todo, incluido mi sueldo, le quedan 700000 pesos.». Tres: «Cada mes me sobran 900000 pesos de plata para pagar una cuota.». Las dos primeras salen del estado de resultados; la tercera, del flujo de efectivo.",
+  "firma": "0b1f9aec683e",
+  "segundos": 23.7,
+  "kb": 186
+ },
+ "piezas/u6-aprende/medios/narracion-4.mp3": {
+  "texto": "¿Te cabe la cuota?. Peso de la cuota es igual a cuota nueva dividido entre lo que te sobra al mes por 100. A 12 meses la cuota de Patricia sería de unos 380000 pesos (con una tasa de ejemplo). A 24 meses, unos 210000 pesos. Mientras más bajo el peso, más tranquila: si la cuota se lleva más de la mitad de lo que te sobra, un mes malo te deja sin con qué pagar.",
+  "firma": "3787736fb86a",
+  "segundos": 21.8,
+  "kb": 171
+ },
+ "piezas/u6-aprende/medios/narracion-5.mp3": {
+  "texto": "Antes de firmar y con el contador. Pregunta siempre la tasa efectiva anual y el valor total que vas a pagar, no solo la cuota. Con el contador, lleva la carpeta del mes (ventas, compras con factura, gastos con soporte y extractos) y pregúntale: ¿debo llevar contabilidad?, ¿qué estados necesito y con qué firma?, ¿qué impuestos me tocan?",
+  "firma": "4f6caf8837db",
+  "segundos": 19.6,
+  "kb": 153
+ },
+ "piezas/u6-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. Lleva la carpeta completa y ordenada. Di tus números en tres frases: cuánto vendes, cuánto te queda y cuánto te sobra. Peso de la cuota es igual a cuota dividido entre lo que te sobra por 100. Pregunta la tasa efectiva anual y el total a pagar.",
+  "firma": "be53c96bfdf6",
+  "segundos": 15.4,
+  "kb": 121
+ },
+ "medios-moodle/u7-entrada-narracion.mp3": {
+  "texto": "Que no se repita febrero. Marisol ya entendió por qué su mejor mes en ventas fue el que menos le dejó. Ahora quiere darse cuenta a tiempo, no a fin de mes. Ha oído hablar de muchos indicadores, pero no tiene tiempo para todos. Quiere tres números que pueda calcular en 10 minutos cada mes. La pregunta de esta unidad: ¿Qué tres números miro cada mes para saber cómo va mi negocio?",
+  "firma": "3dbbe077cf45",
+  "segundos": 21.5,
+  "kb": 168
+ },
+ "piezas/u7-aprende/medios/narracion-1.mp3": {
+  "texto": "Que no se repita febrero. Marisol ya sabe por qué su mejor mes en ventas fue el que menos le dejó. Ahora quiere darse cuenta a tiempo. Con tres números, una vez al mes y en 10 minutos, lo logra: el margen, el punto de equilibrio y el colchón de caja.",
+  "firma": "da101cd81630",
+  "segundos": 13.8,
+  "kb": 108
+ },
+ "piezas/u7-aprende/medios/narracion-2.mp3": {
+  "texto": "Uno: El margen. Margen es igual a utilidad del mes dividido entre ventas por 100. Cuántos pesos te quedan de cada 100 que vendes. En un mes normal Marisol tiene utilidad de 450000 pesos con ventas de 4500000 pesos: margen del 10 por ciento. En febrero fue del 3 por ciento. Si el margen baja, revisa precios y costos antes de vender más.",
+  "firma": "a133899409ab",
+  "segundos": 23.1,
+  "kb": 181
+ },
+ "piezas/u7-aprende/medios/narracion-3.mp3": {
+  "texto": "Dos: El punto de equilibrio. Lo mínimo que tienes que vender al mes para no perder. Punto de equilibrio es igual a gastos fijos dividido entre (1 menos costo de lo vendido dividido entre ventas). Gastos fijos de Marisol: 1800000 pesos (arriendo, servicios, tóner y su sueldo). Su costo de lo vendido es la mitad de las ventas.",
+  "firma": "0bfc50e49515",
+  "segundos": 20.8,
+  "kb": 163
+ },
+ "piezas/u7-aprende/medios/narracion-4.mp3": {
+  "texto": "Tres: El colchón de caja. Cuántos meses aguantas pagando los gastos fijos si un mes no vendes nada. Colchón de caja es igual a plata disponible dividido entre gastos fijos del mes. Marisol tiene 900000 pesos entre caja y banco, y gastos fijos de 1800000 pesos.",
+  "firma": "a978e3fc83ee",
+  "segundos": 16.7,
+  "kb": 131
+ },
+ "piezas/u7-aprende/medios/narracion-5.mp3": {
+  "texto": "Tu tablero de 3 indicadores. Una hoja con 12 filas (una por mes) y 3 columnas: margen, punto de equilibrio y colchón. El mismo día de cada mes, después de tu estado de resultados y tu flujo, anota los tres y compara con el mes anterior: ¿subió?, ¿bajó? No hay un número «bueno» para todos los negocios: compárate contigo mismo.",
+  "firma": "7ec9ff0d3d19",
+  "segundos": 18.9,
+  "kb": 148
+ },
+ "piezas/u7-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. Margen: de cada 100 pesos, cuánto te queda. Punto de equilibrio: lo mínimo que tienes que vender. Colchón: cuántos meses aguantas. Anótalos cada mes y mira hacia dónde van.",
+  "firma": "3851316e3731",
+  "segundos": 11.9,
+  "kb": 93
  }
 }

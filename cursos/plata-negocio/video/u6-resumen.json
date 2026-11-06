@@ -1,0 +1,63 @@
+{
+ "titulo": "Cuánto ganas de verdad",
+ "etiqueta": "Unidad 6 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "voz": "Marleny dice que ganó novecientos mil pesos. Pero compró tela para dos meses y no contó su sueldo.",
+   "titulo": "Cuánto ganas de verdad",
+   "texto": "Marleny · taller de confección en San Mateo",
+   "imagen": "ilustraciones/originales/u6-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "El costo de lo vendido",
+   "items": [
+    [
+     "Inventario al empezar",
+     "más"
+    ],
+    [
+     "Compras del mes",
+     "menos"
+    ],
+    [
+     "Inventario al terminar",
+     "igual al costo"
+    ]
+   ],
+   "voz": "Resta la mercancía que vendiste, no la que compraste: inventario al empezar, más compras, menos inventario al terminar."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Tu sueldo es un gasto",
+   "texto": "Las cuotas y las máquinas van aparte.",
+   "voz": "Tu sueldo se resta como un gasto. Las cuotas de un crédito y las máquinas van aparte."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Utilidad y margen",
+   "items": [
+    [
+     "Utilidad real",
+     "ventas menos todo"
+    ],
+    [
+     "Margen",
+     "utilidad ÷ ventas × 100"
+    ],
+    [
+     "Ojo",
+     "utilidad no es plata en la cuenta"
+    ]
+   ],
+   "voz": "La utilidad real es lo que queda después de todo. El margen te dice cuánto te queda de cada cien pesos que vendes."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Cuenta tu inventario",
+   "texto": "Y calcula tu utilidad real",
+   "voz": "En esta unidad vas a contar tu inventario y a calcular tu utilidad real y tu margen."
+  }
+ ]
+}

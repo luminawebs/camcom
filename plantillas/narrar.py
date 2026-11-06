@@ -4,7 +4,7 @@
 Uso: python3 plantillas/narrar.py cursos/<id> [--forzar] [--solo-texto]
 
 Lee "narracion" de curso.json:
-    "narracion": {"voz": "a253156d", "secciones": ["entrada", "aprende"]}
+    "narracion": {"voz": "a253156d", "secciones": ["entrada", "aprende"], "desde": 1}
 y genera, en MP3 mono de 64 kbps:
 - entrada  -> <curso>/medios-moodle/uN-entrada-narracion.mp3  (el caso de la Entrada, con su pregunta)
 - aprende  -> <curso>/piezas/uN-aprende/medios/narracion-K.mp3  (una por pantalla de la lección;
@@ -61,7 +61,10 @@ def textos(curso: Path, c: dict) -> dict:
             s = s.replace(a, b)
         return limpiar(s, datos)
     out = {}
+    desde = c["narracion"].get("desde", 1)   # opcional: narrar solo desde esa unidad (p. ej. 4 en un curso con tramo del Pase)
     for i, u in enumerate(c["unidades"], 1):
+        if i < desde:
+            continue
         if "entrada" in secs:
             e = u["entrada"]
             out[f"medios-moodle/u{i}-entrada-narracion.mp3"] = limpiar_c(f"{e['titulo']}. {e['texto']} La pregunta de esta unidad: {e['pregunta']}")
@@ -123,7 +126,9 @@ def main():
         registro[ruta] = {"texto": texto, "firma": firma, "segundos": seg, "kb": (curso / ruta).stat().st_size // 1024}
         hechos += 1
         print(f"✓ {ruta}  {seg} s")
-    for viejo in [r for r in registro if r not in pedidos]:
+    desde = c["narracion"].get("desde", 1)
+    unidad = lambda r: int(m.group(1)) if (m := re.search(r"u(\d+)-", r)) else 0
+    for viejo in [r for r in registro if r not in pedidos and unidad(r) >= desde]:   # las de antes de «desde» se conservan
         del registro[viejo]
     registro_ruta.write_text(json.dumps(registro, ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(v.get("segundos", 0) for v in registro.values())

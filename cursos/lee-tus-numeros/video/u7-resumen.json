@@ -1,0 +1,63 @@
+{
+ "titulo": "3 indicadores",
+ "etiqueta": "Unidad 7 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "3 indicadores",
+   "texto": "Marisol · papelería en León XIII",
+   "voz": "Marisol no quiere otro febrero. Quiere darse cuenta a tiempo con tres números.",
+   "imagen": "ilustraciones/originales/u7-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Los tres",
+   "items": [
+    [
+     "Margen",
+     "utilidad ÷ ventas × 100"
+    ],
+    [
+     "Punto de equilibrio",
+     "lo mínimo que vendes"
+    ],
+    [
+     "Colchón de caja",
+     "meses que aguantas"
+    ]
+   ],
+   "voz": "Margen, punto de equilibrio y colchón de caja: tres números, una vez al mes."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Punto de equilibrio",
+   "texto": "Gastos fijos ÷ (1 − costo ÷ ventas)",
+   "voz": "El punto de equilibrio es lo mínimo que tienes que vender para no perder: gastos fijos dividido entre uno menos el costo sobre las ventas."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Tu tablero",
+   "items": [
+    [
+     "12 filas",
+     "una por mes"
+    ],
+    [
+     "3 columnas",
+     "los indicadores"
+    ],
+    [
+     "Compárate",
+     "contigo mismo"
+    ]
+   ],
+   "voz": "Anótalos cada mes en tu tablero y compáralos con el mes anterior."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Calcula los tuyos",
+   "texto": "Margen, equilibrio y colchón",
+   "voz": "En esta unidad vas a calcular tus tres indicadores del último mes."
+  }
+ ]
+}

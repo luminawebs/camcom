@@ -14,5 +14,14 @@ u2-resumen.html: «Resumen generado con inteligencia artificial y revisado por u
 u3-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
 u3-profundiza.html: «[VERIFICAR versión vigente]» (quitado)
 u3-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u4-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u4-profundiza.html: «[VERIFICAR versión vigente]» (quitado)
+u4-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u5-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u5-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u6-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u6-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u7-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u7-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador de la Cámara de Comercio.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
 lee-tus-numeros-u2-aprende.zip/contenido.js: «[VERIFICAR con el contador]» (quitado)
 lee-tus-numeros-u3-aprende.zip/contenido.js: «[VERIFICAR con el contador]» (quitado)

@@ -1,0 +1,63 @@
+{
+ "titulo": "Tu balance general",
+ "etiqueta": "Unidad 4 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Tu balance general",
+   "texto": "Patricia · comidas rápidas en La Despensa",
+   "voz": "La cooperativa le pidió a Patricia el balance general. No es lo mismo que el estado de resultados.",
+   "imagen": "ilustraciones/originales/u4-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Las tres partes",
+   "items": [
+    [
+     "Lo que tiene",
+     "activos"
+    ],
+    [
+     "Lo que debe",
+     "pasivos"
+    ],
+    [
+     "Lo que es tuyo",
+     "patrimonio"
+    ]
+   ],
+   "voz": "El balance muestra lo que el negocio tiene, lo que debe y lo que es tuyo: lo que tiene menos lo que debe."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Una foto de un día",
+   "texto": "La película del mes es el estado de resultados.",
+   "voz": "El balance es la foto de un día. El estado de resultados es la película del mes."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Tres reglas",
+   "items": [
+    [
+     "Solo lo del negocio",
+     "sin cosas de la casa"
+    ],
+    [
+     "La misma fecha",
+     "para todo"
+    ],
+    [
+     "Equipos",
+     "a su valor de hoy"
+    ]
+   ],
+   "voz": "Solo cosas del negocio, todo con la misma fecha y los equipos a su valor de hoy. Los fiados que te deben sí cuentan."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Haz tu balance",
+   "texto": "Lo que tiene menos lo que debe",
+   "voz": "En esta unidad vas a hacer el balance de tu negocio con fecha del último día del mes."
+  }
+ ]
+}
