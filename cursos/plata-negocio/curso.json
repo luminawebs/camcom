@@ -214,7 +214,10 @@
         ],
         "formula": "Te deben = fiados de antes + fiados nuevos − lo que te pagaron",
         "descargas": [
-          "Plantilla Registro con categorías y lista de fiados · Excel 40 KB"
+          {
+            "texto": "Plantilla Registro con categorías y lista de fiados · Excel",
+            "archivo": "u4-registro-categorias-fiados.xlsx"
+          }
         ]
       },
       "profundiza": [
@@ -257,8 +260,14 @@
         ],
         "formula": "Total de una categoría = suma de todas sus líneas del mes",
         "descargas": [
-          "Plantilla Libro del mes · Excel 40 KB",
-          "Hoja para imprimir del libro · PDF 150 KB"
+          {
+            "texto": "Plantilla Libro del mes · Excel",
+            "archivo": "u5-libro-del-mes.xlsx"
+          },
+          {
+            "texto": "Hoja del libro para imprimir · PDF",
+            "archivo": "u5-hoja-libro.pdf"
+          }
         ]
       },
       "profundiza": [
@@ -306,7 +315,10 @@
         ],
         "formula": "Utilidad real = ventas − costo de lo vendido − gastos fijos − gastos variables − tu sueldo",
         "descargas": [
-          "Plantilla Utilidad real e inventario · Excel 40 KB"
+          {
+            "texto": "Plantilla Utilidad real e inventario · Excel",
+            "archivo": "u6-utilidad-real.xlsx"
+          }
         ]
       },
       "profundiza": [
@@ -349,8 +361,14 @@
         ],
         "formula": "Diferencia = saldo del libro − (saldo de la cuenta + efectivo en el cajón)",
         "descargas": [
-          "Hoja de cierre del mes · PDF 150 KB",
-          "Plantilla Cierre del mes · Excel 40 KB"
+          {
+            "texto": "Hoja de cierre del mes para imprimir · PDF",
+            "archivo": "u7-hoja-cierre.pdf"
+          },
+          {
+            "texto": "Plantilla Cierre del mes · Excel",
+            "archivo": "u7-cierre-del-mes.xlsx"
+          }
         ]
       },
       "profundiza": [
@@ -399,5 +417,22 @@
       "¿La utilidad descuenta el sueldo y usa el costo de lo vendido?",
       "¿La acción del mes es concreta y se puede medir?"
     ]
-  }
+  },
+  "narracion": {
+    "voz": "a253156d",
+    "secciones": [
+      "entrada",
+      "aprende"
+    ],
+    "desde": 4,
+    "reemplazos": {
+      "÷": " dividido entre ",
+      "−": " menos ",
+      "×": " por ",
+      "= ": "es igual a ",
+      " + ": " más "
+    },
+    "nota": "Resemble AI (voz Jota) solo para las unidades 4 a 7; las unidades 1 a 3 se hicieron antes sin narración."
+  },
+  "mapa_curso_nota": "Mapa del curso con las 7 unidades y sus fórmulas"
 }

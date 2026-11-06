@@ -1,0 +1,112 @@
+{
+ "hechas": {
+  "u4-entrada": "6d63ba009291",
+  "u4-cajones": "567be746a7d2",
+  "u4-soporte": "4be15f354dad",
+  "u5-entrada": "fbfe1ded921d",
+  "u5-libro": "0c9ccd839ca2",
+  "u6-entrada": "1a37b4a12022",
+  "u6-utilidad": "b92fe0be7363",
+  "u7-entrada": "37be08ec300a",
+  "u7-pasos": "b300f71b9abd",
+  "u7-hoja": "d3d563770ca5"
+ },
+ "llamadas": [
+  {
+   "id": "u4-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:09:37",
+   "tokens_entrada": 208,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u4-cajones",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:09:43",
+   "tokens_entrada": 242,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u4-soporte",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:09:50",
+   "tokens_entrada": 179,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u5-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:09:56",
+   "tokens_entrada": 200,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u5-libro",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:01",
+   "tokens_entrada": 190,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u6-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:06",
+   "tokens_entrada": 191,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u6-utilidad",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:12",
+   "tokens_entrada": 193,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u7-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:18",
+   "tokens_entrada": 198,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u7-pasos",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:23",
+   "tokens_entrada": 186,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u7-hoja",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:28",
+   "tokens_entrada": 182,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u4-cajones",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:47",
+   "tokens_entrada": 260,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u7-pasos",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:10:52",
+   "tokens_entrada": 219,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  }
+ ]
+}

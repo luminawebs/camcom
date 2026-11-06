@@ -5,16 +5,17 @@ window.CONTENIDO = {
   paso: "Aprende",
   unidad: "Unidad 5",
   notaMinima: 60,
+  narracion: true,
   pantallas: [
     {
       titulo: "Tres cuadernos y ninguno cuadra",
       texto: "Jhon Fredy tiene un cuaderno para los servicios, una libreta para el proveedor y los pantallazos de Nequi en el celular. Su contador le pidió «el libro del mes» y no supo qué entregarle. La solución: **un solo libro por mes**.",
-      medio: { tipo: "imagen", src: "", nota: "Un cuaderno, una libreta y un celular con pantallazos sobre el mostrador de la peluquería." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Cuaderno, libreta y celular con pantallazos sobre el mostrador de la peluquería" }
     },
     {
       titulo: "Un libro, siete columnas",
       texto: "En cuaderno, Excel o app, una línea por movimiento, en orden de fecha:\n**Fecha · Qué fue · Categoría · Medio · Entró · Salió · Saldo**\n\n**Categoría:** las 5 de la Unidad 4, o «Venta». **Medio:** efectivo, transferencia o billetera; así cuadras el cajón y la cuenta por separado.",
-      medio: { tipo: "imagen", src: "", nota: "Una página del libro de Jhon Fredy con las 7 columnas y 5 líneas de ejemplo." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "Libro del mes con siete columnas y un total subrayado en rojo" }
     },
     {
       titulo: "Las ventas del día, en pocas líneas",

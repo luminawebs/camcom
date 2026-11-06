@@ -1,0 +1,101 @@
+{
+ "nota": "Ilustraciones de las unidades 4 a 7 (tramo del Pase) con Gemini (plantillas/ilustrar.py). Las de las unidades 1 a 3 se hicieron antes con otro método; este estilo las imita: objetos y manos, sin caras. Las imágenes no llevan texto.",
+ "estilo": "Hand-drawn ink outline with soft watercolor and flat color fills, like an editorial illustration for a friendly online course for small shop owners in Soacha, Colombia. Object-focused close-up compositions: only hands and forearms of people may appear, never faces or full bodies. Off-white dotted-paper background, warm neutrals, charcoal lines, with deep red #c8102e as the single accent color. Simple, uncluttered, clear focal point. No readable text, letters, numbers, logos or brand names anywhere (notebook lines and receipts must be blank or use abstract squiggles).",
+ "personajes": {},
+ "imagenes": [
+  {
+   "id": "u4-entrada",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "An open spiral notebook on a shop counter with many identical handwritten lines (abstract squiggles), a hand holding a pen hesitating over it; next to the notebook a plastic bag full of school supplies (notebooks, pencils, glue) being carried away by another hand at the edge of the frame. A cash drawer slightly open in the background.",
+   "destinos": [
+    "medios-moodle/u4-entrada.jpg",
+    "piezas/u4-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u4-cajones",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "Five small open wooden boxes in a row on a table, each holding a different kind of item: the first with stacked merchandise (notebooks and bottles), the second with a house key and a light bulb (fixed costs), the third with plastic bags and small boxes (variable costs), the fourth with a folded bill tied with a red ribbon (owner's salary), the fifth with a small padlock and a toy-sized sewing machine (debts and investments). A hand dropping a coin into one of them. The boxes are completely plain wood with NO labels, NO words and NO tags on them.",
+   "destinos": [
+    "piezas/u4-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u4-soporte",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "Close-up of two hands holding a smartphone taking a photo of a paper receipt lying on a counter; on the phone screen a grid of small photo thumbnails of receipts (no text). Warm light.",
+   "destinos": [
+    "piezas/u4-aprende/medios/ilustracion-4.jpg"
+   ]
+  },
+  {
+   "id": "u5-entrada",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "On a barbershop counter: a small notebook, a separate little pocket notebook and a smartphone showing a stack of transfer screenshots (abstract, no text), plus scissors, a comb and a spray bottle. A hand scratching the head area is NOT shown; instead one hand rests hesitantly between the three items.",
+   "destinos": [
+    "medios-moodle/u5-entrada.jpg",
+    "piezas/u5-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u5-libro",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "Top-down view of a large open ledger notebook with seven neat columns drawn in pencil and several filled rows of abstract squiggles (no real numbers or letters); a red pen and a ruler lie on it, a hand underlining the last row in red.",
+   "destinos": [
+    "piezas/u5-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u6-entrada",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "A dressmaker's worktable in a small workshop: tall stacked rolls of fabric in different colors, a sewing machine, measuring tape, and a hand-held calculator held by a hand; a second hand pointing at the fabric rolls as if counting them.",
+   "destinos": [
+    "medios-moodle/u6-entrada.jpg",
+    "piezas/u6-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u6-utilidad",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "A balance scale on a table: on one pan a pile of coins and bills, on the other pan a stack of fabric rolls and a small notebook tied with a red ribbon labelled only with a blank tag; a hand gently steadying the scale. Conceptual, simple.",
+   "destinos": [
+    "piezas/u6-aprende/medios/ilustracion-4.jpg"
+   ]
+  },
+  {
+   "id": "u7-entrada",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "Evening on a shop counter: a smartphone showing an alarm clock icon (no text), a steaming cup of black coffee (tinto), an open ledger notebook, a closed cash drawer and a checklist card with five blank checkboxes, three of them ticked in red. One hand ticking the fourth box.",
+   "destinos": [
+    "medios-moodle/u7-entrada.jpg",
+    "piezas/u7-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u7-pasos",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "Exactly FIVE round red-outlined stepping stones (count them: 1, 2, 3, 4, 5) crossing a small stream drawn in watercolor, from left to right, each stone with a simple icon: a balance scale, a plus sign, a cardboard box, a calculator, a light bulb. A hand placing the fifth stone (the light bulb). No text.",
+   "destinos": [
+    "piezas/u7-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u7-hoja",
+   "proporcion": "4:3",
+   "personajes": [],
+   "escena": "A single sheet of paper pinned to a cork board with a small simple bar chart drawn on it (bars rising, no numbers or text) and eight blank boxes; a red pushpin; a hand pinning it.",
+   "destinos": [
+    "piezas/u7-aprende/medios/ilustracion-5.jpg"
+   ]
+  }
+ ]
+}

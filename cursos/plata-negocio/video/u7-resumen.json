@@ -1,0 +1,63 @@
+{
+ "titulo": "Cierra el mes en 20 minutos",
+ "etiqueta": "Unidad 7 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "voz": "El día 30 Luz Dary no sabe por dónde empezar. Jhon Fredy le muestra su lista de cierre: cinco pasos y veinte minutos.",
+   "titulo": "Cierra el mes en 20 minutos",
+   "texto": "Luz Dary y Jhon Fredy · el día 30",
+   "imagen": "ilustraciones/originales/u7-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Los 5 pasos",
+   "items": [
+    [
+     "Cuadra y suma",
+     "libro, cuenta y cajón"
+    ],
+    [
+     "Cuenta y calcula",
+     "inventario y utilidad"
+    ],
+    [
+     "Decide",
+     "una acción"
+    ]
+   ],
+   "voz": "Cuadra, suma, cuenta, calcula y decide. Veinte minutos el último día del mes."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Cuando no cuadra",
+   "texto": "Busca la diferencia antes de ajustar.",
+   "voz": "Si el libro no cuadra con la cuenta y el cajón, busca la diferencia en los movimientos antes de ajustar."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Tu hoja de cierre",
+   "items": [
+    [
+     "Ventas y utilidad",
+     "margen del mes"
+    ],
+    [
+     "Te deben",
+     "e inventario"
+    ],
+    [
+     "Mes a mes",
+     "la historia del negocio"
+    ]
+   ],
+   "voz": "La hoja de cierre guarda tus números de cada mes. Es lo que llevas al banco o al contador."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Haz tu primer cierre",
+   "texto": "Una alarma · cinco pasos · una acción",
+   "voz": "En esta unidad vas a hacer el cierre de tu mes y a escoger una acción para el siguiente."
+  }
+ ]
+}

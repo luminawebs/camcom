@@ -5,11 +5,12 @@ window.CONTENIDO = {
   paso: "Aprende",
   unidad: "Unidad 6",
   notaMinima: 60,
+  narracion: true,
   pantallas: [
     {
       titulo: "«Gané $900.000… ¿o no?»",
       texto: "Marleny vendió $5.000.000 y pagó $4.100.000. Pero compró tela para todo diciembre y su sueldo no aparece. Restar «lo que pagué» falla cuando compras mercancía para varios meses: un mes parece que perdiste y el siguiente que ganaste mucho.",
-      medio: { tipo: "imagen", src: "", nota: "Marleny en su taller entre rollos de tela, con una calculadora." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Rollos de tela, máquina de coser y una calculadora en el taller" }
     },
     {
       titulo: "Lo que compraste no es lo que vendiste",
@@ -40,7 +41,7 @@ window.CONTENIDO = {
     {
       titulo: "Utilidad no es plata en la cuenta",
       texto: "Puedes tener utilidad y no tener plata: si fiaste mucho, si compraste inventario o si pagaste una cuota grande. Y puedes tener plata sin utilidad: si te prestaron. Mira las dos cada mes.\n\n**Margen = utilidad real ÷ ventas × 100.** Marleny: $800.000 ÷ $5.000.000 = **16 %**. De cada $100.000 que vende, le quedan $16.000 después de su sueldo.",
-      medio: { tipo: "imagen", src: "", nota: "Dos columnas: «Utilidad» y «Plata en la cuenta», con fiados e inventario en el medio." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-4.jpg", alt: "Balanza con plata de un lado y tela del otro" }
     },
     {
       titulo: "Lo que debes recordar",

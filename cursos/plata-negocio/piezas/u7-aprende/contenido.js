@@ -5,16 +5,17 @@ window.CONTENIDO = {
   paso: "Aprende",
   unidad: "Unidad 7",
   notaMinima: 60,
+  narracion: true,
   pantallas: [
     {
       titulo: "El día 30 de Luz Dary",
       texto: "Ya tiene cuenta del negocio, sueldo fijo, libro y lista de fiados. Pero el día 30 llega cansada y no sabe por dónde empezar. Jhon Fredy le muestra su lista: **5 pasos, una alarma en el celular y 20 minutos con un tinto**.",
-      medio: { tipo: "imagen", src: "", nota: "Alarma en el celular: «Cierre del mes · 20 min»." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Celular con alarma, un tinto, el libro y una lista de cierre con casillas marcadas" }
     },
     {
       titulo: "Los 5 pasos del cierre",
       texto: "**1. Cuadra** (5 min): el libro contra la cuenta y el cajón.\n**2. Suma** (5 min): totales por categoría y lo que te deben.\n**3. Cuenta** (5 min): el inventario a precio de compra.\n**4. Calcula** (3 min): utilidad real y margen.\n**5. Decide** (2 min): compara con el mes pasado y escoge **una** acción.",
-      medio: { tipo: "imagen", src: "", nota: "Los 5 pasos del cierre en una tarjeta vertical para guardar." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "Cinco piedras para cruzar un río: cuadra, suma, cuenta, calcula y decide" }
     },
     {
       titulo: "Cuando no cuadra",
@@ -45,7 +46,7 @@ window.CONTENIDO = {
     {
       titulo: "Tu hoja de cierre",
       texto: "Al final llenas una hoja con: ventas, costo de lo vendido, gastos, tu sueldo, utilidad real, margen, lo que te deben y el inventario. Mes a mes, esa hoja muestra si vas mejorando. Es lo que llevas al banco o al contador.",
-      medio: { tipo: "imagen", src: "", nota: "Hoja de cierre del mes de Luz Dary con los 8 datos." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-5.jpg", alt: "Hoja de cierre con una gráfica que sube, clavada en un tablero" }
     },
     {
       titulo: "Lo que debes recordar",

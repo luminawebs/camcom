@@ -5,14 +5,16 @@ window.CONTENIDO = {
   paso: "Aprende",
   unidad: "Unidad 4",
   notaMinima: 60,
+  narracion: true,
   pantallas: [
     {
       titulo: "Todo dice «pago»",
       texto: "Luz Dary ya anota cada día lo que entra y lo que sale. Pero al final de la semana no sabe **en qué** se le fue la plata: todo dice «pago». Para decidir, no basta con saber cuánto salió; hay que saber **para qué** fue.",
-      medio: { tipo: "imagen", src: "", nota: "Cuaderno de Luz Dary con muchas líneas que dicen «pago»." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-1.jpg", alt: "Cuaderno con muchas líneas iguales y una bolsa de útiles que se llevan fiada" }
     },
     {
       titulo: "Cada salida tiene su cajón",
+      medio: { tipo: "imagen", src: "medios/ilustracion-2.jpg", alt: "Cinco cajas: mercancía, gastos fijos, gastos variables, tu sueldo y deudas" },
       texto: "Con 5 categorías alcanza para casi todo negocio pequeño:\n**1. Mercancía o insumos:** lo que compras para vender o producir.\n**2. Gastos fijos:** arriendo del local, servicios del local, internet, sueldo de un ayudante.\n**3. Gastos variables:** bolsas, empaques, transporte de mercancía, comisiones.\n**4. Tu sueldo:** lo que te pagas en tu fecha fija.\n**5. Deudas e inversiones:** cuotas de un crédito, una vitrina, una máquina.",
       pregunta: {
         enunciado: "Luz Dary pagó $45.000 de bolsas y empaques para las ventas de la semana. ¿En qué categoría va?",
@@ -40,7 +42,7 @@ window.CONTENIDO = {
     {
       titulo: "El soporte en 1 minuto",
       texto: "Cada compra deja un papel o un pantallazo: la factura del proveedor, el recibo del arriendo, el comprobante de la transferencia. Tómale foto el mismo día y guárdala en una carpeta del celular por mes, por ejemplo «Negocio · noviembre». [VERIFICAR con el contador: qué soportes guardar y por cuánto tiempo.]",
-      medio: { tipo: "imagen", src: "", nota: "Celular con un álbum «Negocio · noviembre» lleno de fotos de facturas y comprobantes." }
+      medio: { tipo: "imagen", src: "medios/ilustracion-4.jpg", alt: "Manos tomando foto a un recibo con el celular" }
     },
     {
       titulo: "Lo que debes recordar",

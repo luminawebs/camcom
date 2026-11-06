@@ -4,7 +4,7 @@
 Uso: python3 plantillas/narrar.py cursos/<id> [--forzar] [--solo-texto]
 
 Lee "narracion" de curso.json:
-    "narracion": {"voz": "a253156d", "secciones": ["entrada", "aprende"]}
+    "narracion": {"voz": "a253156d", "secciones": ["entrada", "aprende"], "desde": 1}
 y genera, en MP3 mono de 64 kbps:
 - entrada  -> <curso>/medios-moodle/uN-entrada-narracion.mp3  (el caso de la Entrada, con su pregunta)
 - aprende  -> <curso>/piezas/uN-aprende/medios/narracion-K.mp3  (una por pantalla de la lección;
@@ -61,7 +61,10 @@ def textos(curso: Path, c: dict) -> dict:
             s = s.replace(a, b)
         return limpiar(s, datos)
     out = {}
+    desde = c["narracion"].get("desde", 1)   # opcional: narrar solo desde esa unidad (p. ej. 4 en un curso con tramo del Pase)
     for i, u in enumerate(c["unidades"], 1):
+        if i < desde:
+            continue
         if "entrada" in secs:
             e = u["entrada"]
             out[f"medios-moodle/u{i}-entrada-narracion.mp3"] = limpiar_c(f"{e['titulo']}. {e['texto']} La pregunta de esta unidad: {e['pregunta']}")
