@@ -2,7 +2,7 @@
    Molde: componentes/leccion-interactiva usado como cuestionario: nota = aciertos ÷ preguntas. Solo con el Pase: en las unidades 1 a 3 este paso lo ve quien tiene el Pase.
    La posición de la respuesta correcta cambia de pregunta a pregunta. */
 window.CONTENIDO = {
-  "titulo": "Demuestra: Tu sueldo",
+  "titulo": "Tu sueldo",
   "paso": "Demuestra",
   "unidad": "Unidad 2",
   "notaMinima": 75,

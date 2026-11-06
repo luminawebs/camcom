@@ -8,13 +8,16 @@
 //   conservando roles y matrículas (así el usuario del servicio web no pierde el acceso).
 // - Si no hay, lo crea en la categoría.
 // - Matricula como Profesor al usuario del servicio web (ClaudeBot) si no lo está, para que los ajustes por REST funcionen.
-// Imprime en la última línea un JSON: {"curso": id, "accion": "nuevo" | "reemplazo"}.
+// - Con --sumar (6.º argumento) NO borra nada: «Fusionar la copia de seguridad con este curso» (lo usa
+//   moodle/sumar_tramo.py para agregar actividades nuevas sin tocar las que ya están ni el avance de nadie).
+// Imprime en la última línea un JSON: {"curso": id, "accion": "nuevo" | "reemplazo" | "suma"}.
 // Si algo falla deja una captura y el HTML en /tmp/restaurar-error.{png,html}.
 import { createRequire } from 'module';
 import { execSync } from 'child_process';
 
 const { chromium } = createRequire(import.meta.url)(execSync('npm root -g').toString().trim() + '/playwright');
 const [mbz, corto, categoria, completo, botRest] = process.argv.slice(2);
+const sumar = process.argv.includes('--sumar');
 if (!botRest) { console.error('Uso: node moodle/restaurar.mjs <mbz> <corto> <categoría> <nombre completo> <usuario REST>'); process.exit(2); }
 const URL = process.env.MOODLE_URL.replace(/\/$/, '');
 const paso = (t) => console.log('· ' + t);
@@ -104,11 +107,15 @@ try {
   const existente = await enDestino();
   const continuar = (f) => Promise.all([p.waitForNavigation(), f.locator('input[type=submit][value="Continuar"]').click()]);
   if (existente) {
-    paso(`Ya existe el curso ${corto} (id ${existente}): se borra su contenido y se restaura encima`);
-    const form = p.locator('form', { has: p.locator('input[name=target][value="3"]') });
-    await form.locator('input[name=target][value="3"]').check();
+    const destino = sumar ? '4' : '3';   // 4 = fusionar con el curso existente; 3 = borrar su contenido y restaurar
+    paso(sumar ? `Ya existe el curso ${corto} (id ${existente}): se le suman las actividades del respaldo, sin borrar nada`
+               : `Ya existe el curso ${corto} (id ${existente}): se borra su contenido y se restaura encima`);
+    const form = p.locator('form', { has: p.locator(`input[name=target][value="${destino}"]`) });
+    await form.locator(`input[name=target][value="${destino}"]`).check();
     await form.locator(`input[name=targetid][value="${existente}"]`).check();
     await continuar(form);
+  } else if (sumar) {
+    throw new Error(`--sumar necesita un curso que ya exista con el nombre corto ${corto}`);
   } else {
     paso(`No existe ${corto}: se crea en «${categoria}»`);
     const form = p.locator('form', { has: p.locator('input[name=target][value="2"]') });
@@ -122,13 +129,13 @@ try {
   await siguiente();
 
   paso('Esquema del curso');
-  await marcar('setting_course_overwrite_conf', true);
-  if (existente) {
+  await marcar('setting_course_overwrite_conf', !sumar);   // al sumar se conservan nombre, resumen y ajustes del curso
+  if (existente && !sumar) {
     // conservar matrículas y roles: así ClaudeBot y los estudiantes no pierden el acceso al reemplazar
     await marcar('setting_course_keep_roles_and_enrolments', true);
     await marcar('setting_course_keep_groups_and_groupings', true);
   }
-  for (const [n, v] of [['setting_course_course_fullname', completo], ['setting_course_course_shortname', corto]]) {
+  if (!sumar) for (const [n, v] of [['setting_course_course_fullname', completo], ['setting_course_course_shortname', corto]]) {
     const c = p.locator(`[name="${n}"]`);
     if ((await c.count()) && (await c.isEditable())) await c.fill(v);
   }
@@ -161,7 +168,7 @@ try {
     console.log(`  (no pude matricular a ${botRest}: ${e.message.split('\n')[0]})`);
   }
 
-  console.log(JSON.stringify({ curso, accion: existente ? 'reemplazo' : 'nuevo' }));
+  console.log(JSON.stringify({ curso, accion: sumar ? 'suma' : existente ? 'reemplazo' : 'nuevo' }));
 } catch (e) {
   await p.screenshot({ path: '/tmp/restaurar-error.png', fullPage: true }).catch(() => {});
   await import('fs').then((fs) => p.content().then((h) => fs.writeFileSync('/tmp/restaurar-error.html', h))).catch(() => {});

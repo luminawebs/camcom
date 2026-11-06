@@ -543,7 +543,7 @@ def paginas(c, secs):
     <p>{t(ci['texto'])}</p>
   </div>
   <ol class="as-pasos">
-    <li class="as-paso"><span class="as-paso__n">1</span><span class="as-paso__t"><b>Reto final</b><small>{t(ci['reto'])}</small></span><span class="as-chip as-chip--gris">Taller</span></li>
+    <li class="as-paso"><span class="as-paso__n">1</span><span class="as-paso__t"><b>{"Proyecto final" if gratis else "Reto final"}</b><small>{t(ci['reto'])}</small></span><span class="as-chip as-chip--gris">Taller</span></li>
     <li class="as-paso"><span class="as-paso__n">★</span><span class="as-paso__t"><b>{t(c['certificado'])}</b><small>{"Se activa al aprobar los cuestionarios de las " + str(len(u_secs)) + " unidades y entregar el proyecto" if gratis else "Se activa al completar las " + str(len(u_secs)) + " unidades"}</small></span><span class="as-chip as-chip--ok">PDF</span></li>
   </ol>
   <div class="as-tarjeta as-pila">

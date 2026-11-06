@@ -2,7 +2,7 @@
    Molde: componentes/leccion-interactiva usado como cuestionario: nota = aciertos ÷ preguntas.
    La posición de la respuesta correcta cambia de pregunta a pregunta. */
 window.CONTENIDO = {
-  "titulo": "Demuestra: Tu utilidad real",
+  "titulo": "Tu utilidad real",
   "paso": "Demuestra",
   "unidad": "Unidad 6",
   "notaMinima": 75,

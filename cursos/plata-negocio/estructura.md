@@ -33,7 +33,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U1 · Aprende | ¿Dónde está la plata del negocio? [SCORM 1.2 · HTML5 · 5 min] → piezas/u1-aprende (leccion-interactiva)
 │   ├── U1 · Practica | ¿Cuánta plata se fue para la casa? [SCORM 1.2 · HTML5 · 8 min] → piezas/u1-practica (calculadora)
 │   ├── U1 · Aplica | Comparte cuánto se fue [Foro de preguntas y respuestas · 8 min] → paginas/u1-aplica.html
-│   ├── U1 · Demuestra | Demuestra: Las fugas de la plata [SCORM 1.2 · HTML5 · 8 min] → piezas/u1-demuestra (leccion-interactiva)
+│   ├── U1 · Demuestra | Las fugas de la plata [SCORM 1.2 · HTML5 · 8 min] → piezas/u1-demuestra (leccion-interactiva)
 │   ├── U1 · Llévatelo | Las 4 fugas de la plata [Página + Archivo · 2 min] → paginas/u1-llevatelo.html
 │   └── U1 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u1-profundiza.html
 │
@@ -43,7 +43,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U2 · Aprende | Págate un sueldo [SCORM 1.2 · HTML5 · 5 min] → piezas/u2-aprende (leccion-interactiva)
 │   ├── U2 · Practica | ¿Cuánto te puedes pagar? [SCORM 1.2 · HTML5 · 8 min] → piezas/u2-practica (calculadora)
 │   ├── U2 · Aplica | Comparte tu sueldo [Foro de preguntas y respuestas · 8 min] → paginas/u2-aplica.html
-│   ├── U2 · Demuestra | Demuestra: Tu sueldo [SCORM 1.2 · HTML5 · 8 min] → piezas/u2-demuestra (leccion-interactiva)
+│   ├── U2 · Demuestra | Tu sueldo [SCORM 1.2 · HTML5 · 8 min] → piezas/u2-demuestra (leccion-interactiva)
 │   ├── U2 · Llévatelo | Tu sueldo en 3 pasos [Página + Archivo · 2 min] → paginas/u2-llevatelo.html
 │   └── U2 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u2-profundiza.html
 │
@@ -53,7 +53,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U3 · Aprende | Una cuenta y un registro para el negocio [SCORM 1.2 · HTML5 · 5 min] → piezas/u3-aprende (leccion-interactiva)
 │   ├── U3 · Practica | Cuadra el registro del día [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-practica (calculadora)
 │   ├── U3 · Aplica | Comparte tu registro [Foro de preguntas y respuestas · 8 min] → paginas/u3-aplica.html
-│   ├── U3 · Demuestra | Demuestra: Tu cuenta y tu registro [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-demuestra (leccion-interactiva)
+│   ├── U3 · Demuestra | Tu cuenta y tu registro [SCORM 1.2 · HTML5 · 8 min] → piezas/u3-demuestra (leccion-interactiva)
 │   ├── U3 · Llévatelo | Las 3 reglas de la plata [Página + Archivo · 2 min] → paginas/u3-llevatelo.html
 │   ├── U3 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u3-profundiza.html
 │   └── U3 · Lo que sigue | Unidades 4 a 7 con el Pase Empresario [Página · opcional] → paginas/u3-pase.html
@@ -64,7 +64,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U4 · Aprende | Registra tus ventas y gastos sin enredos [SCORM 1.2 · HTML5 · 5 min] → piezas/u4-aprende (leccion-interactiva)
 │   ├── U4 · Practica | Separa los gastos fijos del mes [SCORM 1.2 · HTML5 · 8 min] → piezas/u4-practica (calculadora)
 │   ├── U4 · Aplica | Comparte tus categorías [Foro de preguntas y respuestas · 8 min] → paginas/u4-aplica.html
-│   ├── U4 · Demuestra | Demuestra: Ventas y gastos por categoría [SCORM 1.2 · HTML5 · 8 min] → piezas/u4-demuestra (leccion-interactiva)
+│   ├── U4 · Demuestra | Ventas y gastos por categoría [SCORM 1.2 · HTML5 · 8 min] → piezas/u4-demuestra (leccion-interactiva)
 │   ├── U4 · Llévatelo | Cada peso en su cajón [Página + Archivo · 2 min] → paginas/u4-llevatelo.html
 │   └── U4 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u4-profundiza.html
 │
@@ -74,7 +74,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U5 · Aprende | Tu libro sencillo del negocio [SCORM 1.2 · HTML5 · 5 min] → piezas/u5-aprende (leccion-interactiva)
 │   ├── U5 · Practica | Saca el total de una categoría [SCORM 1.2 · HTML5 · 8 min] → piezas/u5-practica (calculadora)
 │   ├── U5 · Aplica | Comparte tus totales [Foro de preguntas y respuestas · 8 min] → paginas/u5-aplica.html
-│   ├── U5 · Demuestra | Demuestra: Tu libro del mes [SCORM 1.2 · HTML5 · 8 min] → piezas/u5-demuestra (leccion-interactiva)
+│   ├── U5 · Demuestra | Tu libro del mes [SCORM 1.2 · HTML5 · 8 min] → piezas/u5-demuestra (leccion-interactiva)
 │   ├── U5 · Llévatelo | El libro de 7 columnas [Página + Archivo · 2 min] → paginas/u5-llevatelo.html
 │   └── U5 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u5-profundiza.html
 │
@@ -84,7 +84,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U6 · Aprende | Cuánto ganas de verdad: tu utilidad real [SCORM 1.2 · HTML5 · 5 min] → piezas/u6-aprende (leccion-interactiva)
 │   ├── U6 · Practica | Calcula la utilidad real del mes [SCORM 1.2 · HTML5 · 8 min] → piezas/u6-practica (calculadora)
 │   ├── U6 · Aplica | Comparte tu margen [Foro de preguntas y respuestas · 8 min] → paginas/u6-aplica.html
-│   ├── U6 · Demuestra | Demuestra: Tu utilidad real [SCORM 1.2 · HTML5 · 8 min] → piezas/u6-demuestra (leccion-interactiva)
+│   ├── U6 · Demuestra | Tu utilidad real [SCORM 1.2 · HTML5 · 8 min] → piezas/u6-demuestra (leccion-interactiva)
 │   ├── U6 · Llévatelo | Tu utilidad real en 3 pasos [Página + Archivo · 2 min] → paginas/u6-llevatelo.html
 │   └── U6 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u6-profundiza.html
 │
@@ -94,7 +94,7 @@ Gancho gratuito · Perfil K (Cálculo y análisis) · ≈ 4 h 09 min de estudian
 │   ├── U7 · Aprende | Cierra el mes en 20 minutos [SCORM 1.2 · HTML5 · 5 min] → piezas/u7-aprende (leccion-interactiva)
 │   ├── U7 · Practica | Encuentra la diferencia del cierre [SCORM 1.2 · HTML5 · 8 min] → piezas/u7-practica (calculadora)
 │   ├── U7 · Aplica | Comparte tu acción del mes [Foro de preguntas y respuestas · 8 min] → paginas/u7-aplica.html
-│   ├── U7 · Demuestra | Demuestra: Tu cierre del mes [SCORM 1.2 · HTML5 · 8 min] → piezas/u7-demuestra (leccion-interactiva)
+│   ├── U7 · Demuestra | Tu cierre del mes [SCORM 1.2 · HTML5 · 8 min] → piezas/u7-demuestra (leccion-interactiva)
 │   ├── U7 · Llévatelo | El cierre en 5 pasos [Página + Archivo · 2 min] → paginas/u7-llevatelo.html
 │   └── U7 · Profundiza | Lecturas y guías [Carpeta + URL · opcional] → paginas/u7-profundiza.html
 │
