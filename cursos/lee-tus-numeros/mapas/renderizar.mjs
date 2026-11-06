@@ -6,7 +6,7 @@ import { readdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 const aqui = dirname(fileURLToPath(import.meta.url));
-const nav = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const nav = await chromium.launch();
 const p = await nav.newPage({ viewport: { width: 1080, height: 800 } });
 for (const f of readdirSync(aqui).filter(f => f.endsWith('.html'))) {
   await p.goto('file://' + join(aqui, f));

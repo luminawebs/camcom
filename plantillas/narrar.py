@@ -126,7 +126,9 @@ def main():
         registro[ruta] = {"texto": texto, "firma": firma, "segundos": seg, "kb": (curso / ruta).stat().st_size // 1024}
         hechos += 1
         print(f"✓ {ruta}  {seg} s")
-    for viejo in [r for r in registro if r not in pedidos]:
+    desde = c["narracion"].get("desde", 1)
+    unidad = lambda r: int(m.group(1)) if (m := re.search(r"u(\d+)-", r)) else 0
+    for viejo in [r for r in registro if r not in pedidos and unidad(r) >= desde]:   # las de antes de «desde» se conservan
         del registro[viejo]
     registro_ruta.write_text(json.dumps(registro, ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(v.get("segundos", 0) for v in registro.values())

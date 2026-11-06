@@ -5,9 +5,9 @@
   "nivel": "g",
   "perfil": "K",
   "area": "Contabilidad y finanzas",
-  "duracion": "≈ 1,5 horas",
+  "duracion": "Gratis ≈ 1,5 horas · completo con el Pase ≈ 4 horas",
   "promesa": "Al terminar sabrás separar ingresos, costos y gastos, juntarás las ventas y los gastos de un mes y tendrás el estado de resultados de tu negocio en una hoja, listo para mostrar.",
-  "certificado": "Constancia de participación",
+  "certificado": "Certificado de 7 unidades con el Pase",
   "resumen_formato": "video",
   "experto": "Contador público de la Cámara de Comercio [por definir]",
   "revisor": "un contador de la Cámara de Comercio",
@@ -21,9 +21,11 @@
       "÷": " dividido entre ",
       "−": " menos ",
       "×": " por ",
-      "= ": "es igual a "
+      "= ": "es igual a ",
+      " + ": " más "
     },
-    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad son videos automáticos (plantillas/video_resumen.py)."
+    "nota": "Resemble AI (voz Jota). Narra el caso de cada Entrada y cada pantalla de las lecciones Aprende. La bienvenida y los resúmenes de unidad son videos automáticos (plantillas/video_resumen.py).",
+    "desde": 4
   },
   "caso": "Patricia, 41 años, vende perros calientes, hamburguesas y salchipapas en La Despensa (Soacha) hace siete años. La cooperativa le puede prestar para una plancha industrial, pero le pide «el estado de resultados del negocio». Patricia sabe que vende bien, pero no sabe cuánto gana.",
   "personas": [
@@ -50,10 +52,14 @@
     "Separar lo que entra (ingresos), lo que te cuesta lo que vendes (costos) y lo que pagas por tener el negocio abierto (gastos).",
     "Juntar las ventas y los gastos de un mes con lo que ya tienes: cuaderno, Nequi, facturas y recibos.",
     "Armar el estado de resultados del mes y calcular la utilidad.",
-    "Leer tu estado de resultados: si el mes fue bueno y qué te dice el margen."
+    "Leer tu estado de resultados: si el mes fue bueno y qué te dice el margen.",
+    "Armar el balance general del negocio en un día: lo que tiene, lo que debe y lo que es tuyo.",
+    "Armar el flujo de efectivo del mes y de las próximas 4 semanas para ver venir los huecos de plata.",
+    "Presentar tus números a una cooperativa, un banco o un contador y calcular si te cabe una cuota.",
+    "Calcular cada mes el margen, el punto de equilibrio y el colchón de caja, y anotarlos en un tablero."
   ],
   "evidencia": "El estado de resultados de un mes de tu negocio, en la plantilla del curso, con tu utilidad y tu margen.",
-  "mapa_curso_nota": "Mapa del curso con las 3 unidades: ingresos, costos y gastos; el mes en números; y tu estado de resultados",
+  "mapa_curso_nota": "Mapa del curso con las 7 unidades y sus fórmulas",
   "inicio": {
     "bienvenida": "Hola, te damos la bienvenida a Lee tus números",
     "texto": "Patricia vende comidas rápidas en La Despensa hace siete años. La cooperativa le puede prestar para una plancha industrial, pero le pide el estado de resultados del negocio. En tres unidades cortas vas a separar ingresos, costos y gastos, juntar los números de un mes y armar tu propio estado de resultados.",
@@ -217,6 +223,201 @@
           "para": "Las líneas del estado de resultados explicadas una por una."
         }
       ]
+    },
+    {
+      "tema": "Tu balance general",
+      "objetivo": "a armar el balance general de tu negocio en un día: lo que tiene, lo que debe y lo que de verdad es tuyo",
+      "entrada": {
+        "titulo": "«Ahora tráigame el balance»",
+        "texto": "Patricia llevó su estado de resultados a la cooperativa. La asesora lo revisó y le dijo: «Muy bien. Ahora tráigame el balance general». Patricia pensó que era lo mismo. Pero el estado de resultados cuenta lo que pasó en un mes, y el balance muestra cómo está el negocio un día: la plata, la mercancía, la plancha, la freidora y lo que todavía debe de la freidora.",
+        "pregunta": "¿Cuánto vale hoy mi negocio y cuánto de eso es mío?",
+        "reflexion": "Haz una lista rápida: ¿qué cosas tiene tu negocio hoy y a quién le debe plata?",
+        "imagen": "Ilustración de Patricia frente a su carro de comidas con la plancha, la freidora y la nevera, haciendo una lista (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "El balance de tu negocio",
+        "texto": "Con la plantilla de esta unidad, haz el balance de tu negocio con fecha del último día del mes: la plata, la mercancía, los fiados por cobrar y los equipos; y todo lo que debes.",
+        "entrega": "Publica en el foro qué parte de lo que tiene tu negocio está en equipos, en mercancía y en plata (puedes dar solo porcentajes). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tu balance en una mirada",
+        "resumen": [
+          "El balance es la foto de un día: lo que el negocio tiene, lo que debe y lo que es tuyo.",
+          "Solo cosas del negocio y todo con la misma fecha. Los fiados que te deben sí cuentan.",
+          "Los equipos van a su valor de hoy: lo que costaron menos el desgaste."
+        ],
+        "etiqueta_formula": "La fórmula",
+        "formula": "Lo que es tuyo (patrimonio) = lo que tiene (activos) − lo que debe (pasivos)",
+        "descargas": [
+          {
+            "texto": "Plantilla del balance general · Excel",
+            "archivo": "u4-balance-general.xlsx"
+          },
+          {
+            "texto": "Hoja del balance para imprimir · PDF",
+            "archivo": "u4-hoja-balance.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Alegra. (s. f.). Balance general. Glosario, Blog Alegra Colombia.",
+          "url": "https://blog.alegra.com/colombia/glosario/balance-general/",
+          "para": "Qué es el balance general, en palabras sencillas."
+        },
+        {
+          "apa": "Decreto 2420 de 2015. Por medio del cual se expide el Decreto Único Reglamentario de las Normas de Contabilidad, de Información Financiera y de Aseguramiento de la Información (Anexo 3, Grupo 3). Diario Oficial.",
+          "url": "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=76745",
+          "para": "El estado de situación financiera de una microempresa (Anexo 3). [VERIFICAR versión vigente]"
+        },
+        {
+          "apa": "Instituto Nacional de Contadores Públicos. (2019). Contabilidad simplificada: grupo 3. ContArte, INCP.",
+          "url": "https://incp.org.co/ContArte/contenidos/2019/08/contabilidad-simplificada-grupo-3/",
+          "para": "Qué estados prepara una microempresa en contabilidad simplificada."
+        }
+      ]
+    },
+    {
+      "tema": "Tu flujo de efectivo",
+      "objetivo": "a armar el flujo de efectivo del mes y de las próximas 4 semanas para ver cuándo te va a faltar plata antes de que pase",
+      "entrada": {
+        "titulo": "Ganó, pero no le alcanzó",
+        "texto": "Óscar hizo el estado de resultados de octubre de su tienda de mascotas: le dio utilidad. Pero el 15 de noviembre no tenía con qué pagarle al proveedor de concentrado. Había fiado a los vecinos del conjunto, pagó la cuota del préstamo y el arriendo cayó la misma semana. «¿Dónde está la plata que gané?», se preguntó.",
+        "pregunta": "Si mi negocio gana, ¿por qué a veces no tengo con qué pagar?",
+        "reflexion": "¿En qué semana del mes te aprieta más la plata? ¿Qué pagos caen esa semana?",
+        "imagen": "Ilustración de Óscar en su tienda de mascotas mirando un calendario con la quincena marcada y bultos de concentrado (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tus próximas 4 semanas",
+        "texto": "Con la plantilla de esta unidad, anota semana por semana lo que esperas que entre y lo que tienes que pagar en las próximas 4 semanas. Mira el saldo de cada semana.",
+        "entrega": "Publica en el foro la semana en que más te aprieta y qué vas a hacer (cobrar antes, pedir plazo, mover una compra). Sin cifras si no quieres. Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tu flujo en una mirada",
+        "resumen": [
+          "El flujo cuenta solo la plata que de verdad entra y sale, no lo que vendiste fiado.",
+          "Lo que fiaste no ha entrado, la cuota del préstamo sí sale y un equipo saca mucha plata de una vez.",
+          "Hazlo hacia adelante, semana por semana, para ver venir los huecos."
+        ],
+        "etiqueta_formula": "La fórmula",
+        "formula": "Saldo al terminar = saldo al empezar + entradas − salidas",
+        "descargas": [
+          {
+            "texto": "Plantilla del flujo de las próximas 4 semanas · Excel",
+            "archivo": "u5-flujo-4-semanas.xlsx"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Alegra. (2026). Flujo de caja para pymes en Colombia: guía completa y cómo proyectarlo. Blog Alegra Colombia.",
+          "url": "https://blog.alegra.com/colombia/flujo-de-caja-para-pymes-en-colombia/",
+          "para": "Diferencia entre flujo de caja y estado de resultados, y cómo proyectarlo."
+        },
+        {
+          "apa": "Banca de las Oportunidades. (2025). Panorama de la exclusión financiera y el crédito informal en los micronegocios colombianos. Banca de las Oportunidades.",
+          "url": "https://www.bancadelasoportunidades.gov.co/sites/default/files/2025-09/Panorama%20de%20la%20Exclusi%C3%B3n%20Financiera%20y%20el%20Cr%C3%A9dito%20Informal%20en%20los%20Micronegocios%20Colombianos.pdf",
+          "para": "Por qué la falta de plata lleva a los micronegocios al crédito informal."
+        }
+      ]
+    },
+    {
+      "tema": "Presenta tus números al banco o al contador",
+      "objetivo": "a saber qué llevar a una cooperativa, un banco o un contador, explicar tus números en tres frases y calcular si te cabe una cuota",
+      "entrada": {
+        "titulo": "La cita del jueves",
+        "texto": "Patricia tiene cita el jueves en la cooperativa para pedir los 4 millones de la plancha. Ya tiene su estado de resultados y su balance. Pero no sabe qué más llevar, cómo explicar sus números en pocos minutos ni si la cuota le va a caber cada mes.",
+        "pregunta": "¿Cómo llego preparado a pedir un crédito o a ver al contador?",
+        "reflexion": "Si mañana te preguntan cuánto vende tu negocio y cuánto le queda, ¿qué contestarías en una frase?",
+        "imagen": "Ilustración de Patricia sentada frente a una asesora de la cooperativa con una carpeta de papeles (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tus tres frases y tu carpeta",
+        "texto": "Escribe tus tres frases (cuánto vendes al mes, cuánto te queda y cuánto te sobra para una cuota) y marca en la lista de esta unidad qué documentos ya tienes.",
+        "entrega": "Publica en el foro tus tres frases (puedes cambiar las cifras) y qué documento te falta conseguir. Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Llega preparado",
+        "resumen": [
+          "Lleva la carpeta: cédula, RUT, matrícula, estado de resultados, balance y extractos.",
+          "Di tus números en tres frases: cuánto vendes, cuánto te queda y cuánto te sobra cada mes.",
+          "Antes de firmar, calcula el peso de la cuota y pregunta la tasa efectiva anual y el total a pagar."
+        ],
+        "etiqueta_formula": "La fórmula",
+        "formula": "Peso de la cuota = cuota nueva ÷ lo que te sobra al mes × 100",
+        "descargas": [
+          {
+            "texto": "Carpeta del crédito: lista, tres frases y peso de la cuota · PDF",
+            "archivo": "u6-carpeta-del-credito.pdf"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Banco de la República. (s. f.). Tasa de usura. Banco de la República.",
+          "url": "https://www.banrep.gov.co/es/glosario/tasa-usura",
+          "para": "Qué es la tasa de usura, el tope de interés que no pueden pasar."
+        },
+        {
+          "apa": "Banca de las Oportunidades. (2021). Reporte de micronegocios: inclusión financiera de los micronegocios en Colombia. Banca de las Oportunidades.",
+          "url": "https://bancadelasoportunidades.gov.co/sites/default/files/2021-03/Reporte%20micronegocios%20final.pdf",
+          "para": "Cómo llevar registros cambia el acceso al crédito formal."
+        },
+        {
+          "apa": "Consejo Técnico de la Contaduría Pública. (2019). Concepto 676 de 2019: estados financieros de personas naturales y grupo en el que deben clasificarse. CTCP.",
+          "url": "https://accounter.co/niif/eeff-de-personas-naturales-y-grupo-niif-en-el-cual-debe-clasificarse-concepto-676-ctcp-de-2019",
+          "para": "Qué estados financieros prepara la persona natural comerciante."
+        }
+      ]
+    },
+    {
+      "tema": "3 indicadores para vigilar cada mes",
+      "objetivo": "a calcular cada mes el margen, el punto de equilibrio y el colchón de caja, y anotarlos en un tablero para ver a tiempo cómo va el negocio",
+      "entrada": {
+        "titulo": "Que no se repita febrero",
+        "texto": "Marisol ya entendió por qué su mejor mes en ventas fue el que menos le dejó. Ahora quiere darse cuenta a tiempo, no a fin de mes. Ha oído hablar de muchos indicadores, pero no tiene tiempo para todos. Quiere tres números que pueda calcular en 10 minutos cada mes.",
+        "pregunta": "¿Qué tres números miro cada mes para saber cómo va mi negocio?",
+        "reflexion": "¿Sabes cuánto tienes que vender al mes, como mínimo, para no perder plata?",
+        "imagen": "Ilustración de Marisol en su papelería mirando un tablero pegado en la pared con tres indicadores y flechas (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Tu tablero de 3 indicadores",
+        "texto": "Con los números de tu último mes, calcula tu margen, tu punto de equilibrio y tu colchón de caja en el tablero de esta unidad.",
+        "entrega": "Publica en el foro cuál de los tres te preocupa más y qué vas a hacer este mes (sin cifras si no quieres). Comenta la publicación de un compañero."
+      },
+      "llevatelo": {
+        "titulo": "Tus 3 indicadores",
+        "resumen": [
+          "Margen: de cada 100 pesos que vendes, cuántos te quedan.",
+          "Punto de equilibrio: lo mínimo que tienes que vender al mes para no perder.",
+          "Colchón de caja: cuántos meses aguantas pagando los gastos fijos. Compárate mes a mes."
+        ],
+        "etiqueta_formula": "Las fórmulas",
+        "formula": "Margen = utilidad ÷ ventas × 100 · Punto de equilibrio = gastos fijos ÷ (1 − costo ÷ ventas) · Colchón = plata disponible ÷ gastos fijos",
+        "descargas": [
+          {
+            "texto": "Tablero de 3 indicadores (12 meses) · Excel",
+            "archivo": "u7-tablero-3-indicadores.xlsx"
+          }
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Alegra. (s. f.). Punto de equilibrio: paso a paso para su cálculo. Blog Alegra Colombia.",
+          "url": "https://blog.alegra.com/colombia/punto-de-equilibrio-paso-a-paso-para-su-calculo/",
+          "para": "El punto de equilibrio con un ejemplo colombiano."
+        },
+        {
+          "apa": "iNNpulsa Colombia. (2024). Punto de equilibrio: emprendimiento. CEmprende, iNNpulsa Colombia.",
+          "url": "https://innpulsacolombia.com/cemprende/sites/default/files/2024-04/1.%20Punto%20de%20Equilibrio_Emprendimiento.pdf",
+          "para": "Guía corta para emprendedores sobre el punto de equilibrio."
+        },
+        {
+          "apa": "Alegra. (s. f.). Cómo leer el estado de resultados de tu empresa sin ser contador. Blog Alegra Colombia.",
+          "url": "https://blog.alegra.com/colombia/como-leer-el-estado-de-resultados-de-tu-empresa-sin-ser-contador/",
+          "para": "De dónde salen la utilidad y el margen."
+        }
+      ]
     }
   ],
   "cierre": {
@@ -228,8 +429,8 @@
       "¿Incluye el sueldo del dueño o dice por qué no lo incluye?",
       "¿Calcula la utilidad y el margen, y dice en una frase si el mes fue bueno?"
     ],
-    "siguiente": "Lee tus números · Unidades 4 a 7",
-    "siguiente_texto": "Con el Pase Empresario: balance general, flujo de efectivo, cómo presentar tus números al banco o al contador y 3 indicadores para vigilar cada mes."
+    "siguiente": "IA para tu negocio desde el celular",
+    "siguiente_texto": "Con el Pase, usa un asistente de IA para analizar tus ventas en Excel y ahorrar tiempo en los mensajes del negocio."
   },
   "pase": {
     "canal": "curso-avs-g05",
@@ -238,6 +439,19 @@
       "Tu flujo de efectivo",
       "Presenta tus números al banco o al contador",
       "3 indicadores para vigilar cada mes"
+    ],
+    "gratis": 3
+  },
+  "constancia": "Constancia de participación",
+  "evidencia_pase": "Tu carpeta de números: el balance general a la fecha, el flujo de efectivo de las próximas 4 semanas y tus 3 indicadores del mes (puedes dejar solo porcentajes).",
+  "cierre_pase": {
+    "titulo": "Último paso: tu carpeta de números",
+    "texto": "Ya sabes armar tu estado de resultados, tu balance y tu flujo, presentarlos y vigilar 3 indicadores. Ahora junta todo con los números reales de tu negocio y recibe tu certificado.",
+    "reto": "Tu carpeta de números, revisada por dos compañeros",
+    "rubrica": [
+      "¿El balance tiene solo cosas del negocio y todo con la misma fecha?",
+      "¿El flujo de las 4 semanas muestra en qué semana aprieta y qué vas a hacer?",
+      "¿Los 3 indicadores están bien calculados y dicen qué vas a vigilar este mes?"
     ]
   }
 }

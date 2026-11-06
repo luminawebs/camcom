@@ -1,0 +1,63 @@
+{
+ "titulo": "Presenta tus números",
+ "etiqueta": "Unidad 6 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Presenta tus números",
+   "texto": "Patricia · cita en la cooperativa",
+   "voz": "Patricia va a pedir cuatro millones para la plancha. ¿Qué lleva y cómo lo explica?",
+   "imagen": "ilustraciones/originales/u6-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "La carpeta",
+   "items": [
+    [
+     "Cédula, RUT y matrícula",
+     "de la Cámara"
+    ],
+    [
+     "Estado de resultados",
+     "y balance"
+    ],
+    [
+     "Extractos",
+     "de 3 a 6 meses"
+    ]
+   ],
+   "voz": "Lleva la carpeta completa: cédula, RUT, matrícula, estado de resultados, balance y extractos."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Tres frases",
+   "texto": "Cuánto vendes, cuánto te queda y cuánto te sobra.",
+   "voz": "Di tus números en tres frases: cuánto vendes al mes, cuánto te queda y cuánto te sobra para una cuota."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "El peso de la cuota",
+   "items": [
+    [
+     "Cuota nueva",
+     "dividida"
+    ],
+    [
+     "Lo que te sobra",
+     "por cien"
+    ],
+    [
+     "Antes de firmar",
+     "tasa efectiva anual y total"
+    ]
+   ],
+   "voz": "El peso de la cuota es la cuota dividida entre lo que te sobra, por cien. Antes de firmar, pregunta la tasa efectiva anual y el total."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Llega preparado",
+   "texto": "Tu carpeta y tus tres frases",
+   "voz": "En esta unidad vas a armar tus tres frases y tu carpeta."
+  }
+ ]
+}

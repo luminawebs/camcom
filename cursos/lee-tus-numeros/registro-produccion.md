@@ -41,3 +41,4 @@ Respaldo: `moodle/lee-tus-numeros/respaldo-avs-g05-lee-tus-numeros.mbz` (≈ 14 
 - 2026-10-20 22:20 UTC · nuevo en Moodle: https://portal.edunest.co/course/view.php?id=14 · 26/26 actividades en su sección
 - 2026-10-20 22:24 UTC · reemplazo (mismo curso, recién creado y sin estudiantes) para incluir las dos hojas de ejemplo de U2 y U3 · 26/26 actividades, 46 archivos con HTTP 200
 - 2026-10-21 02:40 UTC · reemplazo en Moodle: https://portal.edunest.co/course/view.php?id=14 · respaldo-avs-g05-lee-tus-numeros.mbz · 26/26 actividades en su sección
+- 2026-11-06 22:01 UTC · suma del tramo del Pase en Moodle: https://portal.edunest.co/course/view.php?id=14 · 37 actividades nuevas · 63/63 en su sección
