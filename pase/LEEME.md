@@ -47,8 +47,9 @@ verificada contra la API. Ojo: la firma de ePayco cubre referencia, transacción
 | `servidor.py` | Pantallas con la marca del portal (Poppins, verde #00806b, 3 pasos), formulario, pantalla de pago, `/checkout`, retorno, `/webhooks/epayco`, `/estado-pago`, `/admin/resumen` |
 | `estaticos/` | Logos que sirve `/estaticos/<nombre>.svg`: EduNest, ePayco (epayco.com), Visa, Mastercard, Amex y Nequi (Wikimedia Commons), PSE y Daviplata (archivos de David). Solo se sirven los de la lista `ESTATICOS` de `servidor.py` |
 | `tareas.py` | `cobro`, `conciliar`, `pendientes`, `resumen` para cron |
+| `canales.py` | Códigos de canal `?c=` (D-05) y reglas de canal de origen y curso de compra |
 | `simulador_epayco.py` | Imita ePayco en modo prueba (API, epayco.js, checkout.js y confirmaciones firmadas) |
-| `pruebas.py` | 22 pruebas de punta a punta |
+| `pruebas.py` | 44 pruebas de punta a punta |
 | `probar_sandbox.py` | Prueba contra ePayco real en modo prueba |
 | `demo.py` | Simulador + conector para probarlo en el navegador |
 
@@ -57,7 +58,7 @@ Solo usa la biblioteca estándar de Python 3.9+ (SQLite).
 ## Probarlo ya (sin llaves ni red)
 
 ```
-python -m unittest pase.pruebas -v     # 22 pruebas, unos 17 s
+python -m unittest pase.pruebas -v     # 44 pruebas, unos 30 s
 python -m pase.demo                     # abre http://localhost:8080/?c=wa-afiliados
 ```
 
@@ -156,6 +157,43 @@ envía cada 5 minutos por SMTP con Brevo, el mismo servicio del correo de Moodle
 
 Sin `PASE_SMTP_HOST` los avisos quedan guardados y no se envía nada. Un aviso que falla se
 reintenta hasta 5 veces y el error queda en la columna `error`.
+
+## Códigos de canal y canal de origen (D-05, 6-nov-2026)
+
+Cada enlace de campaña lleva su código `?c=` y apunta al **registro gratis**, no a la compra:
+`https://pase.edunest.co/?c=camara-whatsapp` (o `https://portal.edunest.co/?c=camara-whatsapp`,
+que la portada del portal reenvía al formulario con el mismo código). La lista vive en `canales.py`:
+
+| Código | Canal |
+|---|---|
+| `camara-whatsapp` | WhatsApp de la Cámara a afiliados |
+| `camara-correo` | Correo de la Cámara a afiliados |
+| `camara-redes` | Redes de la Cámara |
+| `camara-evento` | Charla o taller con la Cámara (QR) |
+| `brevo-registrados` | Correo de EduNest (Brevo) a registrados |
+| `wa-edunest` | WhatsApp Business de EduNest |
+| `ig-organico` | Instagram orgánico de EduNest |
+| `fb-organico` | Facebook orgánico de EduNest |
+| `meta-ads` | Anuncios en Meta |
+| `qr-impreso` | Afiches o volantes con QR |
+| `aliado-01`, `aliado-02`… | Uno por aliado |
+
+Cómo se lleva el canal hasta la compra al final de la U3 (cuyo botón trae `?c=curso-avs-gNN`):
+
+1. **En la persona**: el primer código de campaña con que se registra queda en
+   `personas.canal_origen` y no se pisa. Al volver por el botón del curso, el formulario la
+   encuentra por documento o correo, así que sirve aunque compre desde otro celular.
+2. **En el navegador**: la galleta `pase_origen` (un año, solo pase.edunest.co) guarda el primer
+   canal; el formulario lo manda como `origen`. También se acepta `?origen=` en el enlace.
+3. **En el Pase**: al crear la suscripción se guardan `suscripciones.canal_origen` y
+   `suscripciones.curso` (el último enlace de curso que usó). El CSV de pagos trae la columna `curso`.
+
+Un enlace de curso nunca es canal de origen: si alguien entra primero por `curso-…`, queda
+`sin-canal` hasta que llegue por una campaña. Un código fuera de la lista se guarda igual y el
+tablero lo muestra en negrita como «No reconocido». El tablero tiene «Por canal de origen»
+(inscritos, compraron, activos), «Pases por curso» y la lista de códigos con su enlace. Para un
+canal nuevo basta una línea en `CANALES`. Las bases anteriores ganan las columnas al arrancar y
+se rellenan con el historial de `canales_persona`.
 
 ## Por hacer después
 

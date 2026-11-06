@@ -84,16 +84,19 @@ class Escenario(unittest.TestCase):
         r = con.getresponse()
         return r.status, dict(r.getheaders()), r.read()
 
-    def inscribir_por_formulario(self, opcion="pase", correo="dora@tienda.co", doc="52111222"):
+    def inscribir_por_formulario(self, opcion="pase", correo="dora@tienda.co", doc="52111222",
+                                 canal="wa-afiliados", origen="", galleta=""):
         datos = urllib.parse.urlencode({
-            "canal": "wa-afiliados", "nombre": "Dora Pérez", "tipo_doc": "CC", "documento": doc,
+            "canal": canal, "origen": origen, "nombre": "Dora Pérez", "tipo_doc": "CC", "documento": doc,
             "correo": correo, "whatsapp": "3001234567", "negocio": "Tienda Dora",
             "municipio": "Soacha", "acepta_datos": "on", "opcion": opcion})
-        return self.http("POST", f"{self.c.url_publica}/inscripcion", datos,
-                         {"Content-Type": "application/x-www-form-urlencoded"})
+        cab = {"Content-Type": "application/x-www-form-urlencoded"}
+        if galleta:
+            cab["Cookie"] = galleta
+        return self.http("POST", f"{self.c.url_publica}/inscripcion", datos, cab)
 
-    def firma_inscripcion(self):
-        status, cab, _ = self.inscribir_por_formulario()
+    def firma_inscripcion(self, **kw):
+        status, cab, _ = self.inscribir_por_formulario(**kw)
         self.assertEqual(status, 303)
         return urllib.parse.parse_qs(urllib.parse.urlparse(cab["Location"]).query)["p"][0]
 
@@ -105,8 +108,8 @@ class Escenario(unittest.TestCase):
             {"Content-Type": "application/json"})
         return json.loads(urllib.request.urlopen(req).read())["id"]
 
-    def pagar_tarjeta(self, numero=sime.TARJETA_APRUEBA):
-        firma = self.firma_inscripcion()
+    def pagar_tarjeta(self, numero=sime.TARJETA_APRUEBA, **kw):
+        firma = self.firma_inscripcion(**kw)
         _, _, pagina = self.http("GET", f"{self.c.url_publica}/pagar?p={firma}")
         self.assertIn(b"Pase Empresario", pagina)
         self.assertIn(b'data-epayco="card[number]"', pagina)
@@ -182,6 +185,18 @@ class PruebasFirmas(unittest.TestCase):
                                ("10", "DECLINED"), ("99", "PENDING")):
             self.assertEqual(ep.normalizar({"x_ref_payco": 1, "x_amount": "1", "x_cod_response": codigo})
                              ["status"], estado)
+
+    def test_codigos_de_canal(self):
+        from . import canales as cn
+        self.assertEqual(cn.normalizar(" Camara-WhatsApp "), "camara-whatsapp")
+        for malo in ("", None, "a b", "<x>", "x" * 41, "-guion"):
+            self.assertEqual(cn.normalizar(malo), "sin-canal")
+        self.assertTrue(all(cn.reconocido(k) for k in cn.CANALES))
+        self.assertTrue(cn.reconocido("aliado-07") and cn.reconocido("curso-avs-g06"))
+        self.assertFalse(cn.reconocido("wa-afiliados"))
+        self.assertTrue(cn.es_origen("wa-afiliados"))  # no reconocido, pero se guarda
+        self.assertFalse(cn.es_origen("curso-avs-g04") or cn.es_origen("sin-canal"))
+        self.assertEqual(len(cn.CANALES), 10)
 
     def test_nombre_usuario_moodle(self):
         from .moodle import nombre_usuario
@@ -542,6 +557,62 @@ class PruebasFlujo(Escenario):
         self.inscribir_por_formulario("gratis")
         self.assertEqual(self.pase.uno("SELECT COUNT(*) n FROM personas")["n"], 1)
 
+    def test_5b_canal_del_registro_gratis_llega_a_la_compra_de_la_u3(self):
+        """D-05: se registra gratis desde la campaña y compra semanas después desde el curso."""
+        url = self.c.url_publica
+        status, cab, pagina = self.http("GET", f"{url}/?c=Camara-WhatsApp")
+        self.assertEqual(status, 200)
+        self.assertIn("pase_origen=camara-whatsapp", cab["Set-Cookie"])
+        self.assertIn(b'name="origen" value="camara-whatsapp"', pagina)
+        galleta = cab["Set-Cookie"].split(";")[0]
+        self.assertEqual(self.inscribir_por_formulario("gratis", canal="camara-whatsapp")[0], 200)
+        pid = self.pase.uno("SELECT id FROM personas")["id"]
+        self.assertEqual(self.pase.persona(pid)["canal_origen"], "camara-whatsapp")
+        # el botón de la U3 trae solo el curso; el navegador recuerda el canal y no se vuelve a fijar
+        status, cab, pagina = self.http("GET", f"{url}/?c=curso-avs-g04", cabeceras={"Cookie": galleta})
+        self.assertNotIn("Set-Cookie", cab)
+        self.assertIn(b'name="origen" value="camara-whatsapp"', pagina)
+        self.assertIn(b'name="canal" value="curso-avs-g04"', pagina)
+        pid2, _ = self.pagar_tarjeta(canal="curso-avs-g04", origen="camara-whatsapp")
+        self.assertEqual(pid2, pid)
+        self.esperar_estado(pid, "suscrito")
+        sus = self.pase.suscripcion(pid)
+        self.assertEqual((sus["canal_origen"], sus["curso"]), ("camara-whatsapp", "curso-avs-g04"))
+        self.assertEqual(self.pase.persona(pid)["canal_origen"], "camara-whatsapp")
+        d = self.pase.tablero()
+        self.assertEqual([(c["canal"], c["compraron"], c["activos"]) for c in d["canales"]],
+                         [("camara-whatsapp", 1, 1)])
+        self.assertEqual([(c["curso"], c["compraron"]) for c in d["cursos"]], [("curso-avs-g04", 1)])
+        csv_ = self.pase.pagos_csv().splitlines()
+        self.assertTrue(csv_[0].endswith(",curso"))
+        self.assertIn("camara-whatsapp", csv_[1])
+        self.assertTrue(csv_[1].endswith(",curso-avs-g04"))
+
+    def test_5c_compra_desde_otro_celular_usa_el_canal_guardado_en_la_persona(self):
+        self.inscribir_por_formulario("gratis", canal="aliado-03")
+        pid, _ = self.pagar_tarjeta(canal="curso-avs-g02")  # sin galleta ni ?origen=
+        self.esperar_estado(pid, "suscrito")
+        sus = self.pase.suscripcion(pid)
+        self.assertEqual((sus["canal_origen"], sus["curso"]), ("aliado-03", "curso-avs-g02"))
+
+    def test_5d_canal_de_origen_no_se_pisa_y_el_curso_nunca_es_origen(self):
+        # primero entra directo por el curso: no hay canal todavía
+        self.inscribir_por_formulario("gratis", canal="curso-avs-g01")
+        pid = self.pase.uno("SELECT id FROM personas")["id"]
+        self.assertEqual(self.pase.persona(pid)["canal_origen"], "sin-canal")
+        # luego llega una campaña: esa es su origen
+        self.inscribir_por_formulario("gratis", canal="meta-ads")
+        self.assertEqual(self.pase.persona(pid)["canal_origen"], "meta-ads")
+        # una tercera campaña ya no lo cambia (primer canal conocido)
+        self.inscribir_por_formulario("gratis", canal="ig-organico")
+        self.assertEqual(self.pase.persona(pid)["canal_origen"], "meta-ads")
+        # un código raro no rompe nada y queda como sin canal
+        self.inscribir_por_formulario("gratis", canal="<script>", correo="otra@x.co", doc="99887766")
+        otra = self.pase.uno("SELECT canal_origen FROM personas WHERE correo='otra@x.co'")
+        self.assertEqual(otra["canal_origen"], "sin-canal")
+        codigos = [r["codigo"] for r in self.pase.q("SELECT codigo FROM canales_persona WHERE persona_id=?", pid)]
+        self.assertEqual(codigos, ["curso-avs-g01", "meta-ads", "ig-organico"])
+
     def test_checkout_y_renovacion_manual(self):
         firma = self.firma_inscripcion()
         pid = int(firma.split(".")[0])
@@ -757,6 +828,22 @@ class Correos(unittest.TestCase):
         b.commit(); b.close()
         p = Pase(Config(base_datos=ruta), MoodleSimulado())
         self.assertIn("intentos", {r[1] for r in p.bd.execute("PRAGMA table_info(avisos)")})
+        p.bd.close()
+
+    def test_base_sin_canal_de_compra_lo_recupera(self):
+        import sqlite3
+        ruta = os.path.join(self.tmp.name, "antes-d05.db")
+        b = sqlite3.connect(ruta)
+        b.executescript("""CREATE TABLE personas (id INTEGER PRIMARY KEY, canal_origen TEXT);
+            CREATE TABLE canales_persona (persona_id INTEGER, codigo TEXT, fecha TEXT);
+            CREATE TABLE suscripciones (id INTEGER PRIMARY KEY, persona_id INTEGER UNIQUE, estado TEXT);
+            INSERT INTO personas VALUES (1, 'camara-correo');
+            INSERT INTO canales_persona VALUES (1, 'camara-correo', 'a'), (1, 'curso-avs-g03', 'b');
+            INSERT INTO suscripciones VALUES (1, 1, 'activa');""")
+        b.commit(); b.close()
+        p = Pase(Config(base_datos=ruta), MoodleSimulado())
+        fila = p.bd.execute("SELECT canal_origen, curso FROM suscripciones").fetchone()
+        self.assertEqual(tuple(fila), ("camara-correo", "curso-avs-g03"))
         p.bd.close()
 
 
