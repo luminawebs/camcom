@@ -109,6 +109,24 @@ def formato_resumen(c, u):
     if f not in RESUMEN:
         raise SystemExit(f"resumen_formato debe ser 'video' o 'audio', no {f!r}")
     return f
+# Tramo del Pase (curso.json "pase": {"gratis": 3, ...} y más unidades que las gratis): el curso tiene 7 unidades,
+# Demuestra en todas (cuestionario SCORM con leccion-interactiva; en U1-U3 solo lo ve quien tiene el Pase),
+# las unidades después de las gratis van restringidas al grupo del Pase y el certificado cubre todo el curso.
+DEMUESTRA_PASE = ("Cuestionario de la unidad", "SCORM 1.2 · HTML5", 8, 8, "leccion-interactiva")
+CIERRE_PASE = [
+    ("Proyecto final entre pares", "Por cohorte mensual: entregas tu proyecto y Moodle te asigna dos compañeros para evaluar con una rúbrica de 3 criterios.", "Taller (revisión entre pares)", 15, True),
+    ("Certificado del curso", "Se emite al aprobar los cuestionarios de las 7 unidades y entregar el proyecto final.", "Certificado personalizado", 1, True),
+    ("Constancia de participación", "Para quien hizo solo la parte gratis: se emite al completar las unidades gratuitas.", "Certificado personalizado", 1, False),
+    ("Tu siguiente paso", "El siguiente curso de tu ruta.", "Página", 2, False),
+]
+
+
+def tramo(c):
+    """Número de unidades gratis si el curso tiene tramo del Pase dentro (U4-U7), si no 0."""
+    g = (c.get("pase") or {}).get("gratis", 0)
+    return g if g and len(c["unidades"]) > g else 0
+
+
 CIERRE_GANCHO = [
     ("Reto final entre pares", "Por cohorte mensual: entregas tu resultado y Moodle te asigna dos compañeros para evaluar con una rúbrica de 3 criterios.", "Taller (revisión entre pares)", 15),
     ("Constancia de participación", "Se emite al completar las 3 unidades.", "Certificado personalizado", 1),
@@ -278,7 +296,8 @@ def pagina_pase(c, n):
 # ---------------------------------------------------------------- estructura
 def estructura(c):
     nivel, receta = c["nivel"], RECETAS[c["perfil"]]
-    pasos = [p for p in PASOS if not (nivel == "g" and p == "demuestra")]
+    gratis = tramo(c)
+    pasos = [p for p in PASOS if not (nivel == "g" and p == "demuestra" and not gratis)]
     n_u = len(c["unidades"])
     secciones = [{"titulo": "INICIO", "tema": "Bienvenida, datos y diagnóstico", "items": []}]
     for nombre, desc, act, m in INICIO_GANCHO:
@@ -291,8 +310,12 @@ def estructura(c):
         for p in pasos:
             ajuste = c.get("receta", {}).get(p)   # curso.json "receta": {"aprende": [formato, actividad, min c, min g, molde]}
             formato, act, mc, mg, molde = PEER_G if (nivel == "g" and p == "aplica") else (tuple(ajuste) if ajuste else receta["pasos"][p])
+            if gratis and p == "demuestra":
+                formato, act, mc, mg, molde = DEMUESTRA_PASE
             it = {"codigo": f"U{i} · {NOMBRE_PASO[p]}", "paso": p, "formato": formato, "actividad": act,
                   "min": mg if nivel == "g" else mc}
+            if gratis and p == "demuestra" and i <= gratis:
+                it["pase"] = True   # en el tramo gratis, Demuestra solo lo ve quien tiene el Pase
             if p == "profundiza":
                 it["opcional"] = True
             if molde:
@@ -300,16 +323,22 @@ def estructura(c):
             else:
                 it.update(nombre=u[p].get("titulo", formato) if isinstance(u.get(p), dict) else formato, pagina=f"paginas/u{i}-{p}.html")
             items.append(it)
-        if nivel == "g" and c.get("pase") and i == n_u:
+        if nivel == "g" and c.get("pase") and i == (gratis or n_u):
             items.append({"codigo": f"U{i} · Lo que sigue", "paso": "pase", "nombre": "Unidades 4 a 7 con el Pase Empresario",
                           "formato": "Invitación al Pase", "actividad": "Página", "min": 0, "opcional": True,
                           "pagina": f"paginas/u{i}-pase.html"})
-        secciones.append({"titulo": f"UNIDAD {i}", "tema": u["tema"], "objetivo": u["objetivo"], "items": items,
-                          "cabecera": f"paginas/u{i}-cabecera.html", "n": i, "de": n_u})
-    cierre = {"titulo": "CIERRE", "tema": "Reto, constancia y siguiente paso", "items": []}
-    for nombre, desc, act, m in CIERRE_GANCHO:
-        cierre["items"].append({"codigo": "", "nombre": nombre, "formato": desc, "actividad": act, "min": m,
-                                "pagina": "paginas/99-cierre.html" if nombre == "Tu siguiente paso" else f"paginas/99-{slug(nombre)}.html"})
+        sec = {"titulo": f"UNIDAD {i}", "tema": u["tema"], "objetivo": u["objetivo"], "items": items,
+               "cabecera": f"paginas/u{i}-cabecera.html", "n": i, "de": n_u}
+        if gratis and i > gratis:
+            sec["pase"] = True   # sección restringida al grupo del Pase
+        secciones.append(sec)
+    cierre = {"titulo": "CIERRE", "tema": "Proyecto final, certificado y siguiente paso" if gratis else "Reto, constancia y siguiente paso", "items": []}
+    for nombre, desc, act, m, *pase in (CIERRE_PASE if gratis else [x + (False,) for x in CIERRE_GANCHO]):
+        it = {"codigo": "", "nombre": nombre, "formato": desc, "actividad": act, "min": m,
+              "pagina": "paginas/99-cierre.html" if nombre == "Tu siguiente paso" else f"paginas/99-{slug(nombre)}.html"}
+        if pase and pase[0]:
+            it["pase"] = True
+        cierre["items"].append(it)
     secciones.append(cierre)
     for s in secciones:
         s["min"] = sum(x["min"] for x in s["items"])
@@ -344,7 +373,7 @@ def paginas(c, secs):
     pasos_li = "".join(
         f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{NOMBRE_PASO[p]}</b>'
         f'<small>{PREGUNTA_PASO[p]}</small></span><span></span></li>'
-        for k, p in enumerate([p for p in PASOS if not (c["nivel"] == "g" and p == "demuestra")], 1))
+        for k, p in enumerate([p for p in PASOS if not (c["nivel"] == "g" and p == "demuestra" and not tramo(c))], 1))
     P["paginas/00-cabecera-curso.html"] = ("Cabecera del curso", "Resumen del curso o sección General.", f"""
   <div class="as-banda as-pila">
     <span class="as-eti">{NIVELES[c['nivel']]} · {len(u_secs)} unidades</span>
@@ -408,12 +437,12 @@ def paginas(c, secs):
         mins = {x["paso"]: x["min"] for x in pasos_u}
         filas = "".join(
             f'<li class="as-paso"><span class="as-paso__n">{k}</span><span class="as-paso__t"><b>{NOMBRE_PASO[x["paso"]]}</b>'
-            f'<small>{t(x["formato"])} · {"opcional" if x.get("opcional") else str(x["min"]) + " min"}</small></span><span class="as-chip as-chip--gris">{t(corta(x["actividad"]))}</span></li>'
+            f'<small>{t(x["formato"])} · {"opcional" if x.get("opcional") else str(x["min"]) + " min"}</small></span><span class="as-chip as-chip--gris">{"🔒 Pase" if x.get("pase") else t(corta(x["actividad"]))}</span></li>'
             for k, x in enumerate(pasos_u, 1))
         fr = formato_resumen(c, u)
         P[f"paginas/u{i}-cabecera.html"] = (f"Unidad {i}: cabecera", f"Resumen de la sección Unidad {i}.", f"""
   <div class="as-banda as-pila">
-    <span class="as-eti">Unidad {i} de {s['de']} · ≈ {s['min']} min</span>
+    <span class="as-eti">Unidad {i} de {s['de']} · ≈ {s['min']} min{" · Con el Pase Empresario" if s.get("pase") else ""}</span>
     <h2>{t(u['tema'])}</h2>
     <p>Al terminar sabrás {t(u['objetivo'])}.</p>
   </div>
@@ -503,9 +532,10 @@ def paginas(c, secs):
   </div>""")
 
     if c.get("pase") and c["nivel"] == "g":
-        P.update(pagina_pase(c, len(u_secs)))
+        P.update(pagina_pase(c, tramo(c) or len(u_secs)))
 
-    ci = c["cierre"]
+    gratis = tramo(c)
+    ci = dict(c["cierre"], **c.get("cierre_pase", {})) if gratis else c["cierre"]
     P["paginas/99-cierre.html"] = ("Cierre del curso", "Resumen de la sección CIERRE.", f"""
   <div class="as-banda as-pila">
     <span class="as-eti">Cierre</span>
@@ -514,7 +544,7 @@ def paginas(c, secs):
   </div>
   <ol class="as-pasos">
     <li class="as-paso"><span class="as-paso__n">1</span><span class="as-paso__t"><b>Reto final</b><small>{t(ci['reto'])}</small></span><span class="as-chip as-chip--gris">Taller</span></li>
-    <li class="as-paso"><span class="as-paso__n">★</span><span class="as-paso__t"><b>{t(c['certificado'])}</b><small>Se activa al completar las {len(u_secs)} unidades</small></span><span class="as-chip as-chip--ok">PDF</span></li>
+    <li class="as-paso"><span class="as-paso__n">★</span><span class="as-paso__t"><b>{t(c['certificado'])}</b><small>{"Se activa al aprobar los cuestionarios de las " + str(len(u_secs)) + " unidades y entregar el proyecto" if gratis else "Se activa al completar las " + str(len(u_secs)) + " unidades"}</small></span><span class="as-chip as-chip--ok">PDF</span></li>
   </ol>
   <div class="as-tarjeta as-pila">
     <span class="as-eti">Tu siguiente paso</span>
@@ -523,9 +553,10 @@ def paginas(c, secs):
     <p class="as-sec">{t(ci['siguiente_texto'])}</p>
     <a class="as-btn" href="#">Ver el curso <em class="as-ph">[descuento por definir]</em> ›</a>
   </div>""")
-    P["paginas/99-reto-final-entre-pares.html"] = ("Reto final entre pares", "Descripción del Taller del CIERRE. Fases por fecha; una cohorte por mes.", ficha_moodle(
-        "Cierre · 15 min", "Reto final: " + ci["reto"].lower(), "Taller (revisión entre pares)",
-        ["Entregas: " + c["evidencia"],
+    P["paginas/99-proyecto-final-entre-pares.html" if gratis else "paginas/99-reto-final-entre-pares.html"] = (
+        "Proyecto final entre pares" if gratis else "Reto final entre pares", "Descripción del Taller del CIERRE. Fases por fecha; una cohorte por mes.", ficha_moodle(
+        "Cierre · 15 min · Con el Pase" if gratis else "Cierre · 15 min", ("Proyecto final: " if gratis else "Reto final: ") + ci["reto"].lower(), "Taller (revisión entre pares)",
+        ["Entregas: " + (c.get("evidencia_pase", c["evidencia"]) if gratis else c["evidencia"]),
          "Moodle te asigna dos compañeros de tu cohorte del mes para revisar con esta rúbrica:",
          *[f"{k}. {x}" for k, x in enumerate(ci.get("rubrica", [
              "¿Calculó su sueldo con el promedio de 3 meses y el colchón?",
@@ -533,9 +564,16 @@ def paginas(c, secs):
              "¿Su registro de la semana tiene fecha, qué fue, entró, salió y saldo?"]), 1)],
          "Antes de calificar ves un ejemplo ya evaluado.",
          "Un moderador de la Cámara revisa una vez por semana que los comentarios sean respetuosos."]))
-    P["paginas/99-constancia-de-participacion.html"] = ("Constancia", "Configuración del certificado.", ficha_moodle(
-        "Cierre · 1 min", c["certificado"], "Certificado personalizado",
-        [f"Se emite al completar las {len(u_secs)} unidades (finalización de actividad).",
+    if gratis:
+        P["paginas/99-certificado-del-curso.html"] = ("Certificado del curso", "Configuración del certificado (solo grupo del Pase).", ficha_moodle(
+            "Cierre · 1 min · Con el Pase", c["certificado"], "Certificado personalizado (mod_customcert)",
+            [f"Restricción: grupo del Pase y Demuestra aprobado en las {len(u_secs)} unidades (estado «aprobado» del SCORM).",
+             "Más el proyecto final entregado (finalización del Taller).",
+             "Lleva nombre, curso, horas, fecha y código de verificación; se envía por correo al emitirse.",
+             "Sin logo de la Cámara por ahora; texto «Aula Virtual Empresarial · EduNest»."]))
+    P["paginas/99-constancia-de-participacion.html"] = ("Constancia", "Configuración de la constancia.", ficha_moodle(
+        "Cierre · 1 min", c.get("constancia", c["certificado"]) if gratis else c["certificado"], "Certificado personalizado",
+        [f"Se emite al completar las {gratis or len(u_secs)} unidades{' gratuitas' if gratis else ''} (finalización de actividad).",
          "Lleva nombre, curso, fecha, horas y código de verificación.",
          "Diseño en Canva con logo de la Cámara [VERIFICAR logo definitivo]"]))
     return P

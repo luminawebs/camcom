@@ -5,9 +5,9 @@
   "nivel": "g",
   "perfil": "K",
   "area": "Contabilidad y finanzas",
-  "duracion": "≈ 1,5 horas",
+  "duracion": "Gratis ≈ 1,5 horas · completo con el Pase ≈ 4 horas",
   "promesa": "Al terminar sabrás cuánto gana de verdad tu negocio, cuánto te puedes pagar cada mes y tendrás una cuenta y un registro solo para el negocio.",
-  "certificado": "Constancia de participación",
+  "certificado": "Certificado de 7 unidades con el Pase",
   "resumen_formato": "video",
   "experto": "Contador público [por definir]",
   "caso": "Luz Dary, 46 años, tiene una miscelánea y papelería en León XIII (Soacha). Vende cerca de $300.000 al día, recibe pagos por Nequi en su celular personal y a fin de mes no le queda para surtir.",
@@ -35,7 +35,11 @@
     "Reconocer por dónde se va la plata del negocio hacia la casa y medir cuánto se fue en una semana.",
     "Calcular la ganancia del mes y un sueldo fijo que el negocio pueda pagar.",
     "Separar una cuenta o billetera solo para el negocio y seguir las 3 reglas de la plata.",
-    "Llevar un registro diario de entradas, salidas y saldo en 5 minutos."
+    "Llevar un registro diario de entradas, salidas y saldo en 5 minutos.",
+    "Anotar ventas y gastos por categoría, llevar la lista de fiados y guardar los soportes.",
+    "Llevar un libro del mes de siete columnas y sacar sus totales por categoría.",
+    "Calcular la utilidad real con el costo de lo vendido y el margen del mes.",
+    "Cerrar el mes en 20 minutos y escoger una acción para el siguiente."
   ],
   "evidencia": "Tu regla de la plata: tu sueldo calculado, la cuenta del negocio definida y una semana de registro (foto del cuaderno o plantilla).",
   "inicio": {
@@ -185,14 +189,193 @@
       "resumen": {
         "guion": "notebooklm/fuentes/u3-guion.md"
       }
+    },
+    {
+      "tema": "Registra tus ventas y gastos sin enredos",
+      "objetivo": "anotar cada venta y cada gasto en la categoría que le toca, incluido el fiado, y guardar el soporte en 1 minuto",
+      "entrada": {
+        "titulo": "Todo dice «pago»",
+        "texto": "Luz Dary ya lleva su registro diario. Al final de la semana suma: entraron $2.100.000 y salieron $1.900.000. Pero cuando quiere saber cuánto se le fue en mercancía y cuánto en arriendo y servicios, no puede: todo dice «pago». Además, doña Carmen se llevó $85.000 en útiles «para pagar el viernes», y eso no está anotado en ninguna parte.",
+        "pregunta": "¿Cómo anoto todo sin enredarme?",
+        "reflexion": "Mira tu registro de la semana pasada: ¿sabes cuánto fue mercancía y cuánto fue arriendo o servicios? ¿Cuánto te deben hoy de fiado?",
+        "imagen": "Ilustración: Luz Dary mirando su cuaderno con muchas líneas que dicen «pago» mientras doña Carmen sale con una bolsa de útiles (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Comparte tus categorías",
+        "texto": "Durante una semana, anota cada salida con su categoría (mercancía, gastos fijos, gastos variables, tu sueldo, deudas e inversiones) y lleva tu lista de fiados. Guarda la foto de cada soporte en una carpeta del mes.",
+        "entrega": "Publica en el foro el total de tu semana por categoría (sin nombres de clientes). Al publicar verás los de tus compañeros: comenta al menos uno. ¿Qué categoría le pesa más?"
+      },
+      "llevatelo": {
+        "titulo": "Cada peso en su cajón",
+        "resumen": [
+          "Cada salida se anota con su categoría: mercancía, fijos, variables, tu sueldo o deudas.",
+          "El fiado es venta, pero no es plata: va en su propia lista hasta que te paguen.",
+          "Foto al soporte el mismo día, en la carpeta del mes."
+        ],
+        "formula": "Te deben = fiados de antes + fiados nuevos − lo que te pagaron",
+        "descargas": [
+          "Plantilla Registro con categorías y lista de fiados · Excel 40 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Departamento Administrativo Nacional de Estadística. (2025, 30 de julio). Encuesta de Micronegocios (EMICRON) 2024: boletín técnico. DANE.",
+          "url": "https://www.dane.gov.co/files/operaciones/EMICRON/bol-EMICRON-2024.pdf",
+          "para": "Cuántos micronegocios llevan cuentas informales en cuaderno o Excel (pp. 21-22)."
+        },
+        {
+          "apa": "Banca de las Oportunidades. (2021). Reporte de micronegocios [VERIFICAR título].",
+          "url": "https://bancadelasoportunidades.gov.co/sites/default/files/2021-03/Reporte%20micronegocios%20final.pdf",
+          "para": "Por qué llevar registros ayuda a conseguir crédito formal (pp. 20-21)."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u4-guion.md"
+      }
+    },
+    {
+      "tema": "Tu libro sencillo del negocio",
+      "objetivo": "juntar todo el mes en un libro de siete columnas y sacar los totales por categoría",
+      "entrada": {
+        "titulo": "Tres cuadernos y ninguno cuadra",
+        "texto": "Jhon Fredy, el de la peluquería en Ciudad Verde, tiene un cuaderno para los servicios, una libreta para lo que le compra al proveedor de productos y los pantallazos de Nequi en el celular. Su contador le pidió «el libro del mes» y él no supo qué entregarle.",
+        "pregunta": "¿Cómo junto todo el mes en un solo lugar?",
+        "reflexion": "¿Dónde anotas hoy tus ventas, tus compras y tus pagos? ¿Es un solo lugar o varios?",
+        "imagen": "Ilustración: Jhon Fredy en la peluquería con un cuaderno, una libreta y el celular lleno de pantallazos sobre el mostrador (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Comparte tus totales",
+        "texto": "Pasa una semana de tu registro al formato del libro (fecha, qué fue, categoría, medio, entró, salió y saldo) en la plantilla o en tu cuaderno, y saca los totales por categoría.",
+        "entrega": "Publica en el foro una foto de tus totales por categoría (tapa lo que no quieras mostrar). Al publicar verás los de tus compañeros: comenta al menos uno."
+      },
+      "llevatelo": {
+        "titulo": "El libro de 7 columnas",
+        "resumen": [
+          "Un solo libro por mes: fecha, qué fue, categoría, medio, entró, salió y saldo.",
+          "Una línea por movimiento; las ventas del día pueden ir en una línea por medio de pago.",
+          "El último día, totales por categoría: es lo que te pide tu contador."
+        ],
+        "formula": "Total de una categoría = suma de todas sus líneas del mes",
+        "descargas": [
+          "Plantilla Libro del mes · Excel 40 KB",
+          "Hoja para imprimir del libro · PDF 150 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Estatuto Tributario. Art. 616. Libro fiscal de registro de operaciones diarias (Colombia) [VERIFICAR texto vigente].",
+          "url": "https://estatuto.co/616",
+          "para": "Qué libro deben llevar quienes no son responsables de IVA."
+        },
+        {
+          "apa": "Gerencie.com. (s. f.). Libro fiscal de registro de operaciones diarias.",
+          "url": "https://www.gerencie.com/libro-fiscal.html",
+          "para": "Explicación sencilla del libro fiscal y quién lo lleva."
+        },
+        {
+          "apa": "Instituto Nacional de Contadores Públicos. (2019). Contabilidad simplificada: grupo 3. INCP.",
+          "url": "https://incp.org.co/ContArte/contenidos/2019/08/contabilidad-simplificada-grupo-3/",
+          "para": "La contabilidad simplificada para microempresas (Decreto 2420 de 2015, anexo 3)."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u5-guion.md"
+      }
+    },
+    {
+      "tema": "Cuánto ganas de verdad: tu utilidad real",
+      "objetivo": "calcular la utilidad real del mes con la mercancía que de verdad vendiste y tu sueldo, y por qué no es lo mismo que la plata que tienes",
+      "entrada": {
+        "titulo": "«Gané $900.000… ¿o no?»",
+        "texto": "Marleny, la del taller de confección en San Mateo, sumó noviembre: vendió $5.000.000 y pagó $4.100.000. «Gané $900.000», dijo. Pero en noviembre compró tela para todo diciembre, y su sueldo no aparece porque esa plata la sacó en efectivo sin anotar.",
+        "pregunta": "¿Cuánto gana de verdad mi negocio?",
+        "reflexion": "¿El mes pasado compraste mercancía para más de un mes? ¿Tu sueldo está restado en lo que crees que ganaste?",
+        "imagen": "Ilustración: Marleny en su taller entre rollos de tela, con una calculadora y cara de duda (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Comparte tu margen",
+        "texto": "El último día del mes, cuenta tu inventario a precio de compra. Con los totales de tu libro calcula el costo de lo vendido, tu utilidad real y tu margen.",
+        "entrega": "Publica en el foro tu margen (o solo cómo lo calculaste si no quieres mostrar cifras). Al publicar verás los de tus compañeros: comenta al menos uno."
+      },
+      "llevatelo": {
+        "titulo": "Tu utilidad real en 3 pasos",
+        "resumen": [
+          "Resta la mercancía que vendiste, no la que compraste: usa el inventario.",
+          "Tu sueldo es un gasto del negocio; las cuotas y las máquinas van aparte.",
+          "Utilidad no es plata en la cuenta: mira las dos cada mes."
+        ],
+        "formula": "Utilidad real = ventas − costo de lo vendido − gastos fijos − gastos variables − tu sueldo",
+        "descargas": [
+          "Plantilla Utilidad real e inventario · Excel 40 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Actualícese. (s. f.). Contabilidad para microempresas.",
+          "url": "https://actualicese.com/archivo/contabilidad-para-microempresas/",
+          "para": "Cómo se lleva la contabilidad en una microempresa."
+        },
+        {
+          "apa": "Decreto 2420 de 2015. Anexo 3: norma de información financiera para microempresas (Colombia) [VERIFICAR versión vigente tras el Decreto 1670 de 2021].",
+          "url": "https://cdn.actualicese.com/normatividad/2015/Decretos/D2420-15/Anexo-3-D2420-15.pdf",
+          "para": "Inventarios y costo de ventas en la norma para microempresas."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u6-guion.md"
+      }
+    },
+    {
+      "tema": "Cierra el mes en 20 minutos",
+      "objetivo": "cerrar el mes de tu negocio en 20 minutos con 5 pasos: cuadrar, sumar, contar, calcular y decidir",
+      "entrada": {
+        "titulo": "El día 30 de Luz Dary",
+        "texto": "Luz Dary ya tiene cuenta del negocio, sueldo fijo, libro y lista de fiados. Pero el día 30 llega cansada y no sabe por dónde empezar. Su vecino Jhon Fredy le muestra su lista de cierre: 5 pasos, una alarma en el celular y 20 minutos con un tinto.",
+        "pregunta": "¿Qué hago el último día del mes para saber cómo me fue?",
+        "reflexion": "¿Qué haces hoy el último día del mes con los números de tu negocio? ¿Cuánto tiempo te toma?",
+        "imagen": "Ilustración: Luz Dary y Jhon Fredy con un tinto, revisando una lista de 5 pasos en el celular al cierre del día (4:3, máx. 150 KB)."
+      },
+      "aplica": {
+        "titulo": "Comparte tu acción del mes",
+        "texto": "Haz tu primer cierre del mes con los 5 pasos y llena tu hoja de cierre: ventas, costo de lo vendido, gastos, tu sueldo, utilidad real, margen, lo que te deben y el inventario.",
+        "entrega": "Publica en el foro tu acción para el mes siguiente (sin cifras si prefieres). Al publicar verás las de tus compañeros: comenta al menos una."
+      },
+      "llevatelo": {
+        "titulo": "El cierre en 5 pasos",
+        "resumen": [
+          "Cuadra, suma, cuenta, calcula y decide: 20 minutos el último día.",
+          "Si no cuadra, busca la diferencia en los movimientos antes de ajustar.",
+          "Una sola acción por mes, y la hoja de cierre guarda la historia del negocio."
+        ],
+        "formula": "Diferencia = saldo del libro − (saldo de la cuenta + efectivo en el cajón)",
+        "descargas": [
+          "Hoja de cierre del mes · PDF 150 KB",
+          "Plantilla Cierre del mes · Excel 40 KB"
+        ]
+      },
+      "profundiza": [
+        {
+          "apa": "Banca de las Oportunidades. (2021). Reporte de micronegocios [VERIFICAR título].",
+          "url": "https://bancadelasoportunidades.gov.co/sites/default/files/2021-03/Reporte%20micronegocios%20final.pdf",
+          "para": "Qué piden los bancos a un micronegocio y por qué sirven los registros."
+        },
+        {
+          "apa": "Departamento Administrativo Nacional de Estadística. (2025, 30 de julio). Encuesta de Micronegocios (EMICRON) 2024: boletín técnico. DANE.",
+          "url": "https://www.dane.gov.co/files/operaciones/EMICRON/bol-EMICRON-2024.pdf",
+          "para": "Cómo se financian los micronegocios y cuántos acuden al gota a gota (p. 33)."
+        }
+      ],
+      "resumen": {
+        "guion": "notebooklm/fuentes/u7-guion.md"
+      }
     }
   ],
   "cierre": {
     "titulo": "Último paso: tu regla de la plata",
     "texto": "Ya sabes por dónde se va la plata, cuánto te puedes pagar y cómo separarla. Ahora déjalo funcionando en tu negocio.",
     "reto": "Tu regla de la plata, revisada por dos compañeros",
-    "siguiente": "Contabilidad práctica para emprendedores",
-    "siguiente_texto": "Curso certificado de 4 unidades: ingresos y gastos, registros básicos, estado de resultados y decisiones."
+    "siguiente": "Lee tus números",
+    "siguiente_texto": "Con el Pase, sigue con tu estado de resultados, tu balance y tu flujo de efectivo, y aprende a presentarlos al banco o al contador."
   },
   "notebooklm": "notebooklm/LEEME.md",
   "pase": {
@@ -202,6 +385,19 @@
       "Tu libro sencillo del negocio",
       "Cuánto ganas de verdad: tu utilidad real",
       "Cierra el mes en 20 minutos"
+    ],
+    "gratis": 3
+  },
+  "constancia": "Constancia de participación (unidades 1 a 3)",
+  "evidencia_pase": "Tu cierre del mes: la hoja de cierre de un mes real (puedes dejar solo porcentajes), tu sueldo fijo y tu acción del mes.",
+  "cierre_pase": {
+    "titulo": "Último paso: tu cierre del mes",
+    "texto": "Ya separas la plata, te pagas un sueldo, llevas tu libro y sabes cuánto ganas. Ahora muéstralo con un mes real de tu negocio y recibe tu certificado.",
+    "reto": "Tu cierre del mes, revisado por dos compañeros",
+    "rubrica": [
+      "¿El libro cuadra, o la diferencia del cierre está explicada?",
+      "¿La utilidad descuenta el sueldo y usa el costo de lo vendido?",
+      "¿La acción del mes es concreta y se puede medir?"
     ]
   }
 }
