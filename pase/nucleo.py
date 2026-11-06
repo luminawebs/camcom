@@ -16,6 +16,7 @@ import threading
 import time
 import urllib.parse
 
+from . import canales as cn
 from . import epayco as ep
 
 ESQUEMA = """
@@ -32,7 +33,8 @@ CREATE TABLE IF NOT EXISTS suscripciones (
   id INTEGER PRIMARY KEY, persona_id INTEGER UNIQUE, estado TEXT, medio TEXT,
   payment_source_id TEXT, medio_enmascarado TEXT, renovacion_manual INTEGER DEFAULT 0,
   inicio TEXT, proximo_corte TEXT, intento INTEGER DEFAULT 0, proximo_intento TEXT,
-  cancelar_al_corte INTEGER DEFAULT 0, cancelada_en TEXT, motivo TEXT);
+  cancelar_al_corte INTEGER DEFAULT 0, cancelada_en TEXT, motivo TEXT,
+  canal_origen TEXT, curso TEXT);
 CREATE TABLE IF NOT EXISTS pagos (
   id INTEGER PRIMARY KEY, suscripcion_id INTEGER, persona_id INTEGER, tipo TEXT,
   periodo TEXT, referencia TEXT UNIQUE, ref_pasarela TEXT, monto INTEGER,
@@ -87,6 +89,13 @@ class Pase:
         for col, tipo in (("intentos", "INTEGER DEFAULT 0"), ("error", "TEXT"), ("html", "TEXT")):
             if col not in columnas:  # bases creadas antes del envío real
                 self.bd.execute(f"ALTER TABLE avisos ADD COLUMN {col} {tipo}")
+        columnas = {r[1] for r in self.bd.execute("PRAGMA table_info(suscripciones)")}
+        if "curso" not in columnas:  # D-05: canal de origen y curso de la compra en cada Pase
+            self.bd.execute("ALTER TABLE suscripciones ADD COLUMN canal_origen TEXT")
+            self.bd.execute("ALTER TABLE suscripciones ADD COLUMN curso TEXT")
+            for s in self.bd.execute("SELECT id, persona_id FROM suscripciones").fetchall():
+                self.bd.execute("UPDATE suscripciones SET canal_origen=?, curso=? WHERE id=?",
+                                (*self._atribucion(s[1]), s[0]))
         self.candado = threading.RLock()
         clave = config.secreto_sesion or config.p_key or "solo-desarrollo"
         self._clave = hashlib.sha256(("sesion:" + clave).encode()).digest()
@@ -178,13 +187,19 @@ class Pase:
         return self.uno("SELECT * FROM suscripciones WHERE persona_id=?", persona_id)
 
     # ------------------------------------------------------------------ formulario
-    def inscribir(self, datos, canal="sin-canal", ip="", user_agent=""):
-        """RF-01 a RF-05: crea o actualiza la persona (deduplica por documento y correo)."""
+    def inscribir(self, datos, canal="sin-canal", ip="", user_agent="", origen=""):
+        """RF-01 a RF-05: crea o actualiza la persona (deduplica por documento y correo).
+
+        D-05: `canal` es el ?c= del enlace; `origen` es el canal con que la persona llegó antes
+        (?origen= o la galleta del primer registro). El canal de origen es el primer código de
+        campaña que se le conoce y no se pisa; un enlace de curso (curso-avs-gNN) nunca lo es."""
+        canal, origen = cn.normalizar(canal), cn.normalizar(origen)
+        campana = canal if cn.es_origen(canal) else (origen if cn.es_origen(origen) else None)
         if datos.get("acepta_datos") not in (True, "1", "on", 1):
             raise ValueError("Falta la autorización de tratamiento de datos")
         correo = datos["correo"].strip().lower()
         doc = datos["documento"].strip()
-        existente = self.uno("SELECT id FROM personas WHERE documento=? OR correo=?", doc, correo)
+        existente = self.uno("SELECT id, canal_origen FROM personas WHERE documento=? OR correo=?", doc, correo)
         campos = (datos.get("tipo_doc", "CC"), doc, datos["nombre"].strip(), correo,
                   datos.get("whatsapp", ""), datos.get("negocio", ""),
                   datos.get("matricula_mercantil", ""), datos.get("municipio", ""))
@@ -193,13 +208,19 @@ class Pase:
             self.q("""UPDATE personas SET tipo_doc=?, documento=?, nombre=?, correo=?, whatsapp=?,
                       negocio=?, matricula_mercantil=?, municipio=?, actualizado=? WHERE id=?""",
                    *campos, ahora(), pid)
+            if campana and not cn.es_origen(existente["canal_origen"]):
+                self.q("UPDATE personas SET canal_origen=? WHERE id=?", campana, pid)
+                self.historial(pid, "canal_origen", f"{existente['canal_origen'] or cn.SIN_CANAL} → {campana}",
+                               "formulario")
         else:
             pid = self.q("""INSERT INTO personas (tipo_doc, documento, nombre, correo, whatsapp,
                             negocio, matricula_mercantil, municipio, canal_origen, creado, actualizado)
                             VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
-                         *campos, canal, ahora(), ahora()).lastrowid
+                         *campos, campana or cn.SIN_CANAL, ahora(), ahora()).lastrowid
             self.historial(pid, "interesado", f"canal {canal}", "formulario")
         self.q("INSERT INTO canales_persona VALUES (?,?,?)", pid, canal, ahora())
+        if origen != cn.SIN_CANAL and origen != canal:
+            self.q("INSERT INTO canales_persona VALUES (?,?,?)", pid, origen, ahora())
         self.q("INSERT INTO consentimientos VALUES (?,?,?,?,?,?,?)", pid, TEXTO_AUTORIZACION_V1, 1,
                1 if datos.get("acepta_whatsapp") in (True, "1", "on", 1) else 0, ahora(), ip, user_agent)
         return pid
@@ -239,15 +260,25 @@ class Pase:
                "PENDIENTE", metodo, intento, ahora())
         return ref
 
+    def _atribucion(self, persona_id):
+        """(canal de origen, curso desde el que compra): el último enlace de curso que usó."""
+        p = self.bd.execute("SELECT canal_origen FROM personas WHERE id=?", (persona_id,)).fetchone()
+        cursos = [r[0] for r in self.bd.execute(
+            "SELECT codigo FROM canales_persona WHERE persona_id=? ORDER BY rowid DESC", (persona_id,))
+            if cn.es_curso(r[0])]
+        return (p[0] if p and p[0] else cn.SIN_CANAL), (cursos[0] if cursos else None)
+
     def _asegurar_suscripcion(self, persona_id, medio, fuente=None, enmascarado="", manual=False):
         if self.suscripcion(persona_id):
             self.q("""UPDATE suscripciones SET medio=?, payment_source_id=?, medio_enmascarado=?,
                       renovacion_manual=?, cancelar_al_corte=0 WHERE persona_id=?""",
                    medio, fuente, enmascarado, int(manual), persona_id)
         else:
+            with self.candado:
+                origen, curso = self._atribucion(persona_id)
             self.q("""INSERT INTO suscripciones (persona_id, estado, medio, payment_source_id,
-                      medio_enmascarado, renovacion_manual) VALUES (?,?,?,?,?,?)""",
-                   persona_id, "pendiente", medio, fuente, enmascarado, int(manual))
+                      medio_enmascarado, renovacion_manual, canal_origen, curso) VALUES (?,?,?,?,?,?,?,?)""",
+                   persona_id, "pendiente", medio, fuente, enmascarado, int(manual), origen, curso)
         self.q("UPDATE pagos SET suscripcion_id=(SELECT id FROM suscripciones WHERE persona_id=?) "
                "WHERE persona_id=? AND suscripcion_id IS NULL", persona_id, persona_id)
 
@@ -636,10 +667,15 @@ class Pase:
             "mes": mes,
             "personas": cuenta("SELECT estado, COUNT(*) FROM personas GROUP BY estado ORDER BY 2 DESC"),
             "suscripciones": cuenta("SELECT estado, COUNT(*) FROM suscripciones GROUP BY estado ORDER BY 2 DESC"),
-            "canales": filas("""SELECT COALESCE(p.canal_origen,'sin-canal') canal, COUNT(*) inscritos,
-                                  SUM(s.estado='activa') activos
+            "canales": [dict(c, reconocido=cn.reconocido(c["canal"]), descripcion=cn.descripcion(c["canal"]))
+                        for c in filas("""SELECT COALESCE(p.canal_origen,'sin-canal') canal, COUNT(*) inscritos,
+                                  COALESCE(SUM(s.estado<>'pendiente'),0) compraron,
+                                  COALESCE(SUM(s.estado='activa'),0) activos
                                 FROM personas p LEFT JOIN suscripciones s ON s.persona_id=p.id
-                                GROUP BY 1 ORDER BY 2 DESC"""),
+                                GROUP BY 1 ORDER BY 2 DESC""")],
+            "cursos": filas("""SELECT COALESCE(curso,'sin curso') curso, COUNT(*) compraron,
+                                 SUM(estado='activa') activos FROM suscripciones
+                               WHERE estado<>'pendiente' GROUP BY 1 ORDER BY 2 DESC"""),
             "recaudo_mes_cop": sum(del_mes) // 100,
             "pagos_mes": len(del_mes),
             "recaudo_total_cop": sum(r["monto"] for r in aprobados) // 100,
@@ -680,11 +716,12 @@ class Pase:
         sal = io.StringIO()
         w = csv.writer(sal)
         w.writerow(["referencia", "ref_epayco", "creado", "aprobado_en", "documento", "nombre", "correo",
-                    "canal", "tipo", "periodo", "monto_cop", "estado", "metodo"])
+                    "canal", "tipo", "periodo", "monto_cop", "estado", "metodo", "curso"])
         for r in self.q("""SELECT pg.referencia, pg.ref_pasarela, pg.creado, pg.aprobado_en, p.documento,
                              p.nombre, p.correo, p.canal_origen, pg.tipo, pg.periodo, pg.monto, pg.estado,
-                             pg.metodo
-                           FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id ORDER BY pg.id"""):
+                             pg.metodo, s.curso
+                           FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id
+                           LEFT JOIN suscripciones s ON s.id=pg.suscripcion_id ORDER BY pg.id"""):
             fila = list(r)
             fila[10] = (fila[10] or 0) // 100
             w.writerow(fila)

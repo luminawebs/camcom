@@ -16,6 +16,7 @@ import time
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+from . import canales as cn
 from . import moodle as moodle_mod
 from .config import Config
 from .nucleo import ENLACE_CODIGO_HORAS, TEXTO_AUTORIZACION_V1, Pase
@@ -223,7 +224,7 @@ def tabla(columnas, filas):
     return f'<div class="tabla"><table><thead><tr>{cab}</tr></thead><tbody>{cuerpo}</tbody></table></div>'
 
 
-def tablero_html(d, precio_cop, sandbox, soporte=""):
+def tablero_html(d, precio_cop, sandbox, soporte="", url="https://pase.edunest.co"):
     e = lambda v: html.escape(str(v if v is not None else ""))
     col = dt.timezone(dt.timedelta(hours=-5))
     fecha = lambda v: e(dt.datetime.fromisoformat(v).astimezone(col).strftime("%Y-%m-%d %H:%M") if v else "")
@@ -256,10 +257,23 @@ def tablero_html(d, precio_cop, sandbox, soporte=""):
         f'<div class="cifra"><b>{e(v)}</b><span>{e(t)}</span></div>' for v, t in cifras) + "</div>")
     cuerpo.append('<div class="dos"><div><h2>Personas por estado</h2>' + tabla(
         ["Estado", "Cantidad"], [[e(k), f'<td class="n">{v}</td>'] for k, v in d["personas"].items()]) +
-        '</div><div><h2>Por canal</h2>' + tabla(
-        ["Canal", "Inscritos", "Pases activos"],
-        [[e(c["canal"]), f'<td class="n">{c["inscritos"]}</td>', f'<td class="n">{c["activos"] or 0}</td>']
-         for c in d["canales"]]) + "</div></div>")
+        '</div><div><h2>Pases por curso</h2><p class="nota">Desde qué curso se compró (botón al final '
+        'de la U3).</p>' + tabla(
+        ["Curso", "Compraron", "Pases activos"],
+        [[e(c["curso"]), f'<td class="n">{c["compraron"]}</td>', f'<td class="n">{c["activos"] or 0}</td>']
+         for c in d["cursos"]]) + "</div></div>")
+    cuerpo.append('<h2>Por canal de origen</h2><p class="nota">Por dónde llegó cada persona la primera vez, '
+                  'aunque haya comprado después desde un curso.</p>' + tabla(
+        ["Canal", "Qué es", "Inscritos", "Compraron", "Pases activos"],
+        [[e(c["canal"]), e(c["descripcion"]) if c["reconocido"] or c["canal"] == cn.SIN_CANAL
+          else f'<b>{e(c["descripcion"])}</b>', f'<td class="n">{c["inscritos"]}</td>',
+          f'<td class="n">{c["compraron"]}</td>', f'<td class="n">{c["activos"]}</td>']
+         for c in d["canales"]]))
+    cuerpo.append('<details><summary>Códigos de canal y sus enlaces</summary>' + tabla(
+        ["Código", "Canal", "Enlace del registro gratis"],
+        [[e(k), e(v), e(f"{url}/?c={k}")] for k, v in cn.CANALES.items()] +
+        [["aliado-01, aliado-02…", "Uno por aliado (gremio, contador, asociación)", e(f"{url}/?c=aliado-01")]]) +
+        "</details>")
     cuerpo.append("<h2>Renovaciones de los próximos 7 días</h2>" + tabla(
         ["Corte", "Nombre", "Correo", "Medio", "Nota"],
         [[e(r["proximo_corte"]), e(r["nombre"]), e(r["correo"]),
@@ -301,8 +315,8 @@ def login_html(configurado, error=""):
 </form>"""
 
 
-def formulario(canal, c=None):
-    canal = html.escape(canal)
+def formulario(canal, c=None, origen=""):
+    canal, origen = html.escape(canal), html.escape(origen)
     precio = pesos_cop(c) if c else "$29.000"
     return f"""
 {pasos(1)}
@@ -316,6 +330,7 @@ def formulario(canal, c=None):
 </section>
 <form class="caja" method="post" action="/inscripcion">
 <input type="hidden" name="canal" value="{canal}">
+<input type="hidden" name="origen" value="{origen}">
 <div class="campo"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" required autocomplete="name"></div>
 <div class="fila doc"><div class="campo"><label for="tipo">Tipo</label><select id="tipo" name="tipo_doc"><option>CC</option>
 <option>CE</option><option>NIT</option><option>PPT</option></select></div>
@@ -780,6 +795,13 @@ class App:
             def json(self, codigo, datos):
                 self.responder(codigo, json.dumps(datos).encode(), "application/json")
 
+            def galleta(self, nombre):
+                try:
+                    g = http.cookies.SimpleCookie(self.headers.get("Cookie", ""))
+                except http.cookies.CookieError:
+                    return ""
+                return g[nombre].value if nombre in g else ""
+
             def admin_valido(self):
                 galleta = http.cookies.SimpleCookie(self.headers.get("Cookie", ""))
                 return app.sesion_admin_valida(galleta["pase_admin"].value if "pase_admin" in galleta else "")
@@ -827,7 +849,18 @@ class App:
                 q = dict(urllib.parse.parse_qsl(u.query))
                 sb = app.c.entorno == "sandbox"
                 if u.path == "/":
-                    return self.responder(200, pagina("Inscripción", formulario(q.get("c", "sin-canal"), app.c), sb))
+                    # D-05: el canal de campaña se recuerda en el navegador para la compra al final de
+                    # la U3 (?c=curso-…). El canal de origen de verdad queda en la persona (correo/documento).
+                    canal = cn.normalizar(q.get("c"))
+                    origen = cn.normalizar(q.get("origen") or self.galleta("pase_origen"))
+                    extra = {}
+                    if not cn.es_origen(origen) and cn.es_origen(canal):
+                        origen = canal  # primer canal en este navegador: se guarda un año
+                        segura = "; Secure" if app.c.url_publica.startswith("https://") else ""
+                        extra["Set-Cookie"] = (f"pase_origen={canal}; Max-Age={365 * 86400}; Path=/; "
+                                               f"HttpOnly; SameSite=Lax{segura}")
+                    return self.responder(200, pagina("Inscripción", formulario(
+                        canal, app.c, origen if cn.es_origen(origen) else ""), sb), extra=extra)
                 if u.path == "/pagar":
                     pid = app.verificar(q.get("p"))
                     if not pid:
@@ -901,7 +934,7 @@ class App:
                         soporte = tablero_soporte(buscar, app.pase.buscar_personas(buscar) if buscar else [],
                                                   q.get("hecho", ""))
                         return self.responder(200, tablero_html(app.pase.tablero(), app.c.precio_centavos // 100,
-                                                                sb, soporte), extra=sin_cache)
+                                                                sb, soporte, app.c.url_publica), extra=sin_cache)
                     return self.responder(200, ("\ufeff" + app.pase.pagos_csv()).encode(), "text/csv; charset=utf-8",
                                           extra={**sin_cache, "Content-Disposition":
                                                  'attachment; filename="pagos-pase.csv"'})
@@ -984,7 +1017,8 @@ class App:
                     datos = dict(urllib.parse.parse_qsl(self.leer().decode()))
                     try:
                         pid = app.pase.inscribir(datos, datos.get("canal") or "sin-canal",
-                                                 self.ip(), self.headers.get("User-Agent", ""))
+                                                 self.ip(), self.headers.get("User-Agent", ""),
+                                                 datos.get("origen") or self.galleta("pase_origen"))
                     except (ValueError, KeyError) as e:
                         return self.responder(400, pagina("Revisa tus datos", f"<h1>Revisa tus datos</h1>"
                                                           f"<p>{html.escape(str(e))}</p>", sb))
