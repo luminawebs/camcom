@@ -1,74 +1,158 @@
 {
-  "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Textos de los prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto.",
-  "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people. No readable text, letters or numbers anywhere.",
-  "personajes": {
-    "patricia": "ONE single woman only, alone, no other people, no background scene. Patricia, a 41-year-old Colombian fast-food cook, medium build, light-olive skin, long straight black hair tied in a high ponytail under a black cap, small hoop earrings, confident smile. Wears a black t-shirt, a deep-red apron, a hairnet visible under the cap, jeans and white sneakers.",
-    "oscar": "ONE single man only, alone, no other people, no background scene. Óscar, a 36-year-old Colombian pet-shop owner, tall and slightly heavy, brown skin, short curly black hair, short neat beard, rectangular glasses. Wears a light-grey polo shirt with a small red paw-print patch on the chest, dark jeans and brown sneakers.",
-    "marisol": "ONE single woman only, alone, no other people, no background scene. Marisol, a 52-year-old Colombian stationery-shop owner who clearly looks middle-aged (soft wrinkles, a few grey strands), petite, fair-to-medium skin, chin-length straight dark-brown hair with bangs, red-framed glasses. Wears a dark-red cardigan over a white blouse, grey trousers and flat black shoes."
+ "nota": "Ilustraciones del curso con Gemini 2.5 Flash Image (plantillas/ilustrar.py). Estilo y personajes fijos para que se vean igual en todo el curso. Textos de los prompts en inglés porque el modelo los sigue mejor; las imágenes no llevan texto.",
+ "estilo": "Warm, friendly flat vector illustration for an online course for small business owners in Soacha, Colombia (a working-class city next to Bogotá). Clean shapes, soft shading, subtle paper texture, natural light. Realistic Colombian people with diverse skin tones and ordinary clothes. Brick houses and small shops typical of Soacha neighborhoods. Palette: warm neutrals and off-white, charcoal #141414 for lines and dark areas, with deep red #c8102e as the only accent color. Simple, uncluttered composition with clear focus on the people. No readable text, letters or numbers anywhere.",
+ "personajes": {
+  "patricia": "ONE single woman only, alone, no other people, no background scene. Patricia, a 41-year-old Colombian fast-food cook, medium build, light-olive skin, long straight black hair tied in a high ponytail under a black cap, small hoop earrings, confident smile. Wears a black t-shirt, a deep-red apron, a hairnet visible under the cap, jeans and white sneakers.",
+  "oscar": "ONE single man only, alone, no other people, no background scene. Óscar, a 36-year-old Colombian pet-shop owner, tall and slightly heavy, brown skin, short curly black hair, short neat beard, rectangular glasses. Wears a light-grey polo shirt with a small red paw-print patch on the chest, dark jeans and brown sneakers.",
+  "marisol": "ONE single woman only, alone, no other people, no background scene. Marisol, a 52-year-old Colombian stationery-shop owner who clearly looks middle-aged (soft wrinkles, a few grey strands), petite, fair-to-medium skin, chin-length straight dark-brown hair with bangs, red-framed glasses. Wears a dark-red cardigan over a white blouse, grey trousers and flat black shoes."
+ },
+ "imagenes": [
+  {
+   "id": "u1-entrada",
+   "personajes": [
+    "patricia"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Patricia appearing only ONCE (do not copy the reference sheet pose). Early evening at Patricia's small fast-food stall in front of a brick house in La Despensa, Soacha: a steel griddle with hot dogs and burgers sizzling and a little smoke, bread buns, sauce bottles, a small menu board with drawings only (no text), plastic stools. Patricia stands behind the griddle holding her smartphone, looking at it with a puzzled expression, one hand holding a spatula.",
+   "destinos": [
+    "medios-moodle/u1-entrada.jpg",
+    "piezas/u1-aprende/medios/ilustracion-1.jpg"
+   ]
   },
-  "imagenes": [
-    {
-      "id": "u1-entrada",
-      "personajes": [
-        "patricia"
-      ],
-      "proporcion": "4:3",
-      "escena": "A single scene with Patricia appearing only ONCE (do not copy the reference sheet pose). Early evening at Patricia's small fast-food stall in front of a brick house in La Despensa, Soacha: a steel griddle with hot dogs and burgers sizzling and a little smoke, bread buns, sauce bottles, a small menu board with drawings only (no text), plastic stools. Patricia stands behind the griddle holding her smartphone, looking at it with a puzzled expression, one hand holding a spatula.",
-      "destinos": [
-        "medios-moodle/u1-entrada.jpg",
-        "piezas/u1-aprende/medios/ilustracion-1.jpg"
-      ]
-    },
-    {
-      "id": "u1-cajas",
-      "personajes": [],
-      "proporcion": "16:9",
-      "escena": "Three large open cardboard boxes side by side on an off-white background, no text: the left box has coins and banknotes flying INTO it with a red arrow (income); the middle box contains hot dog sausages, bread buns, potatoes and food packaging (cost of what is sold); the right box contains a small shop key, a light bulb, a gas cylinder and a water tap icon (fixed expenses). Clean flat infographic style. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
-      "destinos": [
-        "piezas/u1-aprende/medios/ilustracion-3.jpg"
-      ]
-    },
-    {
-      "id": "u2-entrada",
-      "personajes": [
-        "oscar"
-      ],
-      "proporcion": "4:3",
-      "escena": "A single scene with Óscar appearing only ONCE (do not copy the reference sheet pose). Inside Óscar's small pet shop in a residential complex in Ciudad Verde, Soacha: shelves with bags of dog and cat food, leashes, toys and a small fish tank. Óscar stands at the counter with an open paper notebook in one hand and a smartphone in the other, looking from one to the other, confused. A friendly dog sits next to the counter.",
-      "destinos": [
-        "medios-moodle/u2-entrada.jpg",
-        "piezas/u2-aprende/medios/ilustracion-1.jpg"
-      ]
-    },
-    {
-      "id": "u2-fuentes",
-      "personajes": [],
-      "proporcion": "16:9",
-      "escena": "A flat infographic on an off-white background, no text: on the left, four items arranged in a column — an open paper notebook with grey lines, a smartphone showing payment notifications drawn as grey bars, a card-payment terminal with a paper slip, and a small stack of receipts; dashed red arrows from all four converge on the right into a single clean sheet with three columns of grey bars and a red total bar at the bottom. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
-      "destinos": [
-        "piezas/u2-aprende/medios/ilustracion-2.jpg"
-      ]
-    },
-    {
-      "id": "u3-entrada",
-      "personajes": [
-        "marisol"
-      ],
-      "proporcion": "4:3",
-      "escena": "A single scene with Marisol appearing only ONCE (do not copy the reference sheet pose). Inside Marisol's small stationery and photocopy shop across from a school in León XIII, Soacha, during back-to-school season: shelves packed with notebooks, colored pencils and backpacks, a photocopier in the corner. Marisol sits behind the counter with a calculator and a sheet of paper with grey lines, looking worried, resting her chin on her hand.",
-      "destinos": [
-        "medios-moodle/u3-entrada.jpg",
-        "piezas/u3-aprende/medios/ilustracion-1.jpg"
-      ]
-    },
-    {
-      "id": "u3-escalera",
-      "personajes": [],
-      "proporcion": "16:9",
-      "escena": "A flat infographic on an off-white background, no text or numbers: a descending staircase of four horizontal bars from left to right. The first bar at the top is the longest and charcoal (sales); a red bracket removes a chunk to give a shorter grey second bar; another red bracket removes another chunk to give a shorter third bar; the last small bar at the bottom right is deep red with a small coin stack on it (what is left). Very clean and minimal. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
-      "destinos": [
-        "piezas/u3-aprende/medios/ilustracion-4.jpg"
-      ]
-    }
-  ]
+  {
+   "id": "u1-cajas",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "Three large open cardboard boxes side by side on an off-white background, no text: the left box has coins and banknotes flying INTO it with a red arrow (income); the middle box contains hot dog sausages, bread buns, potatoes and food packaging (cost of what is sold); the right box contains a small shop key, a light bulb, a gas cylinder and a water tap icon (fixed expenses). Clean flat infographic style. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
+   "destinos": [
+    "piezas/u1-aprende/medios/ilustracion-3.jpg"
+   ]
+  },
+  {
+   "id": "u2-entrada",
+   "personajes": [
+    "oscar"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Óscar appearing only ONCE (do not copy the reference sheet pose). Inside Óscar's small pet shop in a residential complex in Ciudad Verde, Soacha: shelves with bags of dog and cat food, leashes, toys and a small fish tank. Óscar stands at the counter with an open paper notebook in one hand and a smartphone in the other, looking from one to the other, confused. A friendly dog sits next to the counter.",
+   "destinos": [
+    "medios-moodle/u2-entrada.jpg",
+    "piezas/u2-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u2-fuentes",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "A flat infographic on an off-white background, no text: on the left, four items arranged in a column — an open paper notebook with grey lines, a smartphone showing payment notifications drawn as grey bars, a card-payment terminal with a paper slip, and a small stack of receipts; dashed red arrows from all four converge on the right into a single clean sheet with three columns of grey bars and a red total bar at the bottom. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
+   "destinos": [
+    "piezas/u2-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u3-entrada",
+   "personajes": [
+    "marisol"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Marisol appearing only ONCE (do not copy the reference sheet pose). Inside Marisol's small stationery and photocopy shop across from a school in León XIII, Soacha, during back-to-school season: shelves packed with notebooks, colored pencils and backpacks, a photocopier in the corner. Marisol sits behind the counter with a calculator and a sheet of paper with grey lines, looking worried, resting her chin on her hand.",
+   "destinos": [
+    "medios-moodle/u3-entrada.jpg",
+    "piezas/u3-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u3-escalera",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "A flat infographic on an off-white background, no text or numbers: a descending staircase of four horizontal bars from left to right. The first bar at the top is the longest and charcoal (sales); a red bracket removes a chunk to give a shorter grey second bar; another red bracket removes another chunk to give a shorter third bar; the last small bar at the bottom right is deep red with a small coin stack on it (what is left). Very clean and minimal. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
+   "destinos": [
+    "piezas/u3-aprende/medios/ilustracion-4.jpg"
+   ]
+  },
+  {
+   "id": "u4-entrada",
+   "personajes": [
+    "patricia"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Patricia appearing only ONCE (do not copy the reference sheet pose). Morning at Patricia's fast-food stall in front of a brick house in La Despensa, Soacha, before opening: the steel griddle, a fryer, a small fridge and the food cart are clean and switched off. Patricia stands next to the cart with a clipboard and a pen, looking around at her equipment as if making an inventory list, calm and focused.",
+   "destinos": [
+    "medios-moodle/u4-entrada.jpg",
+    "piezas/u4-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u4-balanza",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "A flat infographic on an off-white background: a large balanced two-pan scale. On the left pan a group of objects: a small cash box with coins, a smartphone, a box of food supplies and a small steel griddle. On the right pan two stacked parts: a charcoal block with a small padlock icon on the bottom (debts) and a deep red block with a small house-key icon on top (what is the owner's). The scale is perfectly level. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
+   "destinos": [
+    "piezas/u4-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u5-entrada",
+   "personajes": [
+    "oscar"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Óscar appearing only ONCE (do not copy the reference sheet pose). Inside Óscar's small pet shop in Ciudad Verde, Soacha: stacked bags of dog food by the door, a paper wall calendar with one day circled in red, shelves with leashes and toys. Óscar stands behind the counter holding an almost empty open wallet in one hand and his smartphone in the other, looking worried at the calendar. A friendly dog sits next to the counter.",
+   "destinos": [
+    "medios-moodle/u5-entrada.jpg",
+    "piezas/u5-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u5-tubo",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "A flat infographic on an off-white background: a transparent water tank in the center, partly filled with coins. On the left, charcoal pipes bring coins and banknotes INTO the tank; on the right, deep red pipes take coins OUT of the tank toward small icons of a dog-food bag, a house key, a light bulb and a padlock. A small dashed coin outside the tank, waiting, with a clock icon next to it (money not yet paid). No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
+   "destinos": [
+    "piezas/u5-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u6-entrada",
+   "personajes": [
+    "patricia"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Patricia appearing only ONCE (do not copy the reference sheet pose), wearing her black t-shirt but no apron and no cap, hair in a ponytail. Inside a small, simple cooperative office in Soacha: Patricia sits at a desk holding an organized folder with papers, explaining calmly; across the desk only the hands and forearms of an advisor are visible next to a computer screen (no face, no second full person). A small plant and a pen holder on the desk.",
+   "destinos": [
+    "medios-moodle/u6-entrada.jpg",
+    "piezas/u6-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u6-carpeta",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "A flat infographic on an off-white background: an open charcoal folder with five colored divider tabs fanned out, each sheet with only grey lines; next to it a plastic ID card shape with a generic silhouette, a smartphone with grey bars on its screen and a small red checkmark badge on the folder. No people at all, no human figures, no buildings, no background scenery; only the objects described. Absolutely no words, labels, letters or numbers.",
+   "destinos": [
+    "piezas/u6-aprende/medios/ilustracion-2.jpg"
+   ]
+  },
+  {
+   "id": "u7-entrada",
+   "personajes": [
+    "marisol"
+   ],
+   "proporcion": "4:3",
+   "escena": "A single scene with Marisol appearing only ONCE (do not copy the reference sheet pose). Inside Marisol's small stationery and photocopy shop in León XIII, Soacha, on a calm day: shelves with notebooks and colored pencils, a photocopier in the corner. Marisol stands next to a cork board on the wall where three small cards are pinned, each with a simple icon (a pie slice, a balance point, a piggy bank) and a small red or grey arrow; she is pinning the third card, satisfied.",
+   "destinos": [
+    "medios-moodle/u7-entrada.jpg",
+    "piezas/u7-aprende/medios/ilustracion-1.jpg"
+   ]
+  },
+  {
+   "id": "u7-equilibrio",
+   "personajes": [],
+   "proporcion": "16:9",
+   "escena": "A minimal flat infographic on an off-white background, drawn like a wordless icon: a thick flat horizontal charcoal bar across the middle, and a straight deep red line rising from the bottom left to the top right that crosses the bar; at the crossing point a small round red dot. The triangle to the right of the dot, above the bar, is softly shaded light red; the triangle to the left, below the bar, is shaded light grey. NO axis, NO labels, NO legend, NO words in any language, NO letters, NO numbers anywhere: a purely graphic picture.",
+   "destinos": [
+    "piezas/u7-aprende/medios/ilustracion-2.jpg"
+   ]
+  }
+ ]
 }

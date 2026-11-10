@@ -9,6 +9,7 @@ Unidad 1 · Ingresos, costos y gastos · page · Entrada: La plancha que Patrici
 Unidad 1 · Ingresos, costos y gastos · scorm · Aprende: Ingreso, costo o gasto
 Unidad 1 · Ingresos, costos y gastos · scorm · Practica: ¿Cuánto fueron los costos del mes?
 Unidad 1 · Ingresos, costos y gastos · forum · Aplica: Clasifica una semana de tu negocio
+Unidad 1 · Ingresos, costos y gastos · scorm · Demuestra: Ingresos, costos y gastos
 Unidad 1 · Ingresos, costos y gastos · page · Llévatelo: Ingresos, costos y gastos en una mirada
 Unidad 1 · Ingresos, costos y gastos · page · Profundiza: Lecturas y guías
 Unidad 2 · El mes en números · page · Resumen: Resumen en video
@@ -16,6 +17,7 @@ Unidad 2 · El mes en números · page · Entrada: El cuaderno, el Nequi y los f
 Unidad 2 · El mes en números · scorm · Aprende: Junta el mes sin contar dos veces
 Unidad 2 · El mes en números · scorm · Practica: ¿Cuánto vendió Óscar en el mes?
 Unidad 2 · El mes en números · forum · Aplica: Junta un mes de tu negocio
+Unidad 2 · El mes en números · scorm · Demuestra: El mes en números
 Unidad 2 · El mes en números · page · Llévatelo: El mes en números, en una mirada
 Unidad 2 · El mes en números · page · Profundiza: Lecturas y guías
 Unidad 3 · Tu estado de resultados del mes · page · Resumen: Resumen en video
@@ -23,7 +25,42 @@ Unidad 3 · Tu estado de resultados del mes · page · Entrada: El mejor mes de 
 Unidad 3 · Tu estado de resultados del mes · scorm · Aprende: Tu estado de resultados en una hoja
 Unidad 3 · Tu estado de resultados del mes · scorm · Practica: ¿Cuánto le quedó a la papelería?
 Unidad 3 · Tu estado de resultados del mes · forum · Aplica: Tu estado de resultados del mes
+Unidad 3 · Tu estado de resultados del mes · scorm · Demuestra: Tu estado de resultados
 Unidad 3 · Tu estado de resultados del mes · page · Llévatelo: Tu estado de resultados en una mirada
 Unidad 3 · Tu estado de resultados del mes · page · Profundiza: Lecturas y guías
-CIERRE · page · [Configurar] Reto final entre pares (Taller) (oculta)
+Unidad 3 · Tu estado de resultados del mes · page · Lo que sigue: Unidades 4 a 7 con el Pase Empresario
+Unidad 4 · Tu balance general · page · Resumen: Resumen en video
+Unidad 4 · Tu balance general · page · Entrada: «Ahora tráigame el balance»
+Unidad 4 · Tu balance general · scorm · Aprende: Tu balance general
+Unidad 4 · Tu balance general · scorm · Practica: ¿Cuánto es del dueño?
+Unidad 4 · Tu balance general · forum · Aplica: El balance de tu negocio
+Unidad 4 · Tu balance general · scorm · Demuestra: Tu balance general
+Unidad 4 · Tu balance general · page · Llévatelo: Tu balance en una mirada
+Unidad 4 · Tu balance general · page · Profundiza: Lecturas y guías
+Unidad 5 · Tu flujo de efectivo · page · Resumen: Resumen en video
+Unidad 5 · Tu flujo de efectivo · page · Entrada: Ganó, pero no le alcanzó
+Unidad 5 · Tu flujo de efectivo · scorm · Aprende: Tu flujo de efectivo
+Unidad 5 · Tu flujo de efectivo · scorm · Practica: ¿Con cuánto termina el mes?
+Unidad 5 · Tu flujo de efectivo · forum · Aplica: Tus próximas 4 semanas
+Unidad 5 · Tu flujo de efectivo · scorm · Demuestra: Tu flujo de efectivo
+Unidad 5 · Tu flujo de efectivo · page · Llévatelo: Tu flujo en una mirada
+Unidad 5 · Tu flujo de efectivo · page · Profundiza: Lecturas y guías
+Unidad 6 · Presenta tus números al banco o al contador · page · Resumen: Resumen en video
+Unidad 6 · Presenta tus números al banco o al contador · page · Entrada: La cita del jueves
+Unidad 6 · Presenta tus números al banco o al contador · scorm · Aprende: Presenta tus números al banco o al contador
+Unidad 6 · Presenta tus números al banco o al contador · scorm · Practica: ¿Le cabe la cuota?
+Unidad 6 · Presenta tus números al banco o al contador · forum · Aplica: Tus tres frases y tu carpeta
+Unidad 6 · Presenta tus números al banco o al contador · scorm · Demuestra: Presenta tus números
+Unidad 6 · Presenta tus números al banco o al contador · page · Llévatelo: Llega preparado
+Unidad 6 · Presenta tus números al banco o al contador · page · Profundiza: Lecturas y guías
+Unidad 7 · 3 indicadores para vigilar cada mes · page · Resumen: Resumen en video
+Unidad 7 · 3 indicadores para vigilar cada mes · page · Entrada: Que no se repita febrero
+Unidad 7 · 3 indicadores para vigilar cada mes · scorm · Aprende: 3 indicadores para vigilar cada mes
+Unidad 7 · 3 indicadores para vigilar cada mes · scorm · Practica: ¿Cuánto tiene que vender para no perder?
+Unidad 7 · 3 indicadores para vigilar cada mes · forum · Aplica: Tu tablero de 3 indicadores
+Unidad 7 · 3 indicadores para vigilar cada mes · scorm · Demuestra: 3 indicadores
+Unidad 7 · 3 indicadores para vigilar cada mes · page · Llévatelo: Tus 3 indicadores
+Unidad 7 · 3 indicadores para vigilar cada mes · page · Profundiza: Lecturas y guías
+CIERRE · page · [Configurar] Proyecto final entre pares (Taller) (oculta)
+CIERRE · page · [Configurar] Certificado del curso (Certificado personalizado) (oculta)
 CIERRE · page · [Configurar] Constancia de participación (Certificado personalizado) (oculta)

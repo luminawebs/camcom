@@ -1,0 +1,158 @@
+{
+ "medios-moodle/u4-entrada-narracion.mp3": {
+  "texto": "Todo dice «pago». Luz Dary ya lleva su registro diario. Al final de la semana suma: entraron 2100000 pesos y salieron 1900000 pesos. Pero cuando quiere saber cuánto se le fue en mercancía y cuánto en arriendo y servicios, no puede: todo dice «pago». Además, doña Carmen se llevó 85000 pesos en útiles «para pagar el viernes», y eso no está anotado en ninguna parte. La pregunta de esta unidad: ¿Cómo anoto todo sin enredarme?",
+  "firma": "5784530479f0",
+  "segundos": 28.9,
+  "kb": 226
+ },
+ "piezas/u4-aprende/medios/narracion-1.mp3": {
+  "texto": "Todo dice «pago». Luz Dary ya anota cada día lo que entra y lo que sale. Pero al final de la semana no sabe en qué se le fue la plata: todo dice «pago». Para decidir, no basta con saber cuánto salió; hay que saber para qué fue.",
+  "firma": "ded34add3790",
+  "segundos": 13.2,
+  "kb": 103
+ },
+ "piezas/u4-aprende/medios/narracion-2.mp3": {
+  "texto": "Cada salida tiene su cajón. Con 5 categorías alcanza para casi todo negocio pequeño: Uno: Mercancía o insumos: lo que compras para vender o producir. Dos: Gastos fijos: arriendo del local, servicios del local, internet, sueldo de un ayudante. Tres: Gastos variables: bolsas, empaques, transporte de mercancía, comisiones. Cuatro: Tu sueldo: lo que te pagas en tu fecha fija. Cinco: Deudas e inversiones: cuotas de un crédito, una vitrina, una máquina.",
+  "firma": "d161200df74f",
+  "segundos": 29.5,
+  "kb": 231
+ },
+ "piezas/u4-aprende/medios/narracion-3.mp3": {
+  "texto": "El fiado se anota aparte. Una venta fiada es una venta, pero no es plata en la cuenta. Anótala en una lista de fiados: fecha, quién, qué llevó, cuánto debe y cuándo paga. Cuando te pague, entra al registro y se tacha de la lista. Te deben es igual a fiados de antes más fiados nuevos menos lo que te pagaron",
+  "firma": "2c52d566ae79",
+  "segundos": 18.3,
+  "kb": 143
+ },
+ "piezas/u4-aprende/medios/narracion-4.mp3": {
+  "texto": "El soporte en 1 minuto. Cada compra deja un papel o un pantallazo: la factura del proveedor, el recibo del arriendo, el comprobante de la transferencia. Tómale foto el mismo día y guárdala en una carpeta del celular por mes, por ejemplo «Negocio, noviembre».",
+  "firma": "349bf4efb93f",
+  "segundos": 14.4,
+  "kb": 113
+ },
+ "piezas/u4-aprende/medios/narracion-5.mp3": {
+  "texto": "Lo que debes recordar. Cada salida con su categoría. El fiado en su lista, no en la caja. Foto al soporte el mismo día. Así a fin de mes sabes en qué se fue la plata y no solo cuánto.",
+  "firma": "194aa993eee8",
+  "segundos": 10.9,
+  "kb": 86
+ },
+ "medios-moodle/u5-entrada-narracion.mp3": {
+  "texto": "Tres cuadernos y ninguno cuadra. Jhon Fredy, el de la peluquería en Ciudad Verde, tiene un cuaderno para los servicios, una libreta para lo que le compra al proveedor de productos y los pantallazos de Nequi en el celular. Su contador le pidió «el libro del mes» y él no supo qué entregarle. La pregunta de esta unidad: ¿Cómo junto todo el mes en un solo lugar?",
+  "firma": "4736ec51f026",
+  "segundos": 19.3,
+  "kb": 151
+ },
+ "piezas/u5-aprende/medios/narracion-1.mp3": {
+  "texto": "Tres cuadernos y ninguno cuadra. Jhon Fredy tiene un cuaderno para los servicios, una libreta para el proveedor y los pantallazos de Nequi en el celular. Su contador le pidió «el libro del mes» y no supo qué entregarle. La solución: un solo libro por mes.",
+  "firma": "152a57088141",
+  "segundos": 14.1,
+  "kb": 111
+ },
+ "piezas/u5-aprende/medios/narracion-2.mp3": {
+  "texto": "Un libro, siete columnas. En cuaderno, Excel o app, una línea por movimiento, en orden de fecha: Fecha, Qué fue, Categoría, Medio, Entró, Salió, Saldo. Categoría: las 5 de la Unidad 4, o «Venta». Medio: efectivo, transferencia o billetera; así cuadras el cajón y la cuenta por separado.",
+  "firma": "d0d765aa7184",
+  "segundos": 18.9,
+  "kb": 148
+ },
+ "piezas/u5-aprende/medios/narracion-3.mp3": {
+  "texto": "Las ventas del día, en pocas líneas. Si un día hiciste 40 servicios, no hacen falta 40 líneas. Basta una línea «Ventas del día en efectivo» y otra «Ventas del día por transferencia».",
+  "firma": "32aea558ac3a",
+  "segundos": 11.3,
+  "kb": 88
+ },
+ "piezas/u5-aprende/medios/narracion-4.mp3": {
+  "texto": "Los totales del mes. El último día sumas las líneas de cada categoría. Total de una categoría es igual a suma de todas sus líneas del mes. Jhon Fredy en noviembre: ventas 4200000 pesos; insumos 780000 pesos; fijos 1350000 pesos; variables 210000 pesos; su sueldo 1400000 pesos; cuota de la silla 250000 pesos.",
+  "firma": "eae6ead77db1",
+  "segundos": 25.0,
+  "kb": 196
+ },
+ "piezas/u5-aprende/medios/narracion-5.mp3": {
+  "texto": "¿Y la ley qué pide?. Si estás inscrito como comerciante, el Código de Comercio (art. 19) dice que debes llevar contabilidad; para microempresas hay una contabilidad simplificada. Quien no está obligado a llevar contabilidad y no es responsable de IVA debe llevar un libro fiscal de operaciones diarias (Estatuto Tributario, art. 616). Este libro sencillo no reemplaza la contabilidad, pero es la base que tu contador necesita.",
+  "firma": "6148b4a1ffde",
+  "segundos": 24.7,
+  "kb": 193
+ },
+ "piezas/u5-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. Un solo libro por mes, siete columnas, una línea por movimiento. El último día, totales por categoría. Si el saldo del libro no cuadra con el cajón y la cuenta, algo falta por anotar.",
+  "firma": "9e7e949d6eb7",
+  "segundos": 12.2,
+  "kb": 96
+ },
+ "medios-moodle/u6-entrada-narracion.mp3": {
+  "texto": "«Gané 900000 pesos… ¿o no?». Marleny, la del taller de confección en San Mateo, sumó noviembre: vendió 5000000 pesos y pagó 4100000 pesos. «Gané 900000 pesos», dijo. Pero en noviembre compró tela para todo diciembre, y su sueldo no aparece porque esa plata la sacó en efectivo sin anotar. La pregunta de esta unidad: ¿Cuánto gana de verdad mi negocio?",
+  "firma": "1fcc269c1839",
+  "segundos": 23.7,
+  "kb": 186
+ },
+ "piezas/u6-aprende/medios/narracion-1.mp3": {
+  "texto": "«Gané 900000 pesos… ¿o no?». Marleny vendió 5000000 pesos y pagó 4100000 pesos. Pero compró tela para todo diciembre y su sueldo no aparece. Restar «lo que pagué» falla cuando compras mercancía para varios meses: un mes parece que perdiste y el siguiente que ganaste mucho.",
+  "firma": "a2cf8c06a403",
+  "segundos": 17.0,
+  "kb": 133
+ },
+ "piezas/u6-aprende/medios/narracion-2.mp3": {
+  "texto": "Lo que compraste no es lo que vendiste. Lo justo es restar solo la mercancía que salió vendida: Costo de lo vendido es igual a inventario al empezar más compras del mes menos inventario al terminar. No tiene que ser perfecto: cuenta lo que tienes y ponle el precio al que lo compraste. Una vez al mes, el mismo día.",
+  "firma": "b8f9ab445b46",
+  "segundos": 17.3,
+  "kb": 136
+ },
+ "piezas/u6-aprende/medios/narracion-3.mp3": {
+  "texto": "La utilidad real. Utilidad real es igual a ventas menos costo de lo vendido menos gastos fijos menos gastos variables menos tu sueldo. Tu sueldo sí se resta: si no, el negocio parece ganar más de lo que gana. Las cuotas de un crédito y las máquinas no van aquí: la cuota es devolver un préstamo y la máquina sirve muchos meses.",
+  "firma": "aac5a7ddf248",
+  "segundos": 18.9,
+  "kb": 148
+ },
+ "piezas/u6-aprende/medios/narracion-4.mp3": {
+  "texto": "Utilidad no es plata en la cuenta. Puedes tener utilidad y no tener plata: si fiaste mucho, si compraste inventario o si pagaste una cuota grande. Y puedes tener plata sin utilidad: si te prestaron. Mira las dos cada mes. Margen es igual a utilidad real dividido entre ventas por 100. Marleny: 800000 pesos dividido entre 5000000 pesos es igual a 16 por ciento. De cada 100000 pesos que vende, le quedan 16000 pesos después de su sueldo.",
+  "firma": "774dd671c18c",
+  "segundos": 27.9,
+  "kb": 218
+ },
+ "piezas/u6-aprende/medios/narracion-5.mp3": {
+  "texto": "Lo que debes recordar. Resta lo que vendiste, no lo que compraste. Cuenta tu sueldo como un gasto. Las cuotas y las máquinas van aparte. Utilidad y plata en la cuenta son cosas distintas.",
+  "firma": "11c200ac80ce",
+  "segundos": 10.6,
+  "kb": 83
+ },
+ "medios-moodle/u7-entrada-narracion.mp3": {
+  "texto": "El día 30 de Luz Dary. Luz Dary ya tiene cuenta del negocio, sueldo fijo, libro y lista de fiados. Pero el día 30 llega cansada y no sabe por dónde empezar. Su vecino Jhon Fredy le muestra su lista de cierre: 5 pasos, una alarma en el celular y 20 minutos con un tinto. La pregunta de esta unidad: ¿Qué hago el último día del mes para saber cómo me fue?",
+  "firma": "c5c1d5a66182",
+  "segundos": 20.8,
+  "kb": 163
+ },
+ "piezas/u7-aprende/medios/narracion-1.mp3": {
+  "texto": "El día 30 de Luz Dary. Ya tiene cuenta del negocio, sueldo fijo, libro y lista de fiados. Pero el día 30 llega cansada y no sabe por dónde empezar. Jhon Fredy le muestra su lista: 5 pasos, una alarma en el celular y 20 minutos con un tinto.",
+  "firma": "f2b991f13e12",
+  "segundos": 14.4,
+  "kb": 113
+ },
+ "piezas/u7-aprende/medios/narracion-2.mp3": {
+  "texto": "Los 5 pasos del cierre. Uno: Cuadra (5 min): el libro contra la cuenta y el cajón. Dos: Suma (5 min): totales por categoría y lo que te deben. Tres: Cuenta (5 min): el inventario a precio de compra. Cuatro: Calcula (3 min): utilidad real y margen. Cinco: Decide (2 min): compara con el mes pasado y escoge una acción.",
+  "firma": "467a780f8424",
+  "segundos": 23.7,
+  "kb": 186
+ },
+ "piezas/u7-aprende/medios/narracion-3.mp3": {
+  "texto": "Cuando no cuadra. Diferencia es igual a saldo del libro menos (saldo de la cuenta más efectivo en el cajón). Si es positiva, falta plata: algo salió sin anotar (un retiro para la casa, una comisión). Si es negativa, sobra: una venta sin anotar o un fiado que pagaron. Búscala en los movimientos antes de ajustar.",
+  "firma": "35ce2b24c9e2",
+  "segundos": 18.3,
+  "kb": 143
+ },
+ "piezas/u7-aprende/medios/narracion-4.mp3": {
+  "texto": "Una acción por mes. El paso 5 es el que cambia tu negocio. Una sola acción, concreta y que puedas medir: «cobrar 100000 pesos de fiados antes del 15», «bajar el internet a un plan más barato», «surtir la mitad de lo que no rotó».",
+  "firma": "e7a615f98d62",
+  "segundos": 13.5,
+  "kb": 106
+ },
+ "piezas/u7-aprende/medios/narracion-5.mp3": {
+  "texto": "Tu hoja de cierre. Al final llenas una hoja con: ventas, costo de lo vendido, gastos, tu sueldo, utilidad real, margen, lo que te deben y el inventario. Mes a mes, esa hoja muestra si vas mejorando. Es lo que llevas al banco o al contador.",
+  "firma": "1ed1a4119eb2",
+  "segundos": 14.1,
+  "kb": 111
+ },
+ "piezas/u7-aprende/medios/narracion-6.mp3": {
+  "texto": "Lo que debes recordar. Una alarma el último día. Cuadra, suma, cuenta, calcula, decide. Una acción por mes. La hoja de cierre es la historia de tu negocio.",
+  "firma": "efc75e037e3d",
+  "segundos": 10.3,
+  "kb": 81
+ }
+}

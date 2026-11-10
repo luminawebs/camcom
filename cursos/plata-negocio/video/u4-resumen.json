@@ -1,0 +1,63 @@
+{
+ "titulo": "Registra tus ventas y gastos sin enredos",
+ "etiqueta": "Unidad 4 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "voz": "Luz Dary ya anota lo que entra y sale. Pero en su cuaderno todo dice pago, y no sabe en qué se le fue la plata.",
+   "titulo": "Registra tus ventas y gastos sin enredos",
+   "texto": "Luz Dary · miscelánea en León XIII",
+   "imagen": "ilustraciones/originales/u4-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Cada salida en su cajón",
+   "items": [
+    [
+     "Mercancía",
+     "lo que compras para vender"
+    ],
+    [
+     "Fijos y variables",
+     "arriendo, servicios, bolsas"
+    ],
+    [
+     "Tu sueldo y deudas",
+     "cada uno aparte"
+    ]
+   ],
+   "voz": "Anota cada salida con su categoría: mercancía, gastos fijos, gastos variables, tu sueldo, y deudas e inversiones."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "El fiado es venta, pero no es plata",
+   "texto": "Va en su lista hasta que te paguen.",
+   "voz": "Una venta fiada es una venta, pero no es plata en la cuenta. Llévala en tu lista de fiados hasta que te paguen."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "El soporte en un minuto",
+   "items": [
+    [
+     "Foto",
+     "el mismo día"
+    ],
+    [
+     "Carpeta",
+     "una por mes"
+    ],
+    [
+     "Para",
+     "el banco o el contador"
+    ]
+   ],
+   "voz": "Tómale foto a cada factura o comprobante el mismo día y guárdala en la carpeta del mes."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Tu semana por categorías",
+   "texto": "Mercancía · fijos · variables · sueldo · deudas",
+   "voz": "En esta unidad vas a anotar tu semana por categorías y a llevar tu lista de fiados."
+  }
+ ]
+}

@@ -80,8 +80,12 @@ def revisar(curso, corto, idnumber, secciones):
             faltan.append(f"sección {num}")
             continue
         if [i for i in actual.get(num, []) if i in ids] != ids:
-            # mover todas las de la sección, en orden, al final de ella deja el orden del respaldo
-            rest("core_courseformat_update_course", action="cm_move", courseid=curso, ids=ids, targetsectionid=sec_id[num])
+            # cm_move con varias ids no cambia su orden relativo: se mueve una por una, de la última a la primera,
+            # cada una justo antes de la que le sigue (la última, al final de la sección)
+            rest("core_courseformat_update_course", action="cm_move", courseid=curso, ids=[ids[-1]], targetsectionid=sec_id[num])
+            for k in range(len(ids) - 2, -1, -1):
+                rest("core_courseformat_update_course", action="cm_move", courseid=curso, ids=[ids[k]],
+                     targetsectionid=sec_id[num], targetcmid=ids[k + 1])
             movidas += 1
             print(f"  · sección {num}: actividades reubicadas ({len(ids)})")
     total = sum(len(v) for v in secciones.values())

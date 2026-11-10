@@ -8,7 +8,15 @@
   "u2-entrada": "fb3ebaf852bf",
   "u2-fuentes": "b4d36ef6128f",
   "u3-entrada": "153e41035789",
-  "u3-escalera": "ee42124a0927"
+  "u3-escalera": "ee42124a0927",
+  "u4-entrada": "bd7326b46df1",
+  "u4-balanza": "90004b3bc5dc",
+  "u5-entrada": "5d39c33d0173",
+  "u5-tubo": "c31df362e9d9",
+  "u6-entrada": "01332c7f0c0f",
+  "u6-carpeta": "b9f04c070ee2",
+  "u7-entrada": "81cb757001f6",
+  "u7-equilibrio": "df02de99f308"
  },
  "llamadas": [
   {
@@ -128,6 +136,78 @@
    "modelo": "gemini-2.5-flash-image",
    "fecha": "2026-10-20T22:12:38",
    "tokens_entrada": 268,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u4-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:50:42",
+   "tokens_entrada": 520,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u4-balanza",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:50:48",
+   "tokens_entrada": 272,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u5-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:50:59",
+   "tokens_entrada": 520,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u5-tubo",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:51:05",
+   "tokens_entrada": 266,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u6-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:51:13",
+   "tokens_entrada": 526,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u6-carpeta",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:51:19",
+   "tokens_entrada": 234,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u7-entrada",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:51:27",
+   "tokens_entrada": 535,
+   "tokens_imagen": 1290,
+   "usd": 0.0389
+  },
+  {
+   "id": "u7-equilibrio",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:51:32",
+   "tokens_entrada": 256,
+   "tokens_imagen": 1290,
+   "usd": 0.0388
+  },
+  {
+   "id": "u7-equilibrio",
+   "modelo": "gemini-2.5-flash-image",
+   "fecha": "2026-11-06T21:51:51",
+   "tokens_entrada": 260,
    "tokens_imagen": 1290,
    "usd": 0.0388
   }

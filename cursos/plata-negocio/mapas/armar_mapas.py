@@ -19,6 +19,19 @@ MAPAS = {
      "Una cuenta o billetera solo para el negocio",
      "3 reglas: todo entra ahí, todo gasto sale de ahí, a la casa solo tu sueldo",
      "<b>Saldo de hoy</b> = saldo de ayer + entró − salió"]),
+   ("Unidad 4 · Ventas y gastos por categoría (Pase)", [
+     "5 categorías: mercancía, fijos, variables, tu sueldo, deudas e inversiones",
+     "El fiado es venta, pero no es plata: va en su lista",
+     "<b>Te deben</b> = fiados de antes + nuevos − lo que pagaron"]),
+   ("Unidad 5 · Tu libro del mes (Pase)", [
+     "7 columnas: fecha, qué fue, categoría, medio, entró, salió, saldo",
+     "<b>Total de una categoría</b> = suma de sus líneas del mes"]),
+   ("Unidad 6 · Tu utilidad real (Pase)", [
+     "<b>Costo de lo vendido</b> = inventario inicial + compras − inventario final",
+     "<b>Utilidad real</b> = ventas − costo de lo vendido − gastos − tu sueldo"]),
+   ("Unidad 7 · El cierre del mes (Pase)", [
+     "Cuadra, suma, cuenta, calcula y decide: 20 minutos",
+     "<b>Diferencia</b> = saldo del libro − (cuenta + cajón)"]),
  ]),
  "u1-mapa": ("Unidad 1", "¿Por dónde se va la plata del negocio?", [
    ("Las 4 fugas", [
@@ -78,6 +91,70 @@ MAPAS = {
    ("Tu registro abre puertas", [
      "Muestra cuánto vendes para pedir crédito en un banco",
      "En 2024, el 22,9&nbsp;% de los micronegocios que pidieron crédito acudió al gota a gota (DANE, EMICRON 2024)"]),
+ ]),
+ "u4-mapa": ("Unidad 4", "¿Cómo anoto todo sin enredarme?", [
+   ("Cada salida tiene su cajón", [
+     "<b>1.</b> Mercancía o insumos: lo que compras para vender o producir",
+     "<b>2.</b> Gastos fijos: arriendo y servicios del local, internet, ayudante",
+     "<b>3.</b> Gastos variables: bolsas, empaques, transporte, comisiones",
+     "<b>4.</b> Tu sueldo, en tu fecha fija",
+     "<b>5.</b> Deudas e inversiones: cuotas, vitrina, máquina"]),
+   ("Las ventas, en dos", [
+     "De contado: efectivo o transferencia, la plata ya está",
+     "Fiadas: es venta, pero la plata todavía no está"]),
+   ("La lista de fiados", [
+     "Fecha · quién · qué llevó · cuánto debe · cuándo paga",
+     "<b>Te deben</b> = fiados de antes + nuevos − lo que pagaron",
+     "$120.000 + $85.000 − $40.000 = <b>$165.000</b>"]),
+   ("El soporte en 1 minuto", [
+     "Foto a la factura o al comprobante el mismo día",
+     "Una carpeta del celular por mes: «Negocio · noviembre»"]),
+ ]),
+ "u5-mapa": ("Unidad 5", "¿Cómo junto todo el mes en un solo lugar?", [
+   ("Un libro, siete columnas", [
+     "Fecha · qué fue · categoría · medio · entró · salió · saldo",
+     "Cuaderno, Excel o app: lo importante es que sea uno solo"]),
+   ("Una línea por movimiento", [
+     "Las ventas del día: una línea por medio de pago",
+     "<b>Saldo</b> = saldo de la línea anterior + entró − salió"]),
+   ("Los totales del mes", [
+     "<b>Total de una categoría</b> = suma de sus líneas del mes",
+     "Es la base para la utilidad (U6) y el cierre (U7)"]),
+   ("¿Y la ley?", [
+     "Comerciante inscrito: contabilidad (Código de Comercio, art. 19)",
+     "No responsable de IVA sin contabilidad: libro fiscal (ET, art. 616)",
+     "Tu contador te dice cuál aplica"]),
+ ]),
+ "u6-mapa": ("Unidad 6", "¿Cuánto gana de verdad mi negocio?", [
+   ("Lo que compraste no es lo que vendiste", [
+     "<b>Costo de lo vendido</b> = inventario al empezar + compras − inventario al terminar",
+     "$600.000 + $2.400.000 − $1.200.000 = <b>$1.800.000</b>"]),
+   ("La utilidad real", [
+     "<b>Utilidad real</b> = ventas − costo de lo vendido − fijos − variables − tu sueldo",
+     "$5.000.000 − $1.800.000 − $900.000 − $300.000 − $1.200.000 = <b>$800.000</b>"]),
+   ("Lo que va aparte", [
+     "Las cuotas de un crédito: es devolver un préstamo",
+     "Las máquinas: te sirven muchos meses"]),
+   ("El margen", [
+     "<b>Margen</b> = utilidad real ÷ ventas × 100",
+     "$800.000 ÷ $5.000.000 = <b>16&nbsp;%</b>"]),
+   ("Ojo", [
+     "Utilidad no es plata en la cuenta: el fiado y el inventario no están en la caja"]),
+ ]),
+ "u7-mapa": ("Unidad 7", "¿Qué hago el último día del mes?", [
+   ("Los 5 pasos del cierre", [
+     "<b>1. Cuadra</b> el libro con la cuenta y el cajón (5 min)",
+     "<b>2. Suma</b> las categorías y lo que te deben (5 min)",
+     "<b>3. Cuenta</b> el inventario a precio de compra (5 min)",
+     "<b>4. Calcula</b> la utilidad real y el margen (3 min)",
+     "<b>5. Decide</b> una acción para el mes (2 min)"]),
+   ("Cuando no cuadra", [
+     "<b>Diferencia</b> = saldo del libro − (cuenta + cajón)",
+     "Positiva: falta plata. Negativa: sobra plata",
+     "Búscala en los movimientos antes de ajustar"]),
+   ("Tu hoja de cierre", [
+     "Ventas, costo, gastos, sueldo, utilidad, margen, te deben, inventario",
+     "Mes a mes: lo que llevas al banco o al contador"]),
  ]),
 }
 

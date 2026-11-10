@@ -1,0 +1,63 @@
+{
+ "titulo": "Tu flujo de efectivo",
+ "etiqueta": "Unidad 5 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "titulo": "Tu flujo de efectivo",
+   "texto": "Óscar · tienda de mascotas en Ciudad Verde",
+   "voz": "Óscar ganó en octubre, pero a mitad de noviembre no tenía con qué pagarle al proveedor.",
+   "imagen": "ilustraciones/originales/u5-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "La fórmula",
+   "items": [
+    [
+     "Saldo al empezar",
+     "más"
+    ],
+    [
+     "Entradas",
+     "menos"
+    ],
+    [
+     "Salidas",
+     "igual al saldo al terminar"
+    ]
+   ],
+   "voz": "Saldo al terminar es igual al saldo al empezar, más las entradas, menos las salidas."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Ganancia no es plata",
+   "texto": "Lo que fiaste no ha entrado; la cuota sí sale.",
+   "voz": "El flujo cuenta solo la plata que de verdad entra y sale. Lo que fiaste no ha entrado, y la cuota del préstamo sí sale."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Mira hacia adelante",
+   "items": [
+    [
+     "4 semanas",
+     "una por una"
+    ],
+    [
+     "Cobra fiados",
+     "con fecha fija"
+    ],
+    [
+     "Pide plazo",
+     "si una semana aprieta"
+    ]
+   ],
+   "voz": "Hazlo para las próximas cuatro semanas y ve venir la semana en que te va a faltar."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Arma tu flujo",
+   "texto": "Para las próximas 4 semanas",
+   "voz": "En esta unidad vas a armar el flujo de tu negocio para las próximas cuatro semanas."
+  }
+ ]
+}

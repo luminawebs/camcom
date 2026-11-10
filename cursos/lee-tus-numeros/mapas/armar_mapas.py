@@ -19,6 +19,18 @@ MAPAS = {
      "Ventas − costo de lo vendido = <b>utilidad bruta</b>",
      "Utilidad bruta − gastos = <b>utilidad del mes</b>",
      "<b>Margen</b> = utilidad ÷ ventas × 100"]),
+   ("Unidad 4 · Tu balance general (Pase)", [
+     "La foto de un día: lo que tiene, lo que debe y lo tuyo",
+     "<b>Patrimonio</b> = lo que tiene − lo que debe"]),
+   ("Unidad 5 · Tu flujo de efectivo (Pase)", [
+     "Solo la plata que de verdad entra y sale",
+     "<b>Saldo al terminar</b> = al empezar + entradas − salidas"]),
+   ("Unidad 6 · Presenta tus números (Pase)", [
+     "La carpeta y tus números en tres frases",
+     "<b>Peso de la cuota</b> = cuota ÷ lo que te sobra × 100"]),
+   ("Unidad 7 · 3 indicadores (Pase)", [
+     "Margen, punto de equilibrio y colchón de caja",
+     "<b>Equilibrio</b> = gastos fijos ÷ (1 − costo ÷ ventas)"]),
  ]),
  "u1-mapa": ("Unidad 1", "¿Ingreso, costo o gasto?", [
    ("Ingreso", [
@@ -72,6 +84,69 @@ MAPAS = {
      "Pedir un crédito con tus números",
      "Revisar un precio que no te deja nada",
      "Vender más no siempre es ganar más"]),
+ ]),
+
+ "u4-mapa": ("Unidad 4", "¿Cuánto vale hoy tu negocio y cuánto es tuyo?", [
+   ("Una foto de un día", [
+     "El estado de resultados es la película del mes",
+     "El balance es la <b>foto de un día</b>"]),
+   ("Lo que tiene (activos)", [
+     "Plata en caja, Nequi o banco",
+     "Mercancía e insumos",
+     "Fiados por cobrar y equipos"]),
+   ("Lo que debe (pasivos)", [
+     "Proveedores, préstamos, impuestos por pagar"]),
+   ("Lo que es tuyo (patrimonio)", [
+     "<b>Patrimonio</b> = lo que tiene − lo que debe"]),
+   ("Tres reglas", [
+     "Solo lo del negocio",
+     "Todo con la misma fecha",
+     "Equipos a su valor de hoy"]),
+ ]),
+ "u5-mapa": ("Unidad 5", "Si tu negocio gana, ¿por qué a veces no tienes con qué pagar?", [
+   ("Ganancia no es plata", [
+     "Lo que fiaste no ha entrado",
+     "La cuota del préstamo sí sale",
+     "Un equipo saca mucha plata de una vez"]),
+   ("La fórmula", [
+     "<b>Saldo al terminar</b> = saldo al empezar + entradas − salidas"]),
+   ("Hacia adelante", [
+     "Las próximas 4 semanas, una por una",
+     "Ve venir la semana que aprieta"]),
+   ("Para que no falte", [
+     "Cobra fiados con fecha fija",
+     "Pide plazo al proveedor",
+     "Guarda un colchón para un mes malo"]),
+ ]),
+ "u6-mapa": ("Unidad 6", "¿Cómo llegas preparado al banco o al contador?", [
+   ("La carpeta", [
+     "Cédula, RUT y matrícula mercantil",
+     "Estado de resultados y balance",
+     "Extractos de 3 a 6 meses y soportes"]),
+   ("Tres frases", [
+     "Cuánto vendes al mes",
+     "Cuánto te queda después de todo",
+     "Cuánto te sobra para una cuota"]),
+   ("¿Te cabe la cuota?", [
+     "<b>Peso de la cuota</b> = cuota ÷ lo que te sobra × 100",
+     "Si pasa de la mitad, un mes malo te deja sin con qué pagar"]),
+   ("Antes de firmar", [
+     "Tasa efectiva anual y total a pagar",
+     "Con el contador: ¿qué estados y qué impuestos?"]),
+ ]),
+ "u7-mapa": ("Unidad 7", "¿Qué tres números miras cada mes?", [
+   ("Margen", [
+     "Utilidad ÷ ventas × 100",
+     "De cada 100 pesos, cuánto te queda"]),
+   ("Punto de equilibrio", [
+     "Gastos fijos ÷ (1 − costo ÷ ventas)",
+     "Lo mínimo que tienes que vender para no perder"]),
+   ("Colchón de caja", [
+     "Plata disponible ÷ gastos fijos",
+     "Cuántos meses aguantas"]),
+   ("Tu tablero", [
+     "12 filas, 3 columnas",
+     "Compárate contigo mismo, mes a mes"]),
  ]),
 }
 

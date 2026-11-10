@@ -1,0 +1,53 @@
+Marcas de pendiente quitadas al publicar (van al registro del contador):
+
+00-cabecera-curso.html: «VideoBienvenida de 60 s, vertical, con subtítulos. H5P o MP4 liviano.» (quitado)
+00-datos-y-perfil-del-negocio.html: «[VERIFICAR texto con la Cámara]» (quitado)
+00-inicio.html: «Video verticalBienvenida de 60 s: Luz Dary cuenta su problema y qué vas a lograr. Con subtítulos.» (quitado)
+00-inicio.html: «Foro Comunidad o WhatsApp de la Cámara» → «Foro Comunidad»
+00-inicio.html: «[VERIFICAR número]» (quitado)
+99-cierre.html: «ImagenPortada del siguiente curso (16:9).» (quitado)
+99-cierre.html: «Ver el curso [descuento por definir] ›» (quitado)
+99-constancia-de-participacion.html: «[VERIFICAR logo definitivo]» (quitado)
+u1-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u1-entrada.html: «ImagenIlustración de Luz Dary en el mostrador con el cajón abierto (4:3, máx. 150 KB).» (quitado)
+u1-llevatelo.html: «⬇ [Ficha Las 4 fugas · PDF 200 KB]» (quitado)
+u1-resumen.html: «VideoResumen en video de 60 s (plantillas/video_resumen.py con video/u1-resumen.json, o NotebookLM). Con subtítulos.» (quitado)
+u1-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u2-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u2-entrada.html: «ImagenIlustración: Luz Dary y Jhon Fredy conversando frente a la peluquería (4:3, máx. 150 KB).» (quitado)
+u2-llevatelo.html: «⬇ [Ficha Tu sueldo · PDF 200 KB]» (quitado)
+u2-profundiza.html: «[VERIFICAR título]» (quitado)
+u2-resumen.html: «VideoResumen en video de 60 s (plantillas/video_resumen.py con video/u2-resumen.json, o NotebookLM). Con subtítulos.» (quitado)
+u2-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u3-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u3-entrada.html: «ImagenPantalla de celular con movimientos mezclados: pagos de clientes y plata familiar (4:3, sin logos).» (quitado)
+u3-profundiza.html: «[VERIFICAR título]» (quitado)
+u3-resumen.html: «VideoResumen en video de 60 s (plantillas/video_resumen.py con video/u3-resumen.json, o NotebookLM). Con subtítulos.» (quitado)
+u3-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u4-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u4-profundiza.html: «[VERIFICAR título]» (quitado)
+u4-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u5-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u5-profundiza.html: «[VERIFICAR texto vigente]» (quitado)
+u5-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u6-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u6-profundiza.html: «[VERIFICAR versión vigente tras el Decreto 1670 de 2021]» (quitado)
+u6-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+u7-cabecera.html: «▶ Resumen en video · 1 min» (quitado)
+u7-profundiza.html: «[VERIFICAR título]» (quitado)
+u7-resumen.html: «Resumen generado con inteligencia artificial y revisado por un contador público.» → «Resumen generado con inteligencia artificial a partir de los contenidos del curso.»
+plata-negocio-u1-aprende.zip/contenido.js: imagen pendiente «Ilustración: Luz Dary detrás del mostrador mirando el cajón casi vacío (4:3, máx. 150 KB).» (recuadro quitado)
+plata-negocio-u1-aprende.zip/contenido.js: imagen pendiente «Infografía vertical con las 4 fugas e íconos (cajón, factura, producto, celular).» (recuadro quitado)
+plata-negocio-u1-aprende.zip/contenido.js: imagen pendiente «La fórmula con el ejemplo de Luz Dary: $200.000 + $1.800.000 − $1.100.000 − $350.000 = $550.000 que se fueron sin anotar.» (recuadro quitado)
+plata-negocio-u2-aprende.zip/contenido.js: imagen pendiente «Ilustración: calendario con dos fechas de pago marcadas (15 y 30).» (recuadro quitado)
+plata-negocio-u2-aprende.zip/contenido.js: imagen pendiente «Tabla vertical: ganancia de agosto, septiembre y octubre de Luz Dary y su promedio.» (recuadro quitado)
+plata-negocio-u2-aprende.zip/contenido.js: imagen pendiente «Tres caminos con íconos: vender más, revisar precios, bajar costos.» (recuadro quitado)
+plata-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR valor en pesos del año]» (quitado)
+plata-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR]» (quitado)
+plata-negocio-u3-aprende.zip/contenido.js: «[VERIFICAR con el contador: Código de Comercio art. 19]» (quitado)
+plata-negocio-u3-aprende.zip/contenido.js: imagen pendiente «Dos celulares: uno con la billetera personal y otro con la del negocio (o dos tarjetas). Sin logos de marcas.» (recuadro quitado)
+plata-negocio-u3-aprende.zip/contenido.js: imagen pendiente «Las 3 reglas en una tarjeta vertical para guardar.» (recuadro quitado)
+plata-negocio-u3-aprende.zip/contenido.js: imagen pendiente «Ejemplo de una semana del registro de Luz Dary en el cuaderno.» (recuadro quitado)
+plata-negocio-u4-aprende.zip/contenido.js: «[VERIFICAR con el contador: qué soportes guardar y por cuánto tiempo.]» (quitado)
+plata-negocio-u5-aprende.zip/contenido.js: «[VERIFICAR con el contador: a quién aplica cada cosa y cómo decirlo sin asustar.]» (quitado)
+plata-negocio-u6-aprende.zip/contenido.js: «[VERIFICAR con el contador cómo explicar intereses y depreciación.]» (quitado)

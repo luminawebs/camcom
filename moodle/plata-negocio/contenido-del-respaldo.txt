@@ -1,0 +1,66 @@
+La plata del negocio no es la de la casa
+Nombre corto: AVS-G01 · Número de ID: AVS-G01-plata-negocio
+
+INICIO · page · Bienvenida
+INICIO · page · [Configurar] Datos y perfil del negocio (Retroalimentación) (oculta)
+INICIO · page · [Configurar] Diagnóstico rápido (Cuestionario) (oculta)
+Unidad 1 · Por qué se mezcla la plata · page · Resumen: Resumen en video
+Unidad 1 · Por qué se mezcla la plata · page · Entrada: El cajón de Luz Dary
+Unidad 1 · Por qué se mezcla la plata · scorm · Aprende: ¿Dónde está la plata del negocio?
+Unidad 1 · Por qué se mezcla la plata · scorm · Practica: ¿Cuánta plata se fue para la casa?
+Unidad 1 · Por qué se mezcla la plata · forum · Aplica: Comparte cuánto se fue
+Unidad 1 · Por qué se mezcla la plata · scorm · Demuestra: Las fugas de la plata
+Unidad 1 · Por qué se mezcla la plata · page · Llévatelo: Las 4 fugas de la plata
+Unidad 1 · Por qué se mezcla la plata · page · Profundiza: Lecturas y guías
+Unidad 2 · Págate un sueldo · page · Resumen: Resumen en video
+Unidad 2 · Págate un sueldo · page · Entrada: Un mes mucho, otro mes nada
+Unidad 2 · Págate un sueldo · scorm · Aprende: Págate un sueldo
+Unidad 2 · Págate un sueldo · scorm · Practica: ¿Cuánto te puedes pagar?
+Unidad 2 · Págate un sueldo · forum · Aplica: Comparte tu sueldo
+Unidad 2 · Págate un sueldo · scorm · Demuestra: Tu sueldo
+Unidad 2 · Págate un sueldo · page · Llévatelo: Tu sueldo en 3 pasos
+Unidad 2 · Págate un sueldo · page · Profundiza: Lecturas y guías
+Unidad 3 · Una cuenta y un registro para el negocio · page · Resumen: Resumen en video
+Unidad 3 · Una cuenta y un registro para el negocio · page · Entrada: Todo llega al mismo Nequi
+Unidad 3 · Una cuenta y un registro para el negocio · scorm · Aprende: Una cuenta y un registro para el negocio
+Unidad 3 · Una cuenta y un registro para el negocio · scorm · Practica: Cuadra el registro del día
+Unidad 3 · Una cuenta y un registro para el negocio · forum · Aplica: Comparte tu registro
+Unidad 3 · Una cuenta y un registro para el negocio · scorm · Demuestra: Tu cuenta y tu registro
+Unidad 3 · Una cuenta y un registro para el negocio · page · Llévatelo: Las 3 reglas de la plata
+Unidad 3 · Una cuenta y un registro para el negocio · page · Profundiza: Lecturas y guías
+Unidad 3 · Una cuenta y un registro para el negocio · page · Lo que sigue: Unidades 4 a 7 con el Pase Empresario
+Unidad 4 · Registra tus ventas y gastos sin enredos · page · Resumen: Resumen en video
+Unidad 4 · Registra tus ventas y gastos sin enredos · page · Entrada: Todo dice «pago»
+Unidad 4 · Registra tus ventas y gastos sin enredos · scorm · Aprende: Registra tus ventas y gastos sin enredos
+Unidad 4 · Registra tus ventas y gastos sin enredos · scorm · Practica: Separa los gastos fijos del mes
+Unidad 4 · Registra tus ventas y gastos sin enredos · forum · Aplica: Comparte tus categorías
+Unidad 4 · Registra tus ventas y gastos sin enredos · scorm · Demuestra: Ventas y gastos por categoría
+Unidad 4 · Registra tus ventas y gastos sin enredos · page · Llévatelo: Cada peso en su cajón
+Unidad 4 · Registra tus ventas y gastos sin enredos · page · Profundiza: Lecturas y guías
+Unidad 5 · Tu libro sencillo del negocio · page · Resumen: Resumen en video
+Unidad 5 · Tu libro sencillo del negocio · page · Entrada: Tres cuadernos y ninguno cuadra
+Unidad 5 · Tu libro sencillo del negocio · scorm · Aprende: Tu libro sencillo del negocio
+Unidad 5 · Tu libro sencillo del negocio · scorm · Practica: Saca el total de una categoría
+Unidad 5 · Tu libro sencillo del negocio · forum · Aplica: Comparte tus totales
+Unidad 5 · Tu libro sencillo del negocio · scorm · Demuestra: Tu libro del mes
+Unidad 5 · Tu libro sencillo del negocio · page · Llévatelo: El libro de 7 columnas
+Unidad 5 · Tu libro sencillo del negocio · page · Profundiza: Lecturas y guías
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · page · Resumen: Resumen en video
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · page · Entrada: «Gané $900.000… ¿o no?»
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · scorm · Aprende: Cuánto ganas de verdad: tu utilidad real
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · scorm · Practica: Calcula la utilidad real del mes
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · forum · Aplica: Comparte tu margen
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · scorm · Demuestra: Tu utilidad real
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · page · Llévatelo: Tu utilidad real en 3 pasos
+Unidad 6 · Cuánto ganas de verdad: tu utilidad real · page · Profundiza: Lecturas y guías
+Unidad 7 · Cierra el mes en 20 minutos · page · Resumen: Resumen en video
+Unidad 7 · Cierra el mes en 20 minutos · page · Entrada: El día 30 de Luz Dary
+Unidad 7 · Cierra el mes en 20 minutos · scorm · Aprende: Cierra el mes en 20 minutos
+Unidad 7 · Cierra el mes en 20 minutos · scorm · Practica: Encuentra la diferencia del cierre
+Unidad 7 · Cierra el mes en 20 minutos · forum · Aplica: Comparte tu acción del mes
+Unidad 7 · Cierra el mes en 20 minutos · scorm · Demuestra: Tu cierre del mes
+Unidad 7 · Cierra el mes en 20 minutos · page · Llévatelo: El cierre en 5 pasos
+Unidad 7 · Cierra el mes en 20 minutos · page · Profundiza: Lecturas y guías
+CIERRE · page · [Configurar] Proyecto final entre pares (Taller) (oculta)
+CIERRE · page · [Configurar] Certificado del curso (Certificado personalizado) (oculta)
+CIERRE · page · [Configurar] Constancia de participación (Certificado personalizado) (oculta)

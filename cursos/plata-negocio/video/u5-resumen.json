@@ -1,0 +1,63 @@
+{
+ "titulo": "Tu libro sencillo del negocio",
+ "etiqueta": "Unidad 5 · Resumen",
+ "diapositivas": [
+  {
+   "tipo": "portada",
+   "voz": "Jhon Fredy tiene tres cuadernos y ninguno cuadra. Su contador le pidió el libro del mes y no supo qué entregarle.",
+   "titulo": "Tu libro sencillo del negocio",
+   "texto": "Jhon Fredy · peluquería en Ciudad Verde",
+   "imagen": "ilustraciones/originales/u5-entrada.png"
+  },
+  {
+   "tipo": "lista",
+   "titulo": "Un libro, siete columnas",
+   "items": [
+    [
+     "Fecha y qué fue",
+     "una línea por movimiento"
+    ],
+    [
+     "Categoría y medio",
+     "efectivo o transferencia"
+    ],
+    [
+     "Entró, salió, saldo",
+     "como en tu registro"
+    ]
+   ],
+   "voz": "Un solo libro por mes, con siete columnas: fecha, qué fue, categoría, medio, entró, salió y saldo."
+  },
+  {
+   "tipo": "frase",
+   "titulo": "Las ventas del día, en pocas líneas",
+   "texto": "Una línea por medio de pago.",
+   "voz": "No hace falta una línea por cada venta: basta una para el efectivo del día y otra para las transferencias."
+  },
+  {
+   "tipo": "lista",
+   "titulo": "El último día",
+   "items": [
+    [
+     "Suma",
+     "cada categoría"
+    ],
+    [
+     "Cuadra",
+     "el saldo con la cuenta y el cajón"
+    ],
+    [
+     "Entrega",
+     "los totales al contador"
+    ]
+   ],
+   "voz": "El último día sumas cada categoría. Esos totales son la base que necesita tu contador."
+  },
+  {
+   "tipo": "cierre",
+   "titulo": "Arma tu libro",
+   "texto": "Siete columnas · totales del mes",
+   "voz": "En esta unidad vas a pasar una semana de tu registro al libro y a sacar tus totales."
+  }
+ ]
+}

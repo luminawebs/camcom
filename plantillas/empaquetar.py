@@ -46,7 +46,7 @@ MANIFIESTO = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 def titulo_de(contenido_js: str, defecto: str) -> str:
-    m = re.search(r'titulo:\s*"([^"]+)"', contenido_js)
+    m = re.search(r'"?titulo"?:\s*"([^"]+)"', contenido_js)
     return m.group(1) if m else defecto
 
 
