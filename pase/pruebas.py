@@ -196,7 +196,7 @@ class PruebasFirmas(unittest.TestCase):
         self.assertFalse(cn.reconocido("wa-afiliados"))
         self.assertTrue(cn.es_origen("wa-afiliados"))  # no reconocido, pero se guarda
         self.assertFalse(cn.es_origen("curso-avs-g04") or cn.es_origen("sin-canal"))
-        self.assertEqual(len(cn.CANALES), 10)
+        self.assertEqual(len(cn.CANALES), 13)
 
     def test_nombre_usuario_moodle(self):
         from .moodle import nombre_usuario
@@ -701,6 +701,106 @@ class PruebasFlujo(Escenario):
         self.assertEqual(self.pase.procesar_pendientes(), 1)  # Moodle volvió
         self.assertEqual(self.estado_persona(pid), "suscrito")
         self.assertTrue(self.en_cohorte(pid, "pase-empresario"))
+
+    # ----------------------------------------------------------------- D-10: curso de alimentos
+    def comprar_alimentos(self, canal="alim-ads-persona", correo="luis@correo.co", doc="1012345678"):
+        """Formulario de /alimentos → redirección al Checkout firmado de esa compra."""
+        _, _, pagina = self.http("GET", f"{self.c.url_publica}/alimentos?c={canal}")
+        self.assertIn(b"$45.000", pagina)
+        self.assertIn(f'name="canal" value="{canal}"'.encode(), pagina)
+        datos = urllib.parse.urlencode({
+            "canal": canal, "nombre": "Luis Gómez", "tipo_doc": "CC", "documento": doc, "correo": correo,
+            "whatsapp": "3109876543", "municipio": "Soacha", "acepta_datos": "on"})
+        status, cab, _ = self.http("POST", f"{self.c.url_publica}/alimentos/inscripcion", datos,
+                                   {"Content-Type": "application/x-www-form-urlencoded"})
+        self.assertEqual(status, 303)
+        self.assertTrue(cab["Location"].startswith(f"{self.c.url_publica}/checkout?r=ALIM-"))
+        ref = urllib.parse.parse_qs(urllib.parse.urlparse(cab["Location"]).query)["r"][0]
+        pid = self.pase.uno("SELECT persona_id FROM pagos WHERE referencia=?", ref)["persona_id"]
+        return pid, ref, cab["Location"]
+
+    def estado_pago(self, ref):
+        return self.pase.uno("SELECT estado FROM pagos WHERE referencia=?", ref)["estado"]
+
+    def test_d10_alimentos_pago_unico_aprobado(self):
+        self.c.avisos_alimentos = ["ventas@edunest.co"]
+        pid, ref, enlace = self.comprar_alimentos()
+        _, _, pagina = self.http("GET", enlace)
+        self.assertIn(b"Curso de manipulaci", pagina)
+        self.assertIn(b"$45.000", pagina)
+        self.assertNotIn(b"un mes", pagina)  # no es suscripción
+        retorno = self.pagar_en_checkout(enlace)
+        sesion = list(self.sim.sesiones.values())[-1]
+        self.assertEqual((sesion["amount"], sesion["name"]), (45000, "Curso de manipulación de alimentos"))
+        self.assertTrue(esperar(lambda: self.estado_pago(ref) == "APPROVED"))
+        self.assertTrue(self.en_cohorte(pid, "manipulacion-alimentos"))
+        self.assertFalse(self.en_cohorte(pid, "pase-empresario"))
+        self.assertFalse(self.en_cohorte(pid, "registro-gratis"))
+        self.assertIsNone(self.pase.suscripcion(pid))  # sin suscripción, tarjeta ni cobro mensual
+        self.assertEqual(self.pase.cobro_mensual(), [])
+        pago = self.pase.uno("SELECT * FROM pagos WHERE referencia=?", ref)
+        self.assertEqual((pago["tipo"], pago["monto"], pago["canal"]), ("alimentos-1", 4_500_000, "alim-ads-persona"))
+        # La Cámara no recibe nada de esta venta: solo la persona y EduNest
+        destinos = {r["para"] for r in self.pase.q("SELECT para FROM avisos")}
+        self.assertEqual(destinos, {"luis@correo.co", "ventas@edunest.co"})
+        asunto = self.pase.uno("SELECT asunto FROM avisos WHERE para='luis@correo.co'")["asunto"]
+        self.assertIn("manipulación de alimentos", asunto)
+        consent = self.pase.uno("SELECT version_texto FROM consentimientos WHERE persona_id=?", pid)[0]
+        self.assertNotIn("Cámara", consent)
+        _, _, pag_retorno = self.http("GET", retorno)
+        self.assertIn("Ya tienes tu curso".encode(), pag_retorno)
+        self.assertNotIn(b"/pagar?p=", pag_retorno)
+        self.assertEqual(self.http("GET", enlace)[0], 404)  # ya pagado: el enlace deja de servir
+        csv_ = self.pase.pagos_csv().splitlines()
+        self.assertIn("alim-ads-persona", csv_[1])
+        self.assertIn("alimentos-1", csv_[1])
+
+    def test_d10_alimentos_rechazado_y_reintento(self):
+        pid, ref, enlace = self.comprar_alimentos(canal="alim-ads-empresa")
+        retorno = self.pagar_en_checkout(enlace, "DECLINED")
+        self.assertTrue(esperar(lambda: self.estado_pago(ref) == "DECLINED"))
+        self.assertFalse(self.en_cohorte(pid, "manipulacion-alimentos"))
+        self.assertIn("no se aprobó", self.pase.uno("SELECT asunto FROM avisos")["asunto"])
+        _, _, pag_retorno = self.http("GET", retorno)
+        self.assertIn(b'href="/alimentos?c=alim-ads-empresa"', pag_retorno)
+        # Segundo intento de la misma persona: nueva referencia, misma persona, aprobado
+        pid2, ref2, enlace2 = self.comprar_alimentos(canal="alim-ads-empresa")
+        self.assertEqual(pid2, pid)
+        self.assertNotEqual(ref2, ref)
+        self.pagar_en_checkout(enlace2)
+        self.assertTrue(esperar(lambda: self.en_cohorte(pid, "manipulacion-alimentos")))
+
+    def test_d10_alimentos_sin_codigo_usa_landing_y_reverso_retira(self):
+        _, _, pagina = self.http("GET", f"{self.c.url_publica}/alimentos")
+        self.assertIn(b'name="canal" value="landing-alimentos"', pagina)
+        self.assertNotIn("Cámara".encode(), pagina)
+        pid, ref, enlace = self.comprar_alimentos(canal="landing-alimentos")
+        self.pagar_en_checkout(enlace)
+        self.assertTrue(esperar(lambda: self.en_cohorte(pid, "manipulacion-alimentos")))
+        tx = self.pase.uno("SELECT ref_pasarela FROM pagos WHERE referencia=?", ref)["ref_pasarela"]
+        self.pase.aplicar_transaccion({"id": tx, "reference": ref, "amount_in_cents": 4_500_000,
+                                       "currency": "COP", "status": "VOIDED"})
+        self.assertEqual(self.estado_pago(ref), "VOIDED")
+        self.assertFalse(self.en_cohorte(pid, "manipulacion-alimentos"))
+
+    def test_d10_alimentos_monto_alterado_no_matricula(self):
+        pid, ref, _ = self.comprar_alimentos()
+        with self.assertRaises(ValueError):  # alguien paga $25.000 con nuestra referencia
+            self.pase.aplicar_transaccion({"id": "x", "reference": ref, "amount_in_cents": 2_500_000,
+                                           "currency": "COP", "status": "APPROVED"})
+        self.assertEqual(self.estado_pago(ref), "PENDIENTE")
+        self.assertFalse(self.en_cohorte(pid, "manipulacion-alimentos"))
+
+    def test_d10_pase_y_alimentos_en_la_misma_persona(self):
+        pid, _ = self.pagar_tarjeta(correo="luis@correo.co", doc="1012345678")
+        self.esperar_estado(pid, "suscrito")
+        pid2, ref, enlace = self.comprar_alimentos()
+        self.assertEqual(pid2, pid)
+        self.pagar_en_checkout(enlace)
+        self.assertTrue(esperar(lambda: self.estado_pago(ref) == "APPROVED"))
+        self.assertTrue(self.en_cohorte(pid, "manipulacion-alimentos"))
+        self.assertEqual(self.estado_persona(pid), "suscrito")  # el Pase no cambia
+        self.assertEqual(self.pase.suscripcion(pid)["estado"], "activa")
 
     def test_base_de_wompi_no_arranca(self):
         import sqlite3

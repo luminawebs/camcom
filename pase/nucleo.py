@@ -62,6 +62,29 @@ TEXTO_AUTORIZACION_V1 = (
     "mis cursos, mis pagos del Pase Empresario y enviarme información de la plataforma, "
     "según la Ley 1581 de 2012 y sus políticas de tratamiento de datos. (v1, borrador)"
 )
+# D-10: la venta del curso de alimentos es solo de EduNest; la Cámara no recibe estos datos.
+TEXTO_AUTORIZACION_ALIMENTOS_V1 = (
+    "Autorizo a Lúmina Interactiva S.A.S. (EduNest), como responsable, para tratar mis datos "
+    "personales con el fin de gestionar mi inscripción y mi pago del curso de manipulación de "
+    "alimentos, emitir mi constancia y enviarme información de la plataforma, según la Ley 1581 "
+    "de 2012 y su política de tratamiento de datos. (v1, borrador)"
+)
+
+# Productos de pago único (D-10). La clave va en pagos.tipo; el Pase usa «inicial» y «mensual».
+ALIMENTOS = "alimentos-1"
+
+
+def productos(c):
+    """Catálogo de pago único. Los paquetes de 5 y 10 llegan con el formulario de empleados."""
+    return {
+        ALIMENTOS: {
+            "nombre": "Curso de manipulación de alimentos",
+            "detalle": "Constancia de capacitación de 10 horas · 1 persona",
+            "descripcion": "Manipulación de alimentos, 10 horas · edunest.co",
+            "precio_centavos": c.alimentos_precio_centavos, "cohorte": c.cohorte_alimentos,
+            "prefijo": "ALIM",
+        },
+    }
 
 
 def ahora():
@@ -96,6 +119,10 @@ class Pase:
             for s in self.bd.execute("SELECT id, persona_id FROM suscripciones").fetchall():
                 self.bd.execute("UPDATE suscripciones SET canal_origen=?, curso=? WHERE id=?",
                                 (*self._atribucion(s[1]), s[0]))
+        columnas = {r[1] for r in self.bd.execute("PRAGMA table_info(pagos)")}
+        if "canal" not in columnas:  # D-10: canal de la compra de un curso de pago único
+            self.bd.execute("ALTER TABLE pagos ADD COLUMN canal TEXT")
+        self.productos = productos(config)
         self.candado = threading.RLock()
         clave = config.secreto_sesion or config.p_key or "solo-desarrollo"
         self._clave = hashlib.sha256(("sesion:" + clave).encode()).digest()
@@ -187,7 +214,8 @@ class Pase:
         return self.uno("SELECT * FROM suscripciones WHERE persona_id=?", persona_id)
 
     # ------------------------------------------------------------------ formulario
-    def inscribir(self, datos, canal="sin-canal", ip="", user_agent="", origen=""):
+    def inscribir(self, datos, canal="sin-canal", ip="", user_agent="", origen="",
+                  texto_autorizacion=TEXTO_AUTORIZACION_V1):
         """RF-01 a RF-05: crea o actualiza la persona (deduplica por documento y correo).
 
         D-05: `canal` es el ?c= del enlace; `origen` es el canal con que la persona llegó antes
@@ -221,7 +249,7 @@ class Pase:
         self.q("INSERT INTO canales_persona VALUES (?,?,?)", pid, canal, ahora())
         if origen != cn.SIN_CANAL and origen != canal:
             self.q("INSERT INTO canales_persona VALUES (?,?,?)", pid, origen, ahora())
-        self.q("INSERT INTO consentimientos VALUES (?,?,?,?,?,?,?)", pid, TEXTO_AUTORIZACION_V1, 1,
+        self.q("INSERT INTO consentimientos VALUES (?,?,?,?,?,?,?)", pid, texto_autorizacion, 1,
                1 if datos.get("acepta_whatsapp") in (True, "1", "on", 1) else 0, ahora(), ip, user_agent)
         return pid
 
@@ -244,11 +272,11 @@ class Pase:
         return uid
 
     # ------------------------------------------------------------------ pago inicial
-    def _nueva_referencia(self, persona_id, periodo):
+    def _nueva_referencia(self, persona_id, periodo, prefijo="PASE"):
         n = self.uno("SELECT COUNT(*) n FROM pagos WHERE persona_id=? AND periodo=?",
                      persona_id, periodo)["n"]
         # El sufijo evita chocar con referencias ya usadas en ePayco si la base se reinicia
-        return f"PASE-{persona_id}-{periodo}-{n + 1}-{secrets.token_hex(3)}"
+        return f"{prefijo}-{persona_id}-{periodo}-{n + 1}-{secrets.token_hex(3)}"
 
     def _registrar_pago(self, persona_id, tipo, metodo, intento=1, periodo=None):
         periodo = periodo or self.hoy().strftime("%Y%m")
@@ -259,6 +287,24 @@ class Pase:
                sus["id"] if sus else None, persona_id, tipo, periodo, ref, self.c.precio_centavos,
                "PENDIENTE", metodo, intento, ahora())
         return ref
+
+    # ------------------------------------------------------------------ cursos de pago único (D-10)
+    def producto_de(self, pago):
+        """Producto de pago único de un pago, o None si el pago es del Pase."""
+        return self.productos.get(pago["tipo"]) if pago else None
+
+    def comprar_curso(self, persona_id, clave=ALIMENTOS, canal=cn.SIN_CANAL):
+        """Pago único por el Smart Checkout (tarjeta, PSE, Nequi, Daviplata). No crea suscripción,
+        no guarda tarjeta ni cobra cada mes. El canal es el ?c= con que llegó a esta compra."""
+        prod = self.productos[clave]
+        periodo = self.hoy().strftime("%Y%m")
+        ref = self._nueva_referencia(persona_id, periodo, prod["prefijo"])
+        self.q("""INSERT INTO pagos (persona_id, tipo, periodo, referencia, monto, estado, metodo,
+                  intento, creado, canal) VALUES (?,?,?,?,?,?,?,?,?,?)""",
+               persona_id, clave, periodo, ref, prod["precio_centavos"], "PENDIENTE", "checkout", 1,
+               ahora(), cn.normalizar(canal))
+        self.historial(persona_id, "compra_iniciada", f"{clave} {ref} canal {cn.normalizar(canal)}", "formulario")
+        return ref, self.enlace_checkout(ref)
 
     def _atribucion(self, persona_id):
         """(canal de origen, curso desde el que compra): el último enlace de curso que usó."""
@@ -311,7 +357,12 @@ class Pase:
         pago = self.uno("SELECT * FROM pagos WHERE referencia=?", referencia)
         if not pago or pago["estado"] != "PENDIENTE":
             return None
-        return self.pasarela.datos_checkout(referencia, dict(self.persona(pago["persona_id"])))
+        persona = dict(self.persona(pago["persona_id"]))
+        prod = self.producto_de(pago)
+        if prod:
+            return self.pasarela.datos_checkout(referencia, persona, pago["monto"], prod["nombre"],
+                                                prod["descripcion"])
+        return self.pasarela.datos_checkout(referencia, persona)
 
     def anotar_ref_pasarela(self, referencia, ref_payco):
         """La página de retorno trae ?ref_payco=: se guarda para que la conciliación pueda
@@ -401,12 +452,39 @@ class Pase:
                estado, ahora(), pago["id"])
         pid = pago["persona_id"]
         self.historial(pid, f"pago_{estado.lower()}", pago["referencia"], origen)
+        prod = self.producto_de(pago)
+        if prod:
+            return self._compra_cambio(pago, prod, estado, origen)
         if estado == "APPROVED":
             self._pago_aprobado(pago, origen)
         elif estado in ("DECLINED", "ERROR"):
             self._pago_rechazado(pago, origen)
         elif estado == "VOIDED":
             self._pago_anulado(pago, origen)
+
+    def _compra_cambio(self, pago, prod, estado, origen):
+        """Curso de pago único: aprobado → cohorte del curso; rechazado → aviso; reversado → sale."""
+        pid = pago["persona_id"]
+        p = self.persona(pid)
+        if estado == "APPROVED":
+            uid = self._usuario_moodle(p)
+            self.moodle.agregar_a_cohorte(uid, prod["cohorte"])
+            self.historial(pid, "curso_activo", f"{pago['tipo']} {pago['referencia']}", origen)
+            self.avisar_con_diseno(p["correo"], "curso_activo", nombre=p["nombre"], curso=prod["nombre"],
+                                   detalle=prod["detalle"], valor=pago["monto"])
+            if self.c.avisos_alimentos:
+                self.avisar_con_diseno(self.c.avisos_alimentos, "interno", asunto=f"Venta: {prod['nombre']}",
+                                       texto=f"{p['nombre']} · {pago['monto'] // 100:,} COP · canal "
+                                             f"{pago['canal'] or cn.SIN_CANAL} · {pago['referencia']}".replace(",", "."))
+        elif estado in ("DECLINED", "ERROR"):
+            self.avisar_con_diseno(p["correo"], "curso_rechazado", nombre=p["nombre"], curso=prod["nombre"])
+        elif estado == "VOIDED" and p["moodle_user_id"]:
+            # Pago reversado: sale de la cohorte (Moodle conserva el avance) salvo que tenga otra compra
+            otra = self.uno("SELECT 1 FROM pagos WHERE persona_id=? AND tipo=? AND estado='APPROVED' "
+                            "AND id<>?", pid, pago["tipo"], pago["id"])
+            if not otra:
+                self.moodle.quitar_de_cohorte(p["moodle_user_id"], prod["cohorte"])
+                self.historial(pid, "curso_retirado", pago["referencia"], origen)
 
     def _pago_aprobado(self, pago, origen):
         pid = pago["persona_id"]
@@ -718,7 +796,8 @@ class Pase:
         w.writerow(["referencia", "ref_epayco", "creado", "aprobado_en", "documento", "nombre", "correo",
                     "canal", "tipo", "periodo", "monto_cop", "estado", "metodo", "curso"])
         for r in self.q("""SELECT pg.referencia, pg.ref_pasarela, pg.creado, pg.aprobado_en, p.documento,
-                             p.nombre, p.correo, p.canal_origen, pg.tipo, pg.periodo, pg.monto, pg.estado,
+                             p.nombre, p.correo, COALESCE(pg.canal, p.canal_origen), pg.tipo, pg.periodo,
+                             pg.monto, pg.estado,
                              pg.metodo, s.curso
                            FROM pagos pg LEFT JOIN personas p ON p.id=pg.persona_id
                            LEFT JOIN suscripciones s ON s.id=pg.suscripcion_id ORDER BY pg.id"""):

@@ -25,6 +25,10 @@ CANALES = {
     "fb-organico": "Facebook orgánico de EduNest",
     "meta-ads": "Anuncios en Meta (Facebook/Instagram) segmentados a Soacha",
     "qr-impreso": "Impresos con QR (afiches o volantes)",
+    # Curso de manipulación de alimentos (C-02, D-09)
+    "landing-alimentos": "Landing de manipulación de alimentos (sin código de campaña)",
+    "alim-ads-persona": "Google Ads de alimentos, búsquedas de persona",
+    "alim-ads-empresa": "Google Ads de alimentos, búsquedas de empresa",
 }
 # Uno por aliado (gremios, contadores, asociaciones): aliado-01, aliado-02…
 ALIADO = re.compile(r"aliado-\d{2,3}")

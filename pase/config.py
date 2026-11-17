@@ -40,6 +40,10 @@ class Config:
     moodle_simulado: bool = True
     cohorte_gratis: str = "registro-gratis"
     cohorte_pase: str = "pase-empresario"
+    # D-10: curso de manipulación de alimentos, pago único (no es suscripción)
+    alimentos_precio_centavos: int = 4_500_000  # $45.000 COP, 1 persona
+    cohorte_alimentos: str = "manipulacion-alimentos"
+    avisos_alimentos: list = field(default_factory=list)  # solo EduNest: la Cámara no es parte de esta venta
     reintentos_dias: list = field(default_factory=lambda: [0, 3, 7])
     avisos_correo: list = field(default_factory=list)
     smtp_host: str = ""         # vacío: los avisos quedan en la tabla sin enviarse
@@ -73,6 +77,9 @@ class Config:
             llave_privada=e("EPAYCO_LLAVE_PRIVADA") or e("PRIVATE_KEY", ""),
             secreto_sesion=e("PASE_SECRETO_SESION", ""),
             precio_centavos=int(e("PASE_PRECIO_CENTAVOS", "2900000")),
+            alimentos_precio_centavos=int(e("PASE_ALIMENTOS_PRECIO_CENTAVOS", "4500000")),
+            cohorte_alimentos=e("PASE_COHORTE_ALIMENTOS", "manipulacion-alimentos"),
+            avisos_alimentos=[x for x in e("PASE_AVISOS_ALIMENTOS", "").split(",") if x],
             url_publica=e("PASE_URL_PUBLICA", "http://localhost:8080").rstrip("/"),
             base_datos=e("PASE_BASE_DATOS", "pase.db"),
             moodle_url=e("PASE_MOODLE_URL", "").rstrip("/"),
@@ -97,6 +104,8 @@ class Config:
             raise ValueError(f"EPAYCO_ENTORNO debe ser sandbox o produccion, no {self.entorno!r}")
         if self.precio_centavos % 100:
             raise ValueError("PASE_PRECIO_CENTAVOS debe ser pesos enteros (ePayco cobra en pesos)")
+        if self.alimentos_precio_centavos % 100 or self.alimentos_precio_centavos <= 0:
+            raise ValueError("PASE_ALIMENTOS_PRECIO_CENTAVOS debe ser pesos enteros (ePayco cobra en pesos)")
         if not self.pruebas:
             if os.environ.get("PASE_PERMITIR_PRODUCCION") != "1":
                 raise ValueError("Producción bloqueada: falta PASE_PERMITIR_PRODUCCION=1")

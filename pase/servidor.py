@@ -19,7 +19,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from . import canales as cn
 from . import moodle as moodle_mod
 from .config import Config
-from .nucleo import ENLACE_CODIGO_HORAS, TEXTO_AUTORIZACION_V1, Pase
+from .nucleo import ALIMENTOS, ENLACE_CODIGO_HORAS, TEXTO_AUTORIZACION_ALIMENTOS_V1, TEXTO_AUTORIZACION_V1, Pase
 
 CSS = """
 :root{--acento:#00806b;--acento-2:#006655;--suave:#e3f6f1;--tinta:#14181f;--tinta-2:#4a5260;--fondo:#f6f7f9;
@@ -180,14 +180,14 @@ def url_mis_cursos(c):
     return f"{c.moodle_url}/my/courses.php" if c.moodle_url else ""
 
 
-def pesos_cop(c):
-    return f"${c.precio_centavos // 100:,}".replace(",", ".")
+def pesos_cop(c, centavos=None):
+    return f"${(centavos or c.precio_centavos) // 100:,}".replace(",", ".")
 
 
-def resumen(c, persona=None, detalle="al mes · IVA incluido", plan="Pase Empresario"):
+def resumen(c, persona=None, detalle="al mes · IVA incluido", plan="Pase Empresario", centavos=None):
     hola = f'<p class="chico">Hola, {html.escape(persona["nombre"].split()[0])}</p>' if persona else ""
-    return (f'<section class="resumen"><div>{hola}<p><b>{plan}</b></p></div><div class="der">'
-            f'<p class="precio">{pesos_cop(c)}</p><p class="chico">{detalle}</p></div></section>')
+    return (f'<section class="resumen"><div>{hola}<p><b>{html.escape(plan)}</b></p></div><div class="der">'
+            f'<p class="precio">{pesos_cop(c, centavos)}</p><p class="chico">{html.escape(detalle)}</p></div></section>')
 
 
 ESTADOS_PAGO = {"APPROVED": "Aprobado", "DECLINED": "Rechazado", "PENDING": "Pendiente", "ERROR": "Error",
@@ -453,25 +453,67 @@ function tarjeta(ev){{ev.preventDefault();
 </script>"""
 
 
-def pantalla_checkout(c, datos, persona=None, firma=None):
-    precio = pesos_cop(c)
+ICONO_CALENDARIO_DATO = """<div class="dato"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00806b"
+stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16"
+rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Este pago cubre <strong>un mes</strong>. Antes del corte te enviamos
+el enlace para renovar.</span></div>"""
+
+
+def formulario_alimentos(canal, c, prod):
+    canal = html.escape(canal)
+    return f"""
+{pasos(1)}
+<div><p class="antetitulo">edunest.co · Curso virtual</p>
+<h1>{html.escape(prod["nombre"])}</h1></div>
+<section class="plan" aria-label="{html.escape(prod["nombre"])}">
+<div class="fila-precio"><b>1 persona</b><span><strong>{pesos_cop(c, prod["precio_centavos"])}</strong>
+<small> pago único</small></span></div>
+<ul><li>{ICONO_OK}Constancia de capacitación de 10 horas al aprobar la evaluación final</li>
+<li>{ICONO_OK}Contenidos según la Resolución 2674 de 2013</li>
+<li>{ICONO_OK}100% virtual, desde el celular · sin cobros mensuales</li></ul>
+</section>
+<form class="caja" method="post" action="/alimentos/inscripcion">
+<input type="hidden" name="canal" value="{canal}">
+<div class="campo"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" required autocomplete="name">
+<span class="nota">Así aparecerá en tu constancia.</span></div>
+<div class="fila doc"><div class="campo"><label for="tipo">Tipo</label><select id="tipo" name="tipo_doc"><option>CC</option>
+<option>CE</option><option>PPT</option><option>TI</option></select></div>
+<div class="campo"><label for="documento">Número de documento</label><input id="documento" name="documento" required
+inputmode="numeric" pattern="[0-9A-Za-z\\-]{{5,15}}"></div></div>
+<div class="campo"><label for="correo">Correo</label><input id="correo" name="correo" type="email" required autocomplete="email">
+<span class="nota">Aquí te llega el acceso al aula.</span></div>
+<div class="campo"><label for="whatsapp">WhatsApp <span class="opc">(opcional)</span></label><input id="whatsapp" name="whatsapp"
+inputmode="tel" autocomplete="tel" pattern="(\\+?57)?3[0-9]{{9}}" placeholder="3001234567"></div>
+<div class="campo"><label for="municipio">Municipio</label><input id="municipio" name="municipio" value="Soacha"></div>
+<label class="check"><input type="checkbox" name="acepta_datos" required>
+<span>{html.escape(TEXTO_AUTORIZACION_ALIMENTOS_V1)}</span></label>
+<label class="check"><input type="checkbox" name="acepta_whatsapp"><span>Quiero recibir mensajes por WhatsApp.</span></label>
+<button>Continuar al pago {ICONO_FLECHA}</button>
+</form>
+<p class="por">Procesado por <img src="/estaticos/epayco.svg" alt="ePayco"></p>"""
+
+
+def pantalla_checkout(c, datos, persona=None, firma=None, prod=None):
+    precio = pesos_cop(c, prod["precio_centavos"] if prod else None)
     medios = (("pse", "PSE", "Débito desde tu cuenta de ahorros o corriente"),
               ("nequi", "Nequi", "Apruebas el pago en tu app"),
               ("daviplata", "Daviplata", "Apruebas el pago en tu app"))
+    if prod:  # pago único: la tarjeta va dentro del mismo Checkout, sin guardarla
+        medios = (("visa", "Tarjeta", "Crédito o débito: Visa, Mastercard o American Express"),) + medios
     lista = "".join(f'<li><span class="logo"><img src="/estaticos/{n}.svg" alt=""></span><span><strong>{t}</strong>'
                     f'<span>{d}</span></span></li>' for n, t, d in medios)
     return f"""
 <span class="seguro">{ICONO_CANDADO}Pago seguro</span>
 {pasos(2)}
-{resumen(c, persona, detalle="IVA incluido", plan="Pase Empresario · 1 mes")}
-{pestanas(firma, "otros") if firma else ""}
-<div><h1>Paga con PSE, Nequi o Daviplata</h1>
-<p class="nota">También puedes usar una tarjeta sin guardarla.</p></div>
+{resumen(c, persona, detalle=prod["detalle"] if prod else "IVA incluido",
+         plan=prod["nombre"] if prod else "Pase Empresario · 1 mes",
+         centavos=prod["precio_centavos"] if prod else None)}
+{pestanas(firma, "otros") if firma and not prod else ""}
+<div><h1>{"Paga con tarjeta, PSE, Nequi o Daviplata" if prod else "Paga con PSE, Nequi o Daviplata"}</h1>
+<p class="nota">{"Un solo pago: no guardamos tu tarjeta ni te cobramos cada mes." if prod else
+"También puedes usar una tarjeta sin guardarla."}</p></div>
 <ul class="medios">{lista}</ul>
-<div class="dato"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00806b" stroke-width="2"
-stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/>
-<path d="M3 10h18M8 3v4M16 3v4"/></svg><span>Este pago cubre <strong>un mes</strong>. Antes del corte te enviamos
-el enlace para renovar.</span></div>
+{"" if prod else ICONO_CALENDARIO_DATO}
 <button onclick="abrir()">Ir a pagar {precio} {ICONO_FLECHA}</button>
 <p class="nota centro">Se abre la ventana segura de ePayco. Al terminar vuelves aquí.</p>
 <p class="por">Procesado por <img src="/estaticos/epayco.svg" alt="ePayco"></p>
@@ -481,10 +523,14 @@ function abrir(){{ePayco.checkout.configure({json.dumps(datos)}).open()}}
 </script>"""
 
 
-def retorno(c, firma=None):
+def retorno(c, firma=None, prod=None, canal=""):
     aula = html.escape(url_mis_cursos(c), quote=True)
     entrar = f'<a class="boton" href="{aula}">Entrar al aula {ICONO_FLECHA}</a>' if aula else ""
-    if firma:
+    listo = "¡Listo! Ya tienes tu curso" if prod else "¡Listo! Tu Pase está activo"
+    if prod:
+        q = urllib.parse.urlencode({"c": canal}) if cn.es_origen(canal) else ""
+        otra_vez = f'<a class="boton" href="/alimentos{"?" + q if q else ""}">Intentar de nuevo</a>'
+    elif firma:
         otra_vez = (f'<a class="boton" href="/pagar?p={firma}">Intentar de nuevo</a>'
                     f'<a class="boton sec" href="/pagar/checkout?p={firma}">Pagar con PSE o Nequi</a>')
     else:
@@ -503,7 +549,7 @@ stroke="#e3f6f1" stroke-width="5"/><path d="M24 4a20 20 0 0 1 20 20" stroke="#00
 <div id="aprobado" class="oculto" style="display:contents">
 <span class="icono"><span class="lleno"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"
 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span></span>
-<h1>¡Listo! Tu Pase está activo</h1>
+<h1>{listo}</h1>
 <p class="chico">Te enviamos un correo con tu usuario y el enlace al aula.</p>{entrar}</div>
 <div id="rechazado" class="oculto" style="display:contents">
 <span class="icono falla"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#b42318" stroke-width="2.4"
@@ -861,6 +907,10 @@ class App:
                                                f"HttpOnly; SameSite=Lax{segura}")
                     return self.responder(200, pagina("Inscripción", formulario(
                         canal, app.c, origen if cn.es_origen(origen) else ""), sb), extra=extra)
+                if u.path == "/alimentos":
+                    canal = cn.normalizar(q.get("c") or "landing-alimentos")
+                    prod = app.pase.productos[ALIMENTOS]
+                    return self.responder(200, pagina(prod["nombre"], formulario_alimentos(canal, app.c, prod), sb))
                 if u.path == "/pagar":
                     pid = app.verificar(q.get("p"))
                     if not pid:
@@ -885,15 +935,23 @@ class App:
                     if not datos:
                         return self.responder(404, pagina("Enlace vencido", "<h1>Este enlace de pago ya no "
                                                           "está disponible</h1>", sb))
+                    pago = app.pase.uno("SELECT * FROM pagos WHERE referencia=?", ref)
+                    prod = app.pase.producto_de(pago)
+                    if prod:
+                        return self.responder(200, pagina("Pagar curso", pantalla_checkout(
+                            app.c, datos, app.pase.persona(pago["persona_id"]), None, prod), sb),
+                            extra={"Cache-Control": "no-store", "Referrer-Policy": "no-referrer"})
                     pid = app.verificar(q.get("p"))
                     return self.responder(200, pagina("Pagar Pase", pantalla_checkout(
                         app.c, datos, app.pase.persona(pid) if pid else None, q["p"] if pid else None), sb))
                 if u.path == "/retorno":
                     # ePayco añade ?ref_payco=; nosotros pusimos ?ref=. Solo informa: no activa nada.
                     app.pase.anotar_ref_pasarela(q.get("ref"), q.get("ref_payco"))
-                    fila = app.pase.uno("SELECT persona_id FROM pagos WHERE referencia=?", q.get("ref", ""))
-                    firma = app.firmar(fila["persona_id"]) if fila else None
-                    return self.responder(200, pagina("Confirmando pago", retorno(app.c, firma), sb))
+                    fila = app.pase.uno("SELECT * FROM pagos WHERE referencia=?", q.get("ref", ""))
+                    prod = app.pase.producto_de(fila)
+                    firma = app.firmar(fila["persona_id"]) if fila and not prod else None
+                    return self.responder(200, pagina("Confirmando pago", retorno(
+                        app.c, firma, prod, (fila["canal"] or "") if prod else ""), sb))
                 if u.path == "/webhooks/epayco":  # por si la confirmación se configura como GET
                     return self.confirmacion(q)
                 if u.path == "/estado-pago":
@@ -1027,6 +1085,17 @@ class App:
                     app.pase.registro_gratis(pid)
                     return self.responder(200, pagina("Registro listo", "<h1>¡Tu registro está listo!</h1>"
                                                       "<p>Te enviamos un correo con tu acceso al aula.</p>", sb))
+                if u.path == "/alimentos/inscripcion":
+                    datos = dict(urllib.parse.parse_qsl(self.leer().decode(errors="replace")))
+                    canal = datos.get("canal") or "landing-alimentos"
+                    try:
+                        pid = app.pase.inscribir(datos, canal, self.ip(), self.headers.get("User-Agent", ""),
+                                                 texto_autorizacion=TEXTO_AUTORIZACION_ALIMENTOS_V1)
+                    except (ValueError, KeyError) as e:
+                        return self.responder(400, pagina("Revisa tus datos", f"<h1>Revisa tus datos</h1>"
+                                                          f"<p>{html.escape(str(e))}</p>", sb))
+                    _, enlace = app.pase.comprar_curso(pid, ALIMENTOS, canal)
+                    return self.redirigir(enlace)
                 if u.path == "/pagar/token":
                     try:
                         d = json.loads(self.leer())
