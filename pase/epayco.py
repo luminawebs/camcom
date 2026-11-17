@@ -256,13 +256,14 @@ class Epayco:
             "customer_id": fuente["cliente"]})
 
     # --- Smart Checkout v2 (PSE, Nequi, Daviplata, tarjeta sin guardar) ---
-    def datos_checkout(self, referencia, persona, monto_centavos=None):
+    def datos_checkout(self, referencia, persona, monto_centavos=None, nombre="Pase Empresario",
+                       descripcion="Pase Empresario · Aula Virtual Empresarial"):
         """Crea la sesión del Smart Checkout en el backend (POST /payment/session/create) y
         devuelve lo que necesita ePayco.checkout.configure() en el navegador."""
         monto = monto_centavos or self.c.precio_centavos
         cuerpo = {
-            "checkout_version": "2", "name": "Pase Empresario",
-            "description": "Pase Empresario · Aula Virtual Empresarial",
+            "checkout_version": "2", "name": nombre,
+            "description": descripcion,
             "currency": self.c.moneda, "amount": monto // 100, "invoice": referencia,
             "lang": "ES", "country": "CO", "taxBase": 0, "tax": 0, "taxIco": 0,
             "response": f"{self.c.url_publica}/retorno?ref={urllib.parse.quote(referencia)}",

@@ -149,6 +149,29 @@ def _contenido(tipo, c, d):
                       f'{html.escape(d["codigo"])}</span>',
                       f"Escríbelo en la página de Mi Pase. Vence en {d['minutos']} minutos y sirve una sola vez.",
                       "Si no lo pediste, ignora este correo: nadie puede entrar sin el código."])
+    if tipo == "curso_activo":
+        return dict(
+            asunto=f"Ya tienes tu {d['curso'].lower()}",
+            previo="Tu pago fue aprobado. Así entras al curso.",
+            etiqueta="Pago aprobado", estado="exito", titulo=f"¡Listo, {nombre}! Ya puedes empezar",
+            parrafos=[f"Tu pago fue aprobado y ya tienes el <b>{html.escape(d['curso'])}</b> en el aula de "
+                      "edunest.co. Avanza a tu ritmo desde el celular."],
+            resumen=[("Curso", d["curso"]), ("Incluye", d["detalle"]), ("Valor pagado", pesos(d["valor"]))],
+            pasos=["Si es tu primera vez en el aula, busca el correo con tu usuario y contraseña. Puede tardar "
+                   "unos minutos; si no llega, revisa spam o promociones.",
+                   "Entra a «Mis cursos» y abre el curso.",
+                   "Al aprobar la evaluación final (mínimo 75 %) descargas tu constancia."],
+            boton=("Ir a mis cursos", aula))
+    if tipo == "curso_rechazado":
+        return dict(
+            asunto="Tu pago no se aprobó",
+            previo="No se hizo ningún cobro. Puedes intentarlo de nuevo con otro medio.",
+            etiqueta="Pago no aprobado", estado="error", titulo=f"{nombre}, tu pago no se aprobó",
+            parrafos=[f"El banco o la billetera no aprobó el pago del <b>{html.escape(d['curso'])}</b>, así que "
+                      "<b>no se hizo ningún cobro</b>."],
+            pasos=["Revisa que la tarjeta o la cuenta tenga cupo y esté habilitada para compras en línea.",
+                   "Si sigue sin pasar, prueba con PSE, Nequi u otra tarjeta."],
+            boton=("Intentar de nuevo", c.url_publica + "/alimentos"))
     if tipo == "interno":
         return dict(asunto=d["asunto"], previo=d["texto"], etiqueta="Aviso del Pase", titulo=d["asunto"],
                     parrafos=[html.escape(d["texto"])])
@@ -288,6 +311,9 @@ EJEMPLOS = {
     "renovar": dict(nombre="Ana María Rojas", corte="2026-11-30",
                     enlace="https://pase.edunest.co/checkout?r=PASE-123&f=abc"),
     "pase_termino": dict(nombre="Ana María Rojas", motivo="reintentos agotados"),
+    "curso_activo": dict(nombre="Ana María Rojas", curso="Curso de manipulación de alimentos",
+                         detalle="Constancia de capacitación de 10 horas · 1 persona", valor=4_500_000),
+    "curso_rechazado": dict(nombre="Ana María Rojas", curso="Curso de manipulación de alimentos"),
     "interno": dict(asunto="Nueva suscripción al Pase", texto="Ana María Rojas (Tienda Ana) · canal camara"),
 }
 

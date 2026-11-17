@@ -91,6 +91,9 @@ Lo que comprueban las pruebas:
 | `EPAYCO_LLAVE_PUBLICA`, `EPAYCO_LLAVE_PRIVADA` | del panel de ePayco (API, epayco.js y Checkout) |
 | `EPAYCO_API_URL`, `EPAYCO_VALIDACION_URL`, `EPAYCO_APIFY_URL`, `EPAYCO_CHECKOUT_JS`, `EPAYCO_TOKEN_JS` | solo si ePayco cambia sus direcciones |
 | `PASE_PRECIO_CENTAVOS` | `2900000` ($29.000; ePayco cobra en pesos enteros) |
+| `PASE_ALIMENTOS_PRECIO_CENTAVOS` | `4500000` ($45.000, curso de manipulación de alimentos, 1 persona) |
+| `PASE_COHORTE_ALIMENTOS` | `manipulacion-alimentos` (idnumber de la cohorte del curso 2 en Moodle) |
+| `PASE_AVISOS_ALIMENTOS` | correos de EduNest que reciben cada venta del curso (la Cámara no) |
 | `PASE_URL_PUBLICA` | `https://pase.edunest.co` |
 | `PASE_MOODLE_URL`, `PASE_MOODLE_TOKEN`, `PASE_MOODLE_SIMULADO` | `https://portal.edunest.co`, token de `conector-pase`, `1` |
 | `PASE_REINTENTOS_DIAS` | `0,3,7` |
@@ -194,6 +197,31 @@ tablero lo muestra en negrita como «No reconocido». El tablero tiene «Por can
 (inscritos, compraron, activos), «Pases por curso» y la lista de códigos con su enlace. Para un
 canal nuevo basta una línea en `CANALES`. Las bases anteriores ganan las columnas al arrancar y
 se rellenan con el historial de `canales_persona`.
+
+## Curso de manipulación de alimentos: pago único (D-10, 17-nov-2026)
+
+`https://pase.edunest.co/alimentos?c=<canal>` vende el curso a una persona por $45.000 en un solo pago:
+
+```
+Landing (portal.edunest.co/manipulacion-de-alimentos, botón con ?c=alim-ads-persona)
+   ▼
+/alimentos  ── formulario corto (autorización Ley 1581 solo con EduNest, sin la Cámara)
+   ▼
+/checkout?r=ALIM-…  ── Smart Checkout v2: tarjeta, PSE, Nequi o Daviplata (no se guarda la tarjeta)
+   ▼  confirmación firmada + consulta a la API (igual que el Pase)
+Aprobado → usuario en Moodle + cohorte manipulacion-alimentos + correo «Ya tienes tu curso»
+Rechazado → correo «Tu pago no se aprobó» con enlace para intentar de nuevo
+Reversado → sale de la cohorte (Moodle conserva el avance)
+```
+
+- No crea suscripción, no cobra cada mes y no toca el Pase de la persona si ya lo tiene.
+- `pagos.tipo` = `alimentos-1`, referencia `ALIM-…`, y `pagos.canal` guarda el `?c=` de esa compra (sin
+  `?c=`, `landing-alimentos`). El CSV del tablero muestra ese canal.
+- Los avisos internos van solo a `PASE_AVISOS_ALIMENTOS`: la Cámara no es parte de esta venta.
+- **Antes de activarlo en el servidor:** crear en Moodle la cohorte con idnumber `manipulacion-alimentos`
+  y agregar «Sincronización de cohortes» en el curso 2.
+- **Falta (siguiente PR):** paquetes de 5 ($200.000) y 10 ($350.000) con formulario para que el dueño
+  inscriba a su equipo.
 
 ## Por hacer después
 
